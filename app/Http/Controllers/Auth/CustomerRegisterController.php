@@ -16,7 +16,11 @@ class CustomerRegisterController extends Controller
             'email' => ['email', 'required', 'unique:users,email'],
             'phone' => ['integer', 'unique:customers,phone'],
             'gender' => ['required'],
-            'password' => ['required','min:8', 'regex:/^[^\d\n]*\d[^\d\n]*$/'],
+            'password' => [
+                'required',
+                'min:10',             // must be at least 10 characters in length
+                'regex:/[0-9]/',      // must contain at least one digit
+            ],
             'password_confirmation' => ['required', 'same:password']
         ]);
 
