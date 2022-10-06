@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('customer/register', [CustomerRegisterController::class, 'create']);
 Route::post('customer/login', [CustomerAuthController::class, 'login']);
+
+Route::get('customer/profile', [CustomerController::class, 'profile']);
