@@ -22,4 +22,9 @@ class CustomerAuthController extends Controller
             'token' => $token
         ]);
     }
+
+    public function logout(Request $request){
+        auth()->logout();
+        return "logout";
+    }
 }
