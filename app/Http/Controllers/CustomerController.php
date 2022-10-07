@@ -19,4 +19,24 @@ class CustomerController extends Controller
             "points" => $biodata->points
         ]);
     }
+
+    public function update(Request $request){
+        $user = $request->user();
+        $biodata = $user->biodata()->get()->first();
+
+        request()->validate([
+            'name' => 'required',
+            'phone' => ['integer', 'unique:customers,phone'],
+            'gender' => ['required']
+        ]);
+
+        $user->name = $request->name;
+        $user->save();
+
+        $biodata->phone = $request->phone;
+        $biodata->gender = $request->gender;
+        $biodata->save();
+
+        return response("success", 200);
+    }
 }

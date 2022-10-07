@@ -25,4 +25,6 @@ Route::post('customer/register', [CustomerRegisterController::class, 'create']);
 Route::post('customer/login', [CustomerAuthController::class, 'login']);
 Route::post('customer/logout', [CustomerAuthController::class, 'logout']);
 
+
 Route::get('customer/profile', [CustomerController::class, 'profile']);
+Route::post('customer/profile/edit', [CustomerController::class, 'update']);
