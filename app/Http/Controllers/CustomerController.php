@@ -26,7 +26,7 @@ class CustomerController extends Controller
 
         request()->validate([
             'name' => 'required',
-            'phone' => ['integer', 'unique:customers,phone'],
+            'phone' => ['integer', "unique:customers,phone,{$biodata->id}"],
             'gender' => ['required']
         ]);
 
