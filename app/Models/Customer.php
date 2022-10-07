@@ -16,4 +16,9 @@ class Customer extends Model
         'phone',
         'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'foreign_key');
+    }
 }

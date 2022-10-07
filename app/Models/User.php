@@ -58,4 +58,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function biodata(){
+        if ($this->type == "customer"){
+            return $this->hasOne(Customer::class, 'user_id');
+        }
+    }
 }

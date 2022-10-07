@@ -8,6 +8,15 @@ class CustomerController extends Controller
 {
     //
     public function profile(Request $request){
-        return $request->user()->name;
+        $user = $request->user();
+        $biodata = $user->biodata()->get()->first();
+        return response()->json([
+            "name"=> $user->name,
+            "email"=> $user->email,
+            "phone" => $biodata->phone,
+            "gender" => $biodata->gender,
+            "balance" => $biodata->balance,
+            "points" => $biodata->points
+        ]);
     }
 }
