@@ -8,7 +8,7 @@ class CustomerController extends Controller
 {
     //
     public function profile(Request $request){
-        $user = $request->user();
+        $user = auth()->user();
         $biodata = $user->biodata()->get()->first();
         return response()->json([
             "name"=> $user->name,
