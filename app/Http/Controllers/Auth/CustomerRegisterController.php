@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\User;
+use Ichtrojan\Otp\Otp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerRegisterController extends Controller
 {
@@ -38,5 +41,30 @@ class CustomerRegisterController extends Controller
             'points' => 0,
             'balance' => 0
         ]);
+        $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 4, 30);
+        $otp_token = $otp->token;
+
+        Mail::raw("Your OTP is $otp_token", function ($m) {
+            $m->to(request('email'))->subject('Email Verification OTP');
+        });
+
+        return $otp;
+    }
+
+    public function validateOtp(Request $request){
+        request()->validate([
+            'email' => 'required',
+            'otp' => 'required'
+            ]);
+
+        $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), intval(request('otp')));
+
+        if($otp->status){
+            $user = User::where('email', request('email'))->first();
+            $user->email_verified_at = Carbon::now()->timestamp;
+            $user->save();
+        }
+
+        return $otp;
     }
 }
