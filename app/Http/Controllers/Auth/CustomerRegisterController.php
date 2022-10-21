@@ -65,6 +65,15 @@ class CustomerRegisterController extends Controller
             $user->save();
         }
 
-        return $otp;
+        if(!$token = auth()->attempt($request->only('email', 'password'))){
+            return response(null, 401);
+        }
+
+        return response()->json([
+            'status' => $otp->status,
+            'token' => $token,
+            'message' => $otp->message
+        ]);
+
     }
 }
