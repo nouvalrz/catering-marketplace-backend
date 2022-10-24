@@ -56,24 +56,25 @@ class CustomerRegisterController extends Controller
             'email' => 'required',
             'otp' => 'required'
             ]);
-
         $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), intval(request('otp')));
 
-        if($otp->status){
+        if(!$token = auth()->attempt($request->only('email', 'password'))){
+            return response()->json([
+                'message' => 'Password is incorrect'
+            ], 401);
+        }else if($otp->status){
             $user = User::where('email', request('email'))->first();
             $user->email_verified_at = Carbon::now()->timestamp;
             $user->save();
+            return response()->json([
+                'status' => $otp->status,
+                'token' => $token,
+                'message' => 'OTP Validation is success'
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'OTP is not valid'
+            ], 401);
         }
-
-        if(!$token = auth()->attempt($request->only('email', 'password'))){
-            return response(null, 401);
-        }
-
-        return response()->json([
-            'status' => $otp->status,
-            'token' => $token,
-            'message' => $otp->message
-        ]);
-
     }
 }
