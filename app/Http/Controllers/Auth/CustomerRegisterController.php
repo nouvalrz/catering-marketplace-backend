@@ -77,4 +77,10 @@ class CustomerRegisterController extends Controller
             ], 401);
         }
     }
+
+    public function checkEmailAvail(Request $request){
+        request()->validate([
+            'email' => ['email', 'required', 'unique:users,email']
+            ]);
+    }
 }

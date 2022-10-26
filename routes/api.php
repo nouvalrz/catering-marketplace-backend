@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('customer/register', [CustomerRegisterController::class, 'create']);
 Route::post('customer/register/validate-otp', [CustomerRegisterController::class, 'validateOtp']);
+Route::post('customer/register/check-email', [CustomerRegisterController::class, 'checkEmailAvail']);
 Route::post('customer/login', [CustomerAuthController::class, 'login']);
 Route::post('customer/logout', [CustomerAuthController::class, 'logout']);
 
