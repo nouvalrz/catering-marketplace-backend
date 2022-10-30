@@ -83,4 +83,10 @@ class CustomerRegisterController extends Controller
             'email' => ['email', 'required', 'unique:users,email']
             ]);
     }
+
+    public function checkPhoneAvail(Request $request){
+        request()->validate([
+            'phone' => ['integer', 'unique:customers,phone']
+        ]);
+    }
 }
