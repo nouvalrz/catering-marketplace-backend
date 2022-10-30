@@ -56,7 +56,7 @@ class CustomerRegisterController extends Controller
             'email' => 'required',
             'otp' => 'required'
             ]);
-        $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), intval(request('otp')));
+        $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), request('otp'));
 
         if(!$token = auth()->attempt($request->only('email', 'password'))){
             return response()->json([
