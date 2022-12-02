@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\CateringController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,3 +32,8 @@ Route::post('customer/logout', [CustomerAuthController::class, 'logout']);
 
 Route::get('customer/profile', [CustomerController::class, 'profile']);
 Route::post('customer/profile/edit', [CustomerController::class, 'update']);
+
+
+Route::post('catering/profile/upload-image', [CateringController::class, 'uploadImage']);
+Route::post('catering/profile/add-product', [CateringController::class, 'addProduct']);
+Route::post('catering/client/get-relevant', [\App\Http\Controllers\CateringToClientController::class, 'getRelevantCatering']);

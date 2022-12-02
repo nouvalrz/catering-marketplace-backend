@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\Province;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCitiesTable extends Migration
+class AddImageToCatering extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +13,9 @@ class CreateCitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cities', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('name');
-            $table->foreignIdFor(Province::class);
+        Schema::table('caterings', function (Blueprint $table) {
+            //
+            $table->foreignIdFor(\App\Models\Image::class);
         });
     }
 
@@ -29,6 +26,8 @@ class CreateCitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cities');
+        Schema::table('catering', function (Blueprint $table) {
+            //
+        });
     }
 }

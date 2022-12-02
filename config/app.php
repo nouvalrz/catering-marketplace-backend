@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Ichtrojan\Otp\OtpServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Otp' => Ichtrojan\Otp\Otp::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

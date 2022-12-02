@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\City;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDistrictsTable extends Migration
+class AddNameToProvinces extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +13,9 @@ class CreateDistrictsTable extends Migration
      */
     public function up()
     {
-        Schema::create('districts', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('provinces', function (Blueprint $table) {
+            //
             $table->string('name');
-            $table->foreignIdFor(City::class);
         });
     }
 
@@ -29,6 +26,8 @@ class CreateDistrictsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('districts');
+        Schema::table('provinces', function (Blueprint $table) {
+            //
+        });
     }
 }
