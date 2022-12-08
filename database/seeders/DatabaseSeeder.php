@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Catering;
+use App\Models\Image;
+use App\Models\Product;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,5 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        Image::truncate();
+        Catering::truncate();
+        Product::truncate();
+        $this->call(CateringImageSeeder::class);
+        $this->call(CateringSeeder::class);
+        $this->call(CateringProductImageSeeder::class);
+        $this->call(CateringProductSeeder::class);
     }
 }
