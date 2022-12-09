@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameVillageCatering extends Migration
+class CreateDeliveryCoveragesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class RenameVillageCatering extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('caterings', function (Blueprint $table) {
-            $table->dropColumn('vila');
-            $table->foreignIdFor(\App\Models\Village::class);
+        Schema::create('delivery_coverages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(\App\Models\Catering::class);
+            $table->foreignIdFor(\App\Models\District::class);
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ class RenameVillageCatering extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('delivery_coverages');
     }
 }

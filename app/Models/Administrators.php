@@ -5,18 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class Administrators extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'regency_id',
-        'name'
-    ];
-
     
-    public function regency()
-    {
-        return $this->belongsTo(Regency::class, 'foreign_key');
-    }
+    protected $fillable = [
+        'username',
+        'password',
+        'fullname',
+        'remember_token',
+        'user_id'
+    ];
 }

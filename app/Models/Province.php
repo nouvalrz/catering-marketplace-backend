@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Province extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'name'
+    ];
+
+    public function regency()
+    {
+        return $this->hasMany(Regency::class, 'foreign_key');
+    }
 }

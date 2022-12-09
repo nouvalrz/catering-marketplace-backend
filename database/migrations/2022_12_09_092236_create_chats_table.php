@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropDistrictInCatering extends Migration
+class CreateChatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class DropDistrictInCatering extends Migration
      */
     public function up()
     {
-        Schema::table('caterings', function (Blueprint $table) {
-            //
-            $table->dropColumn('district_id');
-            $table->bigInteger('vila');
+        Schema::create('chats', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('sender_id');
+            $table->bigInteger('recipient_id');
+            $table->text('message');
+            $table->timestamps();
         });
     }
 
@@ -27,8 +29,6 @@ class DropDistrictInCatering extends Migration
      */
     public function down()
     {
-        Schema::table('catering', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('chats');
     }
 }

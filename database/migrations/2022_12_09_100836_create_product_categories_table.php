@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNameToProvinces extends Migration
+class CreateProductCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AddNameToProvinces extends Migration
      */
     public function up()
     {
-        Schema::table('provinces', function (Blueprint $table) {
-            //
-            $table->string('name');
+        Schema::create('product_categories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(\App\Models\Product::class);
+            $table->foreignIdFor(\App\Models\Categories::class);
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddNameToProvinces extends Migration
      */
     public function down()
     {
-        Schema::table('provinces', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('product_categories');
     }
 }

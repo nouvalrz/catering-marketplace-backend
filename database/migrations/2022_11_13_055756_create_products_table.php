@@ -27,6 +27,7 @@ class CreateProductsTable extends Migration
             $table->boolean('is_free_delivery');
             $table->boolean('is_hidden');
             $table->boolean('is_available');
+            $table->foreignIdFor(\App\Models\Image::class);
         });
     }
 

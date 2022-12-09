@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class Payment extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
-        'regency_id',
-        'name'
+        'order_id',
+        'status',
+        'method',
     ];
 
-    
-    public function regency()
+    public function orders()
     {
-        return $this->belongsTo(Regency::class, 'foreign_key');
+        return $this->belongsTo(Orders::class, 'foreign_key');
     }
 }

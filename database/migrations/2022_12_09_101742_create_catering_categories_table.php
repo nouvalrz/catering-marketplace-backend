@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddImageToCatering extends Migration
+class CreateCateringCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AddImageToCatering extends Migration
      */
     public function up()
     {
-        Schema::table('caterings', function (Blueprint $table) {
-            //
-            $table->foreignIdFor(\App\Models\Image::class);
+        Schema::create('catering_categories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(\App\Models\Catering::class);
+            $table->foreignIdFor(\App\Models\Categories::class);
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddImageToCatering extends Migration
      */
     public function down()
     {
-        Schema::table('catering', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('catering_categories');
     }
 }

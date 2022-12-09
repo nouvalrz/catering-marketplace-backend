@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class Chats extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'regency_id',
-        'name'
+        'sender_id',
+        'recipient_id',
+        'message'
     ];
-
-    
-    public function regency()
-    {
-        return $this->belongsTo(Regency::class, 'foreign_key');
-    }
 }

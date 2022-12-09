@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddImageToProduct extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddImageToProduct extends Migration
      */
     public function up()
     {
-        Schema::table('products', function($table) {
-            $table->foreignIdFor(\App\Models\Image::class);
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('description');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddImageToProduct extends Migration
      */
     public function down()
     {
-        Schema::table('product', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('categories');
     }
 }

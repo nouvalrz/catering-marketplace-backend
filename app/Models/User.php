@@ -63,5 +63,12 @@ class User extends Authenticatable implements JWTSubject
         if ($this->type == "customer"){
             return $this->hasOne(Customer::class, 'user_id');
         }
+        
+        else if ($this->type == "catering"){
+            return $this->hasOne(Catering::class, 'user_id');
+        }
+        else if ($this->type == "administrator"){
+            return $this->hasOne(Administrators::class, 'user_id');
+        }
     }
 }

@@ -5,18 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class DeliveryCost extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
-        'regency_id',
-        'name'
+        'catering_id',
+        'cost',
+        'min_distance'
+
     ];
 
-    
-    public function regency()
+    public function catering()
     {
-        return $this->belongsTo(Regency::class, 'foreign_key');
+        return $this->belongsTo(Catering::class, 'foreign_key');
     }
 }
