@@ -40,6 +40,11 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'api_catering' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
 
     /*

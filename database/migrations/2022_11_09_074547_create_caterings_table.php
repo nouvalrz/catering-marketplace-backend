@@ -17,21 +17,21 @@ class CreateCateringsTable extends Migration
     {
         Schema::create('caterings', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name');
             $table->string('email')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('phone', 20);
             $table->text('address');
-            $table->foreignIdFor(Village::class);
+            $table->foreignIdFor(Village::class)->nullable();
             $table->integer('zipcode');
-            $table->decimal('latitude', $precision = 8, $scale = 6);
-            $table->decimal('longitude', $precision = 9, $scale = 6);
-            $table->time('delivery_start_time');
-            $table->time('delivery_end_time');
-            $table->foreignIdFor(\App\Models\Image::class);
+            $table->decimal('latitude', $precision = 8, $scale = 6)->nullable();
+            $table->decimal('longitude', $precision = 9, $scale = 6)->nullable();
+            $table->time('delivery_start_time')->nullable();
+            $table->time('delivery_end_time')->nullable();
+            $table->foreignIdFor(\App\Models\Image::class)->nullable();
             $table->enum('isVerified',['yes', 'no']);
             $table->foreignIdFor(\App\Models\User::class);
+            $table->timestamps();
         });
     }
 

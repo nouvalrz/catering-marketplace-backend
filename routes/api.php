@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Catering\CategoryController;
+use App\Http\Controllers\Api\Catering\ProductController;
+use App\Http\Controllers\Api\Catering\CateringAuthController;
+use App\Http\Controllers\Api\Catering\CateringRegisterController;
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\CateringController;
@@ -37,3 +41,27 @@ Route::post('customer/profile/edit', [CustomerController::class, 'update']);
 Route::post('catering/profile/upload-image', [CateringController::class, 'uploadImage']);
 Route::post('catering/profile/add-product', [CateringController::class, 'addProduct']);
 Route::post('catering/client/get-relevant', [\App\Http\Controllers\CateringToClientController::class, 'getRelevantCatering']);
+
+Route::prefix('catering')->group(function(){
+    //route register
+    Route::post('/register', [CateringRegisterController::class, 'store'], ['as' => 'catering']);
+    //route login
+    Route::post('/login', [CateringAuthController::class, 'index', ['as' => 'catering']]);
+
+    //group route with middleware "auth:api_catering"
+    Route::group(['middleware' => 'auth:api_catering'], function() {
+        //data user
+        Route::get('/user', [CateringAuthController::class, 'getUser', ['as' => 'catering']]);
+        //refresh token JWT
+        Route::get('/refresh', [CateringAuthController::class, 'refreshToken', ['as' => 'catering']]);
+        //logout
+        Route::post('/logout', [CateringAuthController::class, 'logout', ['as' => 'catering']]);
+        //dashboard
+        // Route::get('/dashboard', [DashboardController::class, 'index', ['as' => 'catering']]);
+        //categories resource
+        Route::apiResource('/categories', CategoryController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //products resource
+        Route::apiResource('/products', ProductController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+    });
+   
+});

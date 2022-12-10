@@ -11,17 +11,17 @@ class Catering extends Model
     
     protected $fillable = [
         'name',
-        'description',
         'email',
+        'description',
         'phone',
         'address',
+        'village_id',
         'zipcode',
         'latiude',
         'longtitude',
         'delivery_start_time',
         'delivery_end_time',
         'image_id',
-        'village_id',
         'isVerified',
         'user_id'
     ];
