@@ -4,10 +4,14 @@ use App\Http\Controllers\Api\Catering\CategoryController;
 use App\Http\Controllers\Api\Catering\ProductController;
 use App\Http\Controllers\Api\Catering\CateringAuthController;
 use App\Http\Controllers\Api\Catering\CateringRegisterController;
+use App\Http\Controllers\Api\Catering\DeliveryCostsController;
+use App\Http\Controllers\Api\Catering\DeliveryCoveragesController;
+use App\Http\Controllers\Api\Catering\DiscountController;
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\CateringController;
 use App\Http\Controllers\CustomerController;
+use App\Models\DeliveryCost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +66,13 @@ Route::prefix('catering')->group(function(){
         Route::apiResource('/categories', CategoryController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //products resource
         Route::apiResource('/products', ProductController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //discount resource
+        Route::apiResource('/discounts', DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //delivery cost resource
+        Route::apiResource('/deliverycost', DeliveryCostsController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //delivery coverage resource
+        Route::apiResource('/deliverycoverage', DeliveryCoveragesController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        
     });
    
 });

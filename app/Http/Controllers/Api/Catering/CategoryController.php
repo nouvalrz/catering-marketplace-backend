@@ -25,12 +25,10 @@ class CategoryController extends Controller
         //get categories
         $categories = Categories::when(request()->q, function($categories)
         {
-            $categories = $categories->where('name', 'like', '%'.
-            request()->q . '%');
+            $categories = $categories->where('name', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
         //return with Api Resource
-        return new CategoriesResource(true, 'List Data Categories',
-        $categories);
+        return new CategoriesResource(true, 'List Data Categories', $categories);
     }
     /**
      * Store a newly created resource in storage.
@@ -61,12 +59,10 @@ class CategoryController extends Controller
         ]);
         if($category) {
             //return success with Api Resource
-            return new CategoriesResource(true, 'Data Category Berhasil
-            Disimpan!', $category);
+            return new CategoriesResource(true, 'Data Category Berhasil Disimpan!', $category);
         }
         //return failed with Api Resource
-        return new CategoriesResource(false, 'Data Category Gagal
-        Disimpan!', null);
+        return new CategoriesResource(false, 'Data Category Gagal Disimpan!', null);
     }
     /**
     * Display the specified resource.
@@ -79,12 +75,10 @@ class CategoryController extends Controller
         $category = Categories::whereId($id)->first();
         if($category) {
             //return success with Api Resource
-            return new CategoriesResource(true, 'Detail Data Category!',
-            $category);
+            return new CategoriesResource(true, 'Detail Data Category!', $category);
         }
         //return failed with Api Resource
-        return new CategoriesResource(false, 'Detail Data Category Tidak
-        DItemukan!', null);
+        return new CategoriesResource(false, 'Detail Data Category Tidak Ditemukan!', null);
     }
     /**
     * Update the specified resource in storage.
@@ -125,12 +119,10 @@ class CategoryController extends Controller
         ]);
         if($category) {
             //return success with Api Resource
-            return new CategoriesResource(true, 'Data Category Berhasil
-            Diupdate!', $category);
+            return new CategoriesResource(true, 'Data Category Berhasil Diupdate!', $category);
         }
         //return failed with Api Resource
-        return new CategoriesResource(false, 'Data Category Gagal
-        Diupdate!', null);
+        return new CategoriesResource(false, 'Data Category Gagal Diupdate!', null);
     }
     /**
      * Remove the specified resource from storage.
@@ -145,11 +137,9 @@ class CategoryController extends Controller
         // image));
         if($category->delete()) {
             //return success with Api Resource
-            return new CategoriesResource(true, 'Data Category Berhasil
-            Dihapus!', null);
+            return new CategoriesResource(true, 'Data Category Berhasil Dihapus!', null);
         }
         //return failed with Api Resource
-        return new CategoriesResource(false, 'Data Category Gagal
-        Dihapus!', null);
+        return new CategoriesResource(false, 'Data Category Gagal Dihapus!', null);
     }
 }

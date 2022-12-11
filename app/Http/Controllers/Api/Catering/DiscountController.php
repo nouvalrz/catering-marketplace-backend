@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers\Api\Catering;
 
-use App\Models\Product;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductResource;
-use App\Models\Catering;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\DiscountResource;
+use App\Models\Discounts;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 
-class ProductController extends Controller
+class DiscountController extends Controller
 {
-    
     /**
      * Display a listing of the resource.
      *
@@ -24,17 +19,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //get products
-        // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $products = Product::where('catering_id', $cateringId)->when(request()->q,
-        function($products) {
-            $products = $products->where('name', 'like', '%'. request()->q . '%');
+        
+        //get products
+        // $products = Product::with('category')->when(request()->q,
+        $discounts = Discounts::where('catering_id', $cateringId)->when(request()->q,
+        function($discounts) {
+            $discounts = $discounts->where('name', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
         //return with Api Resource
-        return new ProductResource(true, 'List Data Products', $products);
+        return new DiscountResource(true, 'List Data Discount', $discounts);
     }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -47,16 +44,15 @@ class ProductController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $validator = Validator::make($request->all(), [
             // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
-            'name' => 'required',
+            'type' => 'required',
+            'title' => 'required',
             // 'catering_id' => 'required',
             'description' => 'required',
-            'weight' => 'required',
-            'price' => 'required',
-            'minimum_quantity' => 'required',
-            'maximum_quantity' => 'required',
-            'is_free_delivery' => 'required',
-            'is_hidden' => 'required',
-            'is_available' => 'required',
+            'percentage' => 'required',
+            'minimum_spend' => 'required',
+            'maximum_disc' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -65,30 +61,30 @@ class ProductController extends Controller
         // $image = $request->file('image');
         // $image->storeAs('public/products', $image->hashName());
         //create product
-        $product = Product::create([
+        $discounts = Discounts::create([
             // 'image' => $image->hashName(),
-            'name' => $request->name,
+            'type' => $request->type,
+            'title' => $request->title,
             // 'slug' => Str::slug($request->title, '-'),
             'catering_id' => $cateringId,
             // 'user_id' => auth()->guard('api_admin')->user()->id,
             'description' => $request->description,
-            'weight' => $request->weight,
-            'price' => $request->price,
-            'minimum_quantity' => $request->minimum_quantity,
-            'maximum_quantity' => $request->maximum_quantity,
-            'is_free_delivery' => $request->is_free_delivery,
-            'is_hidden' => $request->is_hidden,
-            'is_available' => $request->is_available,
-            'image_id' => $cateringId,
+            'percentage' => $request->percentage,
+            'minimum_spend' => $request->minimum_spend,
+            'maximum_disc' => $request->maximum_disc,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
 
         ]);
-        if($product) {
+        if($discounts) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil Disimpan!', $product);
+            return new DiscountResource(true, 'Data Discounts Berhasil Disimpan!', $discounts);
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Data Product Gagal Disimpan!', null);
+        return new DiscountResource(false, 'Data Discounts Gagal Disimpan!', null);
     }
+
+    
     /**
      * Display the specified resource.
      *
@@ -100,14 +96,16 @@ class ProductController extends Controller
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        $product = Product::whereId($id)->first();
-        if($product) {
+        $discounts = Discounts::whereId($id)->first();
+        if($discounts) {
             //return success with Api Resource
-            return new ProductResource(true, 'Detail Data Product!', $product);
+            return new DiscountResource(true, 'Detail Data Piscounts!', $discounts);
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Detail Data Product Tidak Ditemukan!', null);
+        return new DiscountResource(false, 'Detail Data Discounts Tidak Ditemukan!', null);
     }
+
+    
     /**
      * Update the specified resource in storage.
      *
@@ -115,22 +113,22 @@ class ProductController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Discounts $discounts)
     {
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required,name,'.$product->id,
+            'type' => 'required,type,'.$discounts->id,
+            'title' => 'required',
             // 'catering_id' => 'required',
             'description' => 'required',
-            'weight' => 'required',
+            'percentage' => 'required',
             'price' => 'required',
-            'minimum_quantity' => 'required',
-            'maximum_quantity' => 'required',
-            'is_free_delivery' => 'required',
-            'is_hidden' => 'required',
-            'is_available' => 'required',
+            'minimum_spend' => 'required',
+            'maximum_disc' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -143,63 +141,55 @@ class ProductController extends Controller
             // $image = $request->file('image');
             // $image->storeAs('public/products', $image->hashName());
             //update product with new image
-            $product->update([
+            $discounts->update([
                 // 'image' => $image->hashName(),
-                'name' => $request->name,
+                'type' => $request->type,
+                'title' => $request->title,
                 // 'slug' => Str::slug($request->title, '-'),
                 'catering_id' => $cateringId,
                 // 'user_id' => auth()->guard('api_admin')->user()->id,
                 'description' => $request->description,
-                'weight' => $request->weight,
-                'price' => $request->price,
-                'minimum_quantity' => $request->minimum_quantity,
-                'maximum_quantity' => $request->maximum_quantity,
-                'is_free_delivery' => $request->is_free_delivery,
-                'is_hidden' => $request->is_hidden,
-                'is_available' => $request->is_available,
-                'image_id' => $cateringId,
+                'percentage' => $request->percentage,
+                'minimum_spend' => $request->minimum_spend,
+                'maximum_disc' => $request->maximum_disc,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
 
             ]);
         }
         //update product without image
-        $product->update([
-            'name' => $request->name,
+        $discounts->update([
+            // 'image' => $image->hashName(),
+            'type' => $request->type,
+            'title' => $request->title,
             // 'slug' => Str::slug($request->title, '-'),
             'catering_id' => $cateringId,
+            // 'user_id' => auth()->guard('api_admin')->user()->id,
             'description' => $request->description,
-            'weight' => $request->weight,
-            'price' => $request->price,
-            'minimum_quantity' => $request->minimum_quantity,
-            'maximum_quantity' => $request->maximum_quantity,
-            'is_free_delivery' => $request->is_free_delivery,
-            'is_hidden' => $request->is_hidden,
-            'is_available' => $request->is_available,
-            'image_id' => $cateringId,
+            'percentage' => $request->percentage,
+            'minimum_spend' => $request->minimum_spend,
+            'maximum_disc' => $request->maximum_disc,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
 
         ]);
-        if($product) {
+        if($discounts) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil Diupdate!', $product);
+            return new DiscountResource(true, 'Data Product Berhasil Diupdate!', $discounts);
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Data Product Gagal Diupdate!', null);
+        return new DiscountResource(false, 'Data Product Gagal Diupdate!', null);
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-    * @param int $id
-    * @return \Illuminate\Http\Response
-    */
-    public function destroy(Product $product)
+    
+    public function destroy(Discounts $discounts)
     {
         //remove image
         // Storage::disk('local')->delete('public/products/'.basename($product->image));
-        if($product->delete()) {
+        if($discounts->delete()) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil Dihapus!', null);
+            return new DiscountResource(true, 'Data Discount Berhasil Dihapus!', null);
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Data Product Gagal Dihapus!', null);
+        return new DiscountResource(false, 'Data Discount Gagal Dihapus!', null);
     }
-
 }
