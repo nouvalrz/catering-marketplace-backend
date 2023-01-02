@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerAddresses extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'customer_id',
         'recipient_name',
         'address',
-        'district_id',
-        'zipcode',
+        'village_id',
         'latitude',
-        'longtitude'
+        'longitude',
+        'phone'
 
     ];
 
@@ -24,8 +24,8 @@ class CustomerAddresses extends Model
     {
         return $this->belongsTo(Customer::class, 'foreign_key');
     }
-    public function district()
+    public function village()
     {
-        return $this->belongsTo(District::class, 'foreign_key');
+        return $this->belongsTo(Village::class, 'foreign_key');
     }
 }

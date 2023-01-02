@@ -28,7 +28,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010003,
-                "image_id"=>1
+                "image_id"=>1,
+                "user_id" =>1
             ],
             [
                 "name"=>"Mecca Catering",
@@ -42,7 +43,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"20:00:00",
                 "village_id"=>5171030009,
-                "image_id"=>2
+                "image_id"=>2,
+                "user_id" =>2
             ],
             [
                 "name"=>"OMA THIA'S Catering",
@@ -56,7 +58,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3
+                "image_id"=>3,
+                "user_id" =>3
             ],
             [
                 "name"=>"MAKANOPO catering bali",
@@ -70,7 +73,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171010001,
-                "image_id"=>4
+                "image_id"=>4,
+                "user_id" =>4
             ],
             [
                 "name"=>"Harwandi Catering",
@@ -84,7 +88,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5103030005,
-                "image_id"=>5
+                "image_id"=>5,
+                "user_id" =>5
             ],
             [
                 "name"=>"Wr. Zaenah Renon",
@@ -98,7 +103,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171020001,
-                "image_id"=>6
+                "image_id"=>6,
+                "user_id" =>6
             ],
             [
                 "name"=>"Surya Jaya Catering Bali",
@@ -112,7 +118,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010006,
-                "image_id"=>7
+                "image_id"=>7,
+                "user_id" =>7
             ],
             [
                 "name"=>"Lumbung Catering",
@@ -126,7 +133,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020001,
-                "image_id"=>8
+                "image_id"=>8,
+                "user_id" =>8
             ],
             [
                 "name"=>"Sri Krisna Catering",
@@ -140,7 +148,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171031004,
-                "image_id"=>9
+                "image_id"=>9,
+                "user_id" =>9
             ],
             [
                 "name"=>"Catering Kambing Guling Ade Muzni",
@@ -154,7 +163,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:30:00",
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010005,
-                "image_id"=>10
+                "image_id"=>10,
+                "user_id" =>10
             ],
             [
                 "name"=>"Catering Service Ny. Warti Buleleng",
@@ -168,7 +178,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"16:00:00",
                 "village_id"=>5171031006,
-                "image_id"=>11
+                "image_id"=>11,
+                "user_id" =>11
             ],
             [
                 "name"=>"Catering Kita Bali",
@@ -182,7 +193,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030006,
-                "image_id"=>12
+                "image_id"=>12,
+                "user_id" =>12
             ],
             [
                 "name"=>"Endro Catering Bali",
@@ -196,7 +208,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>1
+                "image_id"=>1,
+                "user_id" =>13
             ],
             [
                 "name"=>"Warung Wahai Catering",
@@ -210,7 +223,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030011,
-                "image_id"=>2
+                "image_id"=>2,
+                "user_id" =>14
             ],
             [
                 "name"=>"Catering Ibu Misna",
@@ -224,7 +238,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3
+                "image_id"=>3,
+                "user_id" =>5
             ],
             [
                 "name"=>"Karisma Boga Catering",
@@ -238,7 +253,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>4
+                "image_id"=>4,
+                "user_id" =>16
             ],
             [
                 "name"=>"Dapur Pak Lik",
@@ -252,7 +268,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010003,
-                "image_id"=>5
+                "image_id"=>5,
+                "user_id" =>17
             ],
 
             [
@@ -267,7 +284,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171010008,
-                "image_id"=>6
+                "image_id"=>6,
+                "user_id" =>18
             ],
             [
                 "name"=>"Laela - Catering Service",
@@ -281,7 +299,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030002,
-                "image_id"=>7
+                "image_id"=>7,
+                "user_id" =>19
             ],
             [
                 "name"=>"Dewata Catering",
@@ -295,7 +314,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>8
+                "image_id"=>8,
+                "user_id" =>20
             ],
             [
                 "name"=>"Damar Bali Catering",
@@ -309,7 +329,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010005,
-                "image_id"=>9
+                "image_id"=>9,
+                "user_id" =>21
             ],
 
             [
@@ -324,7 +345,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010001,
-                "image_id"=>10
+                "image_id"=>10,
+                "user_id" =>22
             ],
 
             [
@@ -339,7 +361,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010007,
-                "image_id"=>11
+                "image_id"=>11,
+                "user_id" =>23
             ],
 
             [
@@ -354,7 +377,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020006,
-                "image_id"=>12
+                "image_id"=>12,
+                "user_id" =>24
             ],
 
             [
@@ -369,7 +393,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>1
+                "image_id"=>1,
+                "user_id" =>25
             ],
 
             [
@@ -384,7 +409,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>2
+                "image_id"=>2,
+                "user_id" =>26
             ],
 
             [
@@ -399,7 +425,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"15:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3
+                "image_id"=>3,
+                "user_id" =>27
             ],
 
             [
@@ -414,7 +441,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>4
+                "image_id"=>4,
+                "user_id" =>28
             ],
 
             [
@@ -430,6 +458,8 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>5
+                ,
+                "user_id" =>29
             ],
 
             [
@@ -444,7 +474,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
-                "image_id"=>6
+                "image_id"=>6,
+                "user_id" =>30
             ],
 
             [
@@ -459,7 +490,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
-                "image_id"=>7
+                "image_id"=>7,
+                "user_id" =>31
             ],
 
         ]);

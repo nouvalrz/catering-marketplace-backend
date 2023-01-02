@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catering;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class CateringToClientController extends Controller
 
         foreach ($caterings as $catering){
             $c = array();
-            $c['catering'] = DB::table('caterings')->select(['caterings.id','caterings.name AS name','villages.name AS village_name','images.original_path'])->join('villages', 'caterings.village_id', '=', 'villages.id')->join('images', 'caterings.image_id', '=', 'images.id')->where('caterings.id', $catering->id)->get()->first();
+            $c['catering'] = DB::table('caterings')->select(['caterings.id','caterings.name AS name','villages.name AS village_name','images.original_path', 'caterings.latitude', 'caterings.longitude'])->join('villages', 'caterings.village_id', '=', 'villages.id')->join('images', 'caterings.image_id', '=', 'images.id')->where('caterings.id', $catering->id)->get()->first();
 
 
             $c['products'] = DB::table('products')->select(['products.id', 'products.name', 'products.price', 'images.original_path'])->join('caterings', 'caterings.id', '=', 'products.catering_id')->join('images', 'images.id', '=', 'products.image_id')->where('products.catering_id', $catering->id)->limit(2)->get();
@@ -31,5 +32,15 @@ class CateringToClientController extends Controller
         return response()->json($finish_caterings);
 //        return json_encode($finish_caterings);
 
+    }
+
+    public function getProductsFromCatering($id){
+        $p = DB::table('products')->select(['products.id','products.name', 'products.price', 'products.description', 'products.weight', 'products.minimum_quantity', 'products.maximum_quantity', 'products.is_free_delivery', 'products.is_hidden', 'products.is_available', 'images.original_path'])->join('images', 'images.id', '=', 'products.image_id')->where([['products.catering_id', $id], ['products.is_hidden', 0]])->get();
+
+        $products = array();
+        $products['products'] = $p;
+
+
+        return response()->json($products);
     }
 }
