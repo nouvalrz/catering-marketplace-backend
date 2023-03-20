@@ -16,7 +16,7 @@ class CustomerController extends Controller
             "phone" => $biodata->phone,
             "gender" => $biodata->gender,
             "balance" => $biodata->balance,
-            "points" => $biodata->points
+            "points" => $biodata->points,
         ]);
     }
 

@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Village extends Model
 {
     use HasFactory;
+
+    public function caterings(){
+        return $this->hasMany(Catering::class);
+    }
+
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
 }

@@ -18,7 +18,7 @@ class CateringSeeder extends Seeder
         DB::table("caterings")->insert([
             [
                 "name"=>"Vegan Food Nayla",
-                "email"=>"1@gmail.com",
+                "email"=>"14244@gmail.com",
                 "description"=>"Menjual aneka ragam makanan vegetarian",
                 "phone"=>"628518772829",
                 "address"=>"Jalan Dukuh Sari Gg. Telaga Sari No.15",
@@ -29,7 +29,11 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010003,
                 "image_id"=>1,
-                "user_id" =>1
+                "user_id" =>1,
+                "categories" => [
+                    ["categories_id" => 1],
+                    ["categories_id" => 2],
+                ]
             ],
             [
                 "name"=>"Mecca Catering",

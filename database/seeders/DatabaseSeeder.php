@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Categories;
 use App\Models\Catering;
 use App\Models\District;
 use App\Models\Image;
@@ -34,6 +35,11 @@ class DatabaseSeeder extends Seeder
         Regency::truncate();
         District::truncate();
         $this->call(LocationSeeder::class);
+
+        // Master Business Data
+        Categories::truncate();
+
+        $this->call(CategorySeeder::class);
 
         // Business Data
         Image::truncate();

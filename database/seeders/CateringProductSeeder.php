@@ -491,15 +491,20 @@ class CateringProductSeeder extends Seeder
 
             );
 
+//        print_r($products);
+
         for($i=1; $i<=31; $i++){
             $range = range(0, 35);
             shuffle($range);
             $n = 7;
             $randomProducts = array_slice($range, 0 , $n);
 
+//            print_r($randomProducts);
+
 
             foreach ($randomProducts as $randomProduct){
                 $products[$randomProduct]['catering_id'] = $i;
+                print_r($products[$randomProduct]);
                 Product::create($products[$randomProduct]);
             }
         }

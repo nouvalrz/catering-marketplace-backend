@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetails extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'order_id',
+        'orders_id',
         'product_id',
         'quantity',
         'price',
@@ -18,6 +18,27 @@ class OrderDetails extends Model
         'delivery_datetime',
         'status',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        parent::boot();
+        static::created(function ($orderDetail) {
+            //
+            $product = Product::find($orderDetail->product_id);
+            $catering = Catering::find($product->catering_id);
+            $product->total_sales += $orderDetail->quantity;
+            $catering->total_sales += $orderDetail->quantity;
+            $product->save();
+            $catering->save();
+        });
+    }
+
+
 
     public function orders()
     {
@@ -27,4 +48,6 @@ class OrderDetails extends Model
     {
         return $this->belongsTo(Product::class, 'foreign_key');
     }
+
+
 }
