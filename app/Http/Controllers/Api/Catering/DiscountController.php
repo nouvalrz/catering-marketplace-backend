@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api\Catering;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DiscountResource;
-use App\Models\Discounts;
+use App\Models\Discount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class DiscountController extends Controller
@@ -24,9 +27,9 @@ class DiscountController extends Controller
         
         //get products
         // $products = Product::with('category')->when(request()->q,
-        $discounts = Discounts::where('catering_id', $cateringId)->when(request()->q,
+        $discounts = Discount::where('catering_id', $cateringId)->when(request()->q,
         function($discounts) {
-            $discounts = $discounts->where('name', 'like', '%'. request()->q . '%');
+            $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
         //return with Api Resource
         return new DiscountResource(true, 'List Data Discount', $discounts);
@@ -61,7 +64,7 @@ class DiscountController extends Controller
         // $image = $request->file('image');
         // $image->storeAs('public/products', $image->hashName());
         //create product
-        $discounts = Discounts::create([
+        $discounts = Discount::create([
             // 'image' => $image->hashName(),
             'type' => $request->type,
             'title' => $request->title,
@@ -96,7 +99,7 @@ class DiscountController extends Controller
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        $discounts = Discounts::whereId($id)->first();
+        $discounts = Discount::whereId($id)->first();
         if($discounts) {
             //return success with Api Resource
             return new DiscountResource(true, 'Detail Data Piscounts!', $discounts);
@@ -113,34 +116,34 @@ class DiscountController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Discounts $discounts)
+    public function update(Request $request, int $id)
     {
+        $discounts = Discount::find($id);
+        // dd($discounts);
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
-            'type' => 'required,type,'.$discounts->id,
+            'type' => 'required',
             'title' => 'required',
-            // 'catering_id' => 'required',
             'description' => 'required',
             'percentage' => 'required',
-            'price' => 'required',
             'minimum_spend' => 'required',
             'maximum_disc' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
         //check image update
         if ($request->file('image')) {
-            //remove old image
-            // Storage::disk('local')->delete('public/products/'.basename($product->image));
-            //upload new image
-            // $image = $request->file('image');
-            // $image->storeAs('public/products', $image->hashName());
-            //update product with new image
+        //     //remove old image
+        //     // Storage::disk('local')->delete('public/products/'.basename($product->image));
+        //     //upload new image
+        //     // $image = $request->file('image');
+        //     // $image->storeAs('public/products', $image->hashName());
+        //     //update product with new image
             $discounts->update([
                 // 'image' => $image->hashName(),
                 'type' => $request->type,
@@ -158,13 +161,25 @@ class DiscountController extends Controller
             ]);
         }
         //update product without image
+        // $discounts->update([
+        //     'name' => $request->name,
+        //     // 'slug' => Str::slug($request->title, '-'),
+        //     'catering_id' => $cateringId,
+        //     'description' => $request->description,
+        //     'weight' => $request->weight,
+        //     'price' => $request->price,
+        //     'minimum_quantity' => $request->minimum_quantity,
+        //     'maximum_quantity' => $request->maximum_quantity,
+        //     'is_free_delivery' => $request->is_free_delivery,
+        //     'is_hidden' => $request->is_hidden,
+        //     'is_available' => $request->is_available,
+        //     // 'image_id' => $cateringId,
+
+        // ]);
         $discounts->update([
-            // 'image' => $image->hashName(),
             'type' => $request->type,
             'title' => $request->title,
-            // 'slug' => Str::slug($request->title, '-'),
             'catering_id' => $cateringId,
-            // 'user_id' => auth()->guard('api_admin')->user()->id,
             'description' => $request->description,
             'percentage' => $request->percentage,
             'minimum_spend' => $request->minimum_spend,
@@ -173,16 +188,24 @@ class DiscountController extends Controller
             'end_date' => $request->end_date,
 
         ]);
+        // dd($discounts);
         if($discounts) {
             //return success with Api Resource
-            return new DiscountResource(true, 'Data Product Berhasil Diupdate!', $discounts);
+            return new DiscountResource(true, 'Data Discounts Berhasil Diupdate!', $discounts);
         }
         //return failed with Api Resource
-        return new DiscountResource(false, 'Data Product Gagal Diupdate!', null);
+        return new DiscountResource(false, 'Data Discounts Gagal Diupdate!', null);
     }
     
-    public function destroy(Discounts $discounts)
+    /**
+     * Remove the specified resource from storage.
+     *
+    * @param int $id
+    * @return \Illuminate\Http\Response
+    */
+    public function destroy(int $id)
     {
+        $discounts = Discount::find($id);
         //remove image
         // Storage::disk('local')->delete('public/products/'.basename($product->image));
         if($discounts->delete()) {

@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\District;
+use App\Models\Province;
+use App\Models\Regency;
 use App\Models\Village;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,6 +24,9 @@ class CreateCateringsTable extends Migration
             $table->text('description')->nullable();
             $table->string('phone', 20);
             $table->text('address');
+            $table->foreignIdFor(Province::class)->nullable();
+            $table->foreignIdFor(Regency::class)->nullable();
+            $table->foreignIdFor(District::class)->nullable();
             $table->foreignIdFor(Village::class)->nullable();
             $table->integer('zipcode');
             $table->decimal('latitude', $precision = 8, $scale = 6)->nullable();

@@ -13,4 +13,10 @@ class Categories extends Model
         'name',
         'description',
     ];
+
+    public function product()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
 }

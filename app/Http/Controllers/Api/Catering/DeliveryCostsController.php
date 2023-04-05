@@ -27,7 +27,7 @@ class DeliveryCostsController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $deliveryCosts = DeliveryCost::where('catering_id', $cateringId)->when(request()->q,
         function($deliveryCosts) {
-            $deliveryCosts = $deliveryCosts->where('name', 'like', '%'. request()->q . '%');
+            $deliveryCosts = $deliveryCosts->where('catering_id', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
         //return with Api Resource
         return new DeliveryCostsResource(true, 'List Data Discount', $deliveryCosts);
@@ -77,16 +77,16 @@ class DeliveryCostsController extends Controller
      */
     public function show($id)
     {
-        // $userId = auth()->guard('api_catering')->user()->id;
-        // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        $userId = auth()->guard('api_catering')->user()->id;
+        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        $deliveryCosts = DeliveryCost::whereId($id)->first();
+        $deliveryCosts = DeliveryCost::where('catering_id', '=',$cateringId)->first();
         if($deliveryCosts) {
             //return success with Api Resource
-            return new DeliveryCostsResource(true, 'Detail Data Piscounts!', $deliveryCosts);
+            return new DeliveryCostsResource(true, 'Detail Data Product!', $deliveryCosts);
         }
         //return failed with Api Resource
-        return new DeliveryCostsResource(false, 'Detail Data Discounts Tidak Ditemukan!', null);
+        return new DeliveryCostsResource(false, 'Detail Data Product Tidak Ditemukan!', null);
     }
 
     
@@ -97,13 +97,16 @@ class DeliveryCostsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DeliveryCost $deliveryCosts)
+    // public function update(Request $request, int $id)
+    public function update(Request $request)
     {
+        
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        $deliveryCosts = DeliveryCost::where('catering_id', '=',$cateringId)->first();
         
         $validator = Validator::make($request->all(), [
-            'cost' => 'required,cost,'.$deliveryCosts->id,
+            'cost' => 'required',
             'min_distance' => 'required',
         ]);
         if ($validator->fails()) {

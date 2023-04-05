@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Customer::class);
             $table->foreignIdFor(\App\Models\CustomerAddresses::class);
+            $table->foreignIdFor(\App\Models\Catering::class);
             $table->string('note');
             $table->string('delivery_type');
             $table->bigInteger('delivery_cost');

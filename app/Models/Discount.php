@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Discounts extends Model
+class Discount extends Model
 {
     use HasFactory;
 
@@ -22,8 +22,8 @@ class Discounts extends Model
 
     ];
 
-    public function catering()
-    {
-        return $this->belongsTo(Catering::class, 'foreign_key');
-    }
+    // public function catering()
+    // {
+    //     return $this->belongsTo(Catering::class, 'foreign_key');
+    // }
 }

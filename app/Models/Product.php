@@ -20,6 +20,11 @@ class Product extends Model
         'is_free_delivery',
         'is_hidden',
         'is_available',
-        'image_id'
+        'image_id',
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Categories::class)->withTimestamps();
+    }
 }

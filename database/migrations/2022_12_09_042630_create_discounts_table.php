@@ -21,7 +21,7 @@ class CreateDiscountsTable extends Migration
             $table->string('type');
             $table->string('title');
             $table->string('description');
-            $table->float('percentage', 8, 2);
+            $table->float('percentage');
             $table->BigInteger('minimum_spend');
             $table->BigInteger('maximum_disc');
             $table->dateTimeTz('start_date', $precision = 0);

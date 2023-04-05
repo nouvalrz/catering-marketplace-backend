@@ -12,6 +12,7 @@ class Orders extends Model
     protected $fillable = [
         'customer_id',
         'customer_address_id',
+        'catering_id',
         'note',
         'delivery_type',
         'delivery_cost',
@@ -29,6 +30,10 @@ class Orders extends Model
     public function customerAddresses()
     {
         return $this->belongsTo(CustomerAddresses::class, 'foreign_key');
+    }
+    public function catering()
+    {
+        return $this->belongsTo(Catering::class, 'foreign_key');
     }
     // public function district()
     // {

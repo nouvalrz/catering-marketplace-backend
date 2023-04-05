@@ -17,6 +17,11 @@ class District extends Model
     
     public function regency()
     {
-        return $this->belongsTo(Regency::class, 'foreign_key');
+        return $this->belongsTo(Regency::class, 'regency_id');
+    }
+    
+    public function village()
+    {
+        return $this->hasMany(Village::class, 'district_id');
     }
 }
