@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Catering;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,8 @@ class CateringSeeder extends Seeder
     public function run()
     {
         //
-        DB::table("caterings")->insert([
+        $caterings =
+            [
             [
                 "name"=>"Vegan Food Nayla",
                 "email"=>"14244@gmail.com",
@@ -31,8 +33,7 @@ class CateringSeeder extends Seeder
                 "image_id"=>1,
                 "user_id" =>1,
                 "categories" => [
-                    ["categories_id" => 1],
-                    ["categories_id" => 2],
+                    1,7
                 ]
             ],
             [
@@ -48,7 +49,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"20:00:00",
                 "village_id"=>5171030009,
                 "image_id"=>2,
-                "user_id" =>2
+                "user_id" =>2,
+                "categories" => [
+                    1,7
+                ]
             ],
             [
                 "name"=>"OMA THIA'S Catering",
@@ -63,7 +67,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>3,
-                "user_id" =>3
+                "user_id" =>3,
+                "categories" => [
+                    1, 7
+                ]
             ],
             [
                 "name"=>"MAKANOPO catering bali",
@@ -78,7 +85,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171010001,
                 "image_id"=>4,
-                "user_id" =>4
+                "user_id" =>4,
+                "categories" => [
+                    1, 4
+                ]
             ],
             [
                 "name"=>"Harwandi Catering",
@@ -93,7 +103,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5103030005,
                 "image_id"=>5,
-                "user_id" =>5
+                "user_id" =>5,
+                "categories" => [
+                    1, 7
+                ]
             ],
             [
                 "name"=>"Wr. Zaenah Renon",
@@ -108,7 +121,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171020001,
                 "image_id"=>6,
-                "user_id" =>6
+                "user_id" =>6,
+                "categories" => [
+                    1
+                ]
             ],
             [
                 "name"=>"Surya Jaya Catering Bali",
@@ -123,7 +139,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010006,
                 "image_id"=>7,
-                "user_id" =>7
+                "user_id" =>7,
+                "categories" => [
+                    1
+                ]
             ],
             [
                 "name"=>"Lumbung Catering",
@@ -138,7 +157,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020001,
                 "image_id"=>8,
-                "user_id" =>8
+                "user_id" =>8,
+                "categories" => [
+                    1, 6
+                ]
             ],
             [
                 "name"=>"Sri Krisna Catering",
@@ -153,7 +175,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171031004,
                 "image_id"=>9,
-                "user_id" =>9
+                "user_id" =>9,
+                "categories" => [
+                    1, 3
+                ]
             ],
             [
                 "name"=>"Catering Kambing Guling Ade Muzni",
@@ -168,7 +193,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010005,
                 "image_id"=>10,
-                "user_id" =>10
+                "user_id" =>10,
+                "categories" => [
+                    1, 4
+                ]
             ],
             [
                 "name"=>"Catering Service Ny. Warti Buleleng",
@@ -183,7 +211,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"16:00:00",
                 "village_id"=>5171031006,
                 "image_id"=>11,
-                "user_id" =>11
+                "user_id" =>11,
+                "categories" => [
+                    1, 3
+                ]
             ],
             [
                 "name"=>"Catering Kita Bali",
@@ -198,7 +229,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030006,
                 "image_id"=>12,
-                "user_id" =>12
+                "user_id" =>12,
+                "categories" => [
+                    1, 3
+                ]
             ],
             [
                 "name"=>"Endro Catering Bali",
@@ -213,7 +247,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>1,
-                "user_id" =>13
+                "user_id" =>13,
+                "categories" => [
+                    1, 7
+                ]
             ],
             [
                 "name"=>"Warung Wahai Catering",
@@ -228,7 +265,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030011,
                 "image_id"=>2,
-                "user_id" =>14
+                "user_id" =>14,
+                "categories" => [
+                    1, 4
+                ]
             ],
             [
                 "name"=>"Catering Ibu Misna",
@@ -243,7 +283,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>3,
-                "user_id" =>5
+                "user_id" =>5,
+                "categories" => [
+                    1, 4
+                ]
             ],
             [
                 "name"=>"Karisma Boga Catering",
@@ -258,7 +301,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>4,
-                "user_id" =>16
+                "user_id" =>16,
+                "categories" => [
+                    1, 7
+                ]
             ],
             [
                 "name"=>"Dapur Pak Lik",
@@ -273,7 +319,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010003,
                 "image_id"=>5,
-                "user_id" =>17
+                "user_id" =>17,
+                "categories" => [
+                    1, 3
+                ]
             ],
 
             [
@@ -289,7 +338,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171010008,
                 "image_id"=>6,
-                "user_id" =>18
+                "user_id" =>18,
+                "categories" => [
+                    1, 3
+                ]
             ],
             [
                 "name"=>"Laela - Catering Service",
@@ -304,7 +356,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030002,
                 "image_id"=>7,
-                "user_id" =>19
+                "user_id" =>19,
+                "categories" => [
+                    1, 7
+                ]
             ],
             [
                 "name"=>"Dewata Catering",
@@ -319,7 +374,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>8,
-                "user_id" =>20
+                "user_id" =>20,
+                "categories" => [
+                    1, 3
+                ]
             ],
             [
                 "name"=>"Damar Bali Catering",
@@ -334,7 +392,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010005,
                 "image_id"=>9,
-                "user_id" =>21
+                "user_id" =>21,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -350,7 +411,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010001,
                 "image_id"=>10,
-                "user_id" =>22
+                "user_id" =>22,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -366,7 +430,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010007,
                 "image_id"=>11,
-                "user_id" =>23
+                "user_id" =>23,
+                "categories" => [
+                    1, 4
+                ]
             ],
 
             [
@@ -382,7 +449,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020006,
                 "image_id"=>12,
-                "user_id" =>24
+                "user_id" =>24,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -398,7 +468,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
                 "image_id"=>1,
-                "user_id" =>25
+                "user_id" =>25,
+                "categories" => [
+                    1, 4
+                ]
             ],
 
             [
@@ -414,7 +487,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
                 "image_id"=>2,
-                "user_id" =>26
+                "user_id" =>26,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -430,7 +506,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"15:00:00",
                 "village_id"=>5171030010,
                 "image_id"=>3,
-                "user_id" =>27
+                "user_id" =>27,
+                "categories" => [
+                    1, 3
+                ]
             ],
 
             [
@@ -446,7 +525,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030004,
                 "image_id"=>4,
-                "user_id" =>28
+                "user_id" =>28,
+                "categories" => [
+                    1, 3
+                ]
             ],
 
             [
@@ -463,7 +545,10 @@ class CateringSeeder extends Seeder
                 "village_id"=>5171030010,
                 "image_id"=>5
                 ,
-                "user_id" =>29
+                "user_id" =>29,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -479,7 +564,10 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
                 "image_id"=>6,
-                "user_id" =>30
+                "user_id" =>30,
+                "categories" => [
+                    1, 7
+                ]
             ],
 
             [
@@ -495,9 +583,31 @@ class CateringSeeder extends Seeder
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
                 "image_id"=>7,
-                "user_id" =>31
-            ],
+                "user_id" =>31,
+                "categories" => [
+                    1, 7
+                ]
+            ]
+                ];
 
-        ]);
+
+        $cateringsWithoutCat = array();
+
+        foreach ($caterings as $catering){
+            unset($catering["categories"]);
+            array_push($cateringsWithoutCat, $catering);
+        }
+
+//        print_r($caterings[1]["categories"]);
+
+        DB::table("caterings")->insert($cateringsWithoutCat);
+
+        $cateringDataOnDB = Catering::all();
+
+        foreach ($cateringDataOnDB as $index=>$catering){
+//            print $index;
+            $catering->categories()->attach($caterings[$index]["categories"]);
+        }
+
     }
 }

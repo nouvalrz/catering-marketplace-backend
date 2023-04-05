@@ -32,7 +32,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings = array();
 
-        $finish_caterings["caterings"] = Catering::with("recommendation_products")->with( "village.district")->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->get()->map(function ($catering){
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->get()->map(function ($catering){
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });

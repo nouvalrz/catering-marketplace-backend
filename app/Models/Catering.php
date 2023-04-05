@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Catering extends Model
 {
     use HasFactory;
+
+
 //    public $preventsLazyLoading = true;
 //    protected $with = ['recommendation_products'];
     protected $fillable = [
@@ -24,7 +26,7 @@ class Catering extends Model
         'image_id',
         'village_id',
         'isVerified',
-        'user_id'
+        'user_id',
     ];
 
     public function user()
