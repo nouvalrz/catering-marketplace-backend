@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Catering\DeliveryCoveragesController;
 use App\Http\Controllers\Api\Catering\DiscountController;
 use App\Http\Controllers\Api\Catering\OrdersController;
 use App\Http\Controllers\Api\Catering\ProfileController;
+use App\Http\Controllers\Api\Catering\DashboardController;
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\CateringController;
@@ -89,11 +90,13 @@ Route::prefix('catering')->group(function($router){
         //logout
         Route::post('/logout', [CateringAuthController::class, 'logout', ['as' => 'catering']]);
         //dashboard
-        // Route::get('/dashboard', [DashboardController::class, 'index', ['as' => 'catering']]);
+        Route::get('/dashboard', [DashboardController::class, 'index', ['as' => 'catering']]);
         //categories resource
         Route::apiResource('/categories', CategoryController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //products resource
         Route::apiResource('/products', ProductController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //products change available
+        Route::post('/productsA/{id}', 'App\Http\Controllers\Api\Catering\ProductController@changeAvailableProduct');
         //discount resource
         Route::apiResource('/discounts', DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //delivery cost resource
@@ -104,6 +107,8 @@ Route::prefix('catering')->group(function($router){
         Route::apiResource('/profile', ProfileController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
 
         Route::apiResource('/order', OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //products change status order
+        Route::post('/orderA/{id}', 'App\Http\Controllers\Api\Catering\OrdersController@changeStatus');
         
         Route::apiResource('/complaint', ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         

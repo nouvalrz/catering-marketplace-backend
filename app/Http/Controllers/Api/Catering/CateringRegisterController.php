@@ -44,6 +44,10 @@ class CateringRegisterController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'zipcode' => $request->zipcode,
+            // 'province_id' => 0,
+            // 'regency_id' => 0,
+            // 'district_id' => 0,
+            // 'village_id' => 0,
             'isVerified' => 'no',
 
         ]);

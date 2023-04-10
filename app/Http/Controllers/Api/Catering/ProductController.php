@@ -10,6 +10,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Categories;
 use App\Models\Catering;
 use App\Models\CategoriesProduct;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -31,10 +32,26 @@ class ProductController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        // $productFilter = Product::where('catering_id', $cateringId)
+
+        // asli
         $products = Product::where('catering_id', $cateringId)->when(request()->q,
         function($products) {
-            $products = $products->where('name', 'like', '%'. request()->q . '%');
+            $products = $products->where('name', 'like', '%'. request()->q . '%')
+            ->orWhere('is_available', 'like', '%'. request()->q . '%');
         })->latest()->paginate(20);
+
+        // if(request()->filter != ''){
+        //     $products = Product::where('catering_id', $cateringId)->where('is_available', '=', request()->filter)->latest();
+        // }
+        // $products = $products->where('name', 'like', '%'. request()->q . '%')->latest()->paginate(20);
+        // function($products) {
+        //     $products = $products->when(request()->q,
+        //     function($products){
+        //         $products = $products->where('name', 'like', '%'. request()->q . '%')
+        //         ->orWhere('is_available', 'like', '%'. request()->q . '%');
+        //     });
+        // })->latest()->paginate(20);
         //return with Api Resource
         return new ProductResource(true, 'List Data Products', $products);
     }
@@ -202,6 +219,23 @@ class ProductController extends Controller
         //return failed with Api Resource
         return new ProductResource(false, 'Data Product Gagal Diupdate!', null);
     }
+
+    
+    public function changeAvailableProduct(Request $request, $id)
+    {
+        // dd($request->status);
+        $product      = Product::findOrFail($id);
+        $product->is_available = $request->is_available;
+        $product->save();
+
+        if($product) {
+            //return success with Api Resource
+            return new ProductResource(true, 'Data Product Berhasil!', $product);
+        }
+        //return failed with Api Resource
+        return new ProductResource(false, 'Data Product Gagal Diupdate!', $product);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

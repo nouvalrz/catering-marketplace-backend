@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Catering;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -31,6 +32,8 @@ class CateringAuthController extends Controller
             ], 401);
    
         }
+        // $akun = auth()->guard('api_catering')->user()->id;
+        // redirect()->action('RegencyController@index', ['akun' => $akun]);
         //response login "success" dengan generate "Token"
         return response()->json([
             'success' => true,

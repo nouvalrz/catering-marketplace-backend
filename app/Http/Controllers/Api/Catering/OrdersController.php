@@ -27,9 +27,10 @@ class OrdersController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $orders = Orders::where('catering_id', $cateringId)->when(request()->q,
+        $orders = Orders::where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
         function($orders) {
-            $orders = $orders->where('note', 'like', '%'. request()->q . '%');
+            $orders = $orders->where('note', 'like', '%'. request()->q . '%')
+            ->orWhere('status', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
         //return with Api Resource
         return new OrderResource(true, 'List Data Orders', $orders);
@@ -76,6 +77,22 @@ class OrdersController extends Controller
     public function update(Request $request, Orders $order)
     {
 
+    }
+
+    
+    public function changeStatus(Request $request, $id)
+    {
+        // dd($request->status);
+        $order      = Orders::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+
+        if($order) {
+            //return success with Api Resource
+            return new ProductResource(true, 'Data Product Berhasil!', $order);
+        }
+        //return failed with Api Resource
+        return new ProductResource(false, 'Data Product Gagal Diupdate!', $order);
     }
 
     /**

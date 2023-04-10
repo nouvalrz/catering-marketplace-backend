@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RegencyResource;
+use App\Models\Catering;
 use App\Models\Regency;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class RegencyController extends Controller
@@ -16,6 +18,9 @@ class RegencyController extends Controller
      */
     public function index()
     {
+        // $echo $akun;
+        // $userId = auth()->guard('api_catering')->user()->id;
+        // $catering = Catering::find($akun);
         //get Regency
         $regency = Regency::get();
         //return with Api Resource

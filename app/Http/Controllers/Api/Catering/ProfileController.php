@@ -41,7 +41,12 @@ class ProfileController extends Controller
             'email' => 'required',
             'description' => 'required',
             'phone' => 'required',
-            'address' => 'required'
+            'address' => 'required',
+            'zipcode' => 'required',
+            'province_id' => 'required',
+            'regency_id' => 'required',
+            'district_id' => 'required',
+            'village_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -63,7 +68,12 @@ class ProfileController extends Controller
                 'description' => $request->description,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'address' => $request->address
+                'address' => $request->address,
+                'zipcode' => $request->zipcode,
+                'province_id' => $request->province_id,
+                'regency_id' => $request->regency_id,
+                'district_id' => $request->district_id,
+                'village_id' => $request->village_id,
 
             ]);
         }
@@ -78,6 +88,11 @@ class ProfileController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
+            'zipcode' => $request->zipcode,
+            'province_id' => $request->province_id,
+            'regency_id' => $request->regency_id,
+            'district_id' => $request->district_id,
+            'village_id' => $request->village_id,
             'delivery_start_time' => $request->delivery_start_time,
             'delivery_end_time' => $request->delivery_end_time,
 
