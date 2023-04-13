@@ -24,7 +24,7 @@ class Catering extends Model
         'longtitude',
         'delivery_start_time',
         'delivery_end_time',
-        'image_id',
+        'image',
         'isVerified',
         'user_id'
     ];
@@ -32,5 +32,10 @@ class Catering extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'foreign_key');
+    }
+    
+    public function getImageAttribute($image)
+    {
+        return asset('storage/caterings/' . $image);
     }
 }

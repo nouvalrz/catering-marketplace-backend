@@ -38,6 +38,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             // 'catering_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'email' => 'required',
             'description' => 'required',
             'phone' => 'required',
@@ -55,12 +56,13 @@ class ProfileController extends Controller
         if ($request->file('image')) {
             //remove old image
             // Storage::disk('local')->delete('public/products/'.basename($product->image));
+            Storage::disk('local')->delete('public/caterings/'.basename($catering->image));
             //upload new image
-            // $image = $request->file('image');
-            // $image->storeAs('public/products', $image->hashName());
+            $image = $request->file('image');
+            $image->storeAs('public/caterings', $image->hashName());
             //update product with new image
             $catering->update([
-                // 'image' => $image->hashName(),
+                'image' => $image->hashName(),
                 'name' => $request->name,
                 // 'slug' => Str::slug($request->title, '-'),
                 // 'catering_id' => $cateringId,
@@ -76,30 +78,31 @@ class ProfileController extends Controller
                 'village_id' => $request->village_id,
 
             ]);
+        }else{
+            $catering->update([
+                // 'image' => $image->hashName(),
+                'name' => $request->name,
+                // 'slug' => Str::slug($request->title, '-'),
+                // 'catering_id' => $cateringId,
+                // 'user_id' => auth()->guard('api_admin')->user()->id,
+                'description' => $request->description,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'zipcode' => $request->zipcode,
+                'province_id' => $request->province_id,
+                'regency_id' => $request->regency_id,
+                'district_id' => $request->district_id,
+                'village_id' => $request->village_id,
+                'delivery_start_time' => $request->delivery_start_time,
+                'delivery_end_time' => $request->delivery_end_time,
+    
+            ]);
         }
         //update product without image
-        $catering->update([
-            // 'image' => $image->hashName(),
-            'name' => $request->name,
-            // 'slug' => Str::slug($request->title, '-'),
-            // 'catering_id' => $cateringId,
-            // 'user_id' => auth()->guard('api_admin')->user()->id,
-            'description' => $request->description,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'zipcode' => $request->zipcode,
-            'province_id' => $request->province_id,
-            'regency_id' => $request->regency_id,
-            'district_id' => $request->district_id,
-            'village_id' => $request->village_id,
-            'delivery_start_time' => $request->delivery_start_time,
-            'delivery_end_time' => $request->delivery_end_time,
-
-        ]);
         if($catering) {
             //return success with Api Resource
-            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $catering);
+            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $catering->image);
         }
         //return failed with Api Resource
         return new CateringResource(false, 'Data Product Gagal Diupdate!', null);

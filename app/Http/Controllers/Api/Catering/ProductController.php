@@ -34,12 +34,13 @@ class ProductController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $productFilter = Product::where('catering_id', $cateringId)
 
+        $product = Product::where('is_available', 'like', '%' . request()->available . '%' );
+
         // asli
-        $products = Product::where('catering_id', $cateringId)->when(request()->q,
+        $products = $product->where('catering_id', $cateringId)->when(request()->q,
         function($products) {
-            $products = $products->where('name', 'like', '%'. request()->q . '%')
-            ->orWhere('is_available', 'like', '%'. request()->q . '%');
-        })->latest()->paginate(20);
+            $products = $products->where('name', 'like', '%'. request()->q . '%');
+        })->latest()->paginate(request()->pages);
 
         // if(request()->filter != ''){
         //     $products = Product::where('catering_id', $cateringId)->where('is_available', '=', request()->filter)->latest();
@@ -69,30 +70,31 @@ class ProductController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $validator = Validator::make($request->all(), [
-            // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'name' => 'required',
             // 'catering_id' => 'required',
             'description' => 'required',
-            'weight' => 'required',
-            'price' => 'required',
-            'minimum_quantity' => 'required',
-            // 'maximum_quantity' => 'required',
-            // 'is_free_delivery' => 'required',
+            'weight' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
+            'minimum_quantity' => 'required|numeric|min:1',
+            'maximum_quantity' => 'required|numeric|min:1',
+            'is_free_delivery' => 'required',
             // 'is_hidden' => 'required',
-            // 'is_available' => 'required',
+            'is_available' => 'required',
             'category_id' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
         //upload image
-        // $image = $request->file('image');
-        // $image->storeAs('public/products', $image->hashName());
+        $image = $request->file('image');
+        $image->storeAs('public/products', $image->hashName());
         //create product
         $product = Product::create([
-            // 'image' => $image->hashName(),
+            'image' => $image->hashName(),
             'name' => $request->name,
             // 'slug' => Str::slug($request->title, '-'),
+            'category_id' => $request->category_id,
             'catering_id' => $cateringId,
             // 'user_id' => auth()->guard('api_admin')->user()->id,
             'description' => $request->description,
@@ -103,17 +105,17 @@ class ProductController extends Controller
             'is_free_delivery' => $request->is_free_delivery,
             'is_hidden' => $request->is_hidden,
             'is_available' => $request->is_available,
-            'image_id' => $cateringId,
+            // 'image_id' => $cateringId,
 
         ]);
         // dd($request->category_id);
         // Log::debug($request->category_id);
-        $category = Categories::find($request->category_id);
-        $product->categories()->attach($category);
+        // $category = Categories::find($request->category_id);
+        // $product->categories()->attach($category);
 
         if($product) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil Disimpan!', $category);
+            return new ProductResource(true, 'Data Product Berhasil Disimpan!', $request->category_id);
 
 
         }
@@ -156,13 +158,15 @@ class ProductController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
+            // 'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'name' => 'required',
+            'category_id' => 'required',
             // 'catering_id' => 'required',
             'description' => 'required',
-            'weight' => 'required',
-            'price' => 'required',
-            'minimum_quantity' => 'required',
-            'maximum_quantity' => 'required',
+            'weight' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
+            'minimum_quantity' => 'required|numeric|min:1',
+            'maximum_quantity' => 'required|numeric|min:1',
             'is_free_delivery' => 'required',
             'is_hidden' => 'required',
             'is_available' => 'required',
@@ -171,47 +175,50 @@ class ProductController extends Controller
             return response()->json($validator->errors(), 422);
         }
         //check image update
-        // if ($request->file('image')) {
-        //     //remove old image
-        //     // Storage::disk('local')->delete('public/products/'.basename($product->image));
-        //     //upload new image
-        //     // $image = $request->file('image');
-        //     // $image->storeAs('public/products', $image->hashName());
-        //     //update product with new image
-        //     $product->update([
-        //         // 'image' => $image->hashName(),
-        //         'name' => $request->name,
-        //         // 'slug' => Str::slug($request->title, '-'),
-        //         'catering_id' => $cateringId,
-        //         // 'user_id' => auth()->guard('api_admin')->user()->id,
-        //         'description' => $request->description,
-        //         'weight' => $request->weight,
-        //         'price' => $request->price,
-        //         'minimum_quantity' => $request->minimum_quantity,
-        //         'maximum_quantity' => $request->maximum_quantity,
-        //         'is_free_delivery' => $request->is_free_delivery,
-        //         'is_hidden' => $request->is_hidden,
-        //         'is_available' => $request->is_available,
-        //         'image_id' => $cateringId,
+        if ($request->file('image')) {
+            //remove old image
+            Storage::disk('local')->delete('public/products/'.basename($product->image));
+            //upload new image
+            $image = $request->file('image');
+            $image->storeAs('public/products', $image->hashName());
+            //update product with new image
+            $product->update([
+                'image' => $image->hashName(),
+                'name' => $request->name,
+                // 'slug' => Str::slug($request->title, '-'),
+                'category_id' => $request->category_id,
+                'catering_id' => $cateringId,
+                // 'user_id' => auth()->guard('api_admin')->user()->id,
+                'description' => $request->description,
+                'weight' => $request->weight,
+                'price' => $request->price,
+                'minimum_quantity' => $request->minimum_quantity,
+                'maximum_quantity' => $request->maximum_quantity,
+                'is_free_delivery' => $request->is_free_delivery,
+                'is_hidden' => $request->is_hidden,
+                'is_available' => $request->is_available,
+                'image_id' => $cateringId,
 
-        //     ]);
-        // }
-        //update product without image
-        $product->update([
-            'name' => $request->name,
-            // 'slug' => Str::slug($request->title, '-'),
-            'catering_id' => $cateringId,
-            'description' => $request->description,
-            'weight' => $request->weight,
-            'price' => $request->price,
-            'minimum_quantity' => $request->minimum_quantity,
-            'maximum_quantity' => $request->maximum_quantity,
-            'is_free_delivery' => $request->is_free_delivery,
-            'is_hidden' => $request->is_hidden,
-            'is_available' => $request->is_available,
-            'image_id' => $cateringId,
-
-        ]);
+            ]);
+        }else{
+            //update product without image
+            $product->update([
+                'name' => $request->name,
+                // 'slug' => Str::slug($request->title, '-'),
+                'category_id' => $request->category_id,
+                'catering_id' => $cateringId,
+                'description' => $request->description,
+                'weight' => $request->weight,
+                'price' => $request->price,
+                'minimum_quantity' => $request->minimum_quantity,
+                'maximum_quantity' => $request->maximum_quantity,
+                'is_free_delivery' => $request->is_free_delivery,
+                'is_hidden' => $request->is_hidden,
+                'is_available' => $request->is_available,
+                // 'image_id' => $cateringId,
+    
+            ]);
+        }
         if($product) {
             //return success with Api Resource
             return new ProductResource(true, 'Data Product Berhasil Diupdate!', $request->name);

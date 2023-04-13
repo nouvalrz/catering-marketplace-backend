@@ -34,7 +34,11 @@ class DashboardController extends Controller
         $received = $order->where('status', '=', 'Diterima')->count();
         $complain = $order->where('status', '=', 'Dikomplain')->count();
 
-        $year = date('Y');
+        if(request()->q == null){
+            $year = date('Y');
+        }else{
+            $year = request()->q;
+        }
 
         $transaction = DB::table('orders')
             ->addSelect(DB::raw('SUM(total_price) as total_price'))

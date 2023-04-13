@@ -108,6 +108,8 @@ Route::prefix('catering')->group(function($router){
 
         Route::apiResource('/order', OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //products change status order
+        Route::get('/order/listProduct/{id}', 'App\Http\Controllers\Api\Catering\OrdersController@listProducts');
+
         Route::post('/orderA/{id}', 'App\Http\Controllers\Api\Catering\OrdersController@changeStatus');
         
         Route::apiResource('/complaint', ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);

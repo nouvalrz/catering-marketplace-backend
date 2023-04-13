@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'catering_id',
+        'category_id',
         'description',
         'weight',
         'price',
@@ -20,11 +21,16 @@ class Product extends Model
         'is_free_delivery',
         'is_hidden',
         'is_available',
-        'image_id',
+        'image',
     ];
 
     public function categories()
     {
         return $this->belongsToMany(Categories::class)->withTimestamps();
+    }
+
+    public function getImageAttribute($image)
+    {
+        return asset('storage/products/' . $image);
     }
 }
