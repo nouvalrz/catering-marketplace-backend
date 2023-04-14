@@ -79,9 +79,11 @@ Route::prefix('catering')->group(function($router){
     //route register
     Route::post('/register', [CateringRegisterController::class, 'store'], ['as' => 'catering']);
     // validate otp
-    Route::post('/register/validate-otp', [CateringRegisterController::class, 'validateOtp'], ['as' => 'catering']);
+    Route::post('/validate-otp', [CateringRegisterController::class, 'validateOtp'], ['as' => 'catering']);
     //route login
     Route::post('/login', [CateringAuthController::class, 'index', ['as' => 'catering']]);
+    //route get otp
+    Route::post('/get-otp', [CateringAuthController::class, 'getOtp', ['as' => 'catering']]);
 
     //group route with middleware "auth:api_catering"
     Route::group(['middleware' => 'auth:api_catering'], function($router) {

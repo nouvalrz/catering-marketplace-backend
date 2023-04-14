@@ -7,6 +7,8 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Catering;
 
 class CateringAuthController extends Controller
 {
@@ -23,6 +25,7 @@ class CateringAuthController extends Controller
         }
         //get "email" dan "password" dari input
         $credentials = $request->only('email', 'password');
+
         //check jika "email" dan "password" tidak sesuai
         if(!$token = auth()->guard('api_catering')->attempt($credentials)){
         //response login "failed"
@@ -32,21 +35,73 @@ class CateringAuthController extends Controller
             ], 401);
    
         }
+
+        $valid = auth()->guard('api_catering')->user()->email_verified_at;
+
         // $akun = auth()->guard('api_catering')->user()->id;
         // redirect()->action('RegencyController@index', ['akun' => $akun]);
+
+        if($valid){
+
+            //response login "success" dengan generate "Token"
+            return response()->json([
+                'success' => true,
+                'user' => auth()->guard('api_catering')->user(),
+                'token' => $token,
+                'valid' => $valid
+                ], 200);
+        }
+
+        
+        $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
+        $otp_token = $otp->token;
+
+        Mail::raw("Your OTP is $otp_token", function ($m) {
+            $m->to(request('email'))->subject('Email Verification OTP');
+        });
         //response login "success" dengan generate "Token"
         return response()->json([
             'success' => true,
             'user' => auth()->guard('api_catering')->user(),
-            'token' => $token
+            // 'token' => $token,
+            'valid' => $valid,
+            'message' => 'belum'
             ], 200);
+
     }
+
+    public function getOtp(){
+        
+        $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
+        $otp_token = $otp->token;
+
+        Mail::raw("Your OTP is $otp_token", function ($m) {
+            $m->to(request('email'))->subject('Email Verification OTP');
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kode berhasil dikirim'
+        ], 200);
+    }
+
+
     public function getUser()
     {
+        $user = auth()->guard('api_catering')->user();
+
+        $id = $user->id;
+
+        $img = Catering::whereId($id)->first()->image;
+
+        $user->image = $img;
+
+
+
         //response data "user" yang sedang login
         return response()->json([
             'success' => true,
-            'user' => auth()->guard('api_catering')->user()
+            'user' => $user
         ], 200);
     }
     public function refreshToken(Request $request)

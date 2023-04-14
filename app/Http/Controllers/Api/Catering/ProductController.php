@@ -138,6 +138,9 @@ class ProductController extends Controller
         // $product = Product::whereId($id)->first();
         // $product = DB::table('categories_product')->where('product_id', '=', $id)->get('id');
         // $product = DB::table('categories_product')->where('product_id', $id);
+
+        $product->link = asset('storage/products/');
+
         if($product) {
             //return success with Api Resource
             return new ProductResource(true, 'Detail Data Product!', $product);
