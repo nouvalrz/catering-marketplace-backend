@@ -11,7 +11,7 @@ class Orders extends Model
 
     protected $fillable = [
         'customer_id',
-        'customer_address_id',
+        'customer_addresses_id',
         'note',
         'delivery_type',
         'delivery_cost',
@@ -19,19 +19,35 @@ class Orders extends Model
         'order_type',
         'start_date',
         'end_date',
-        'canceled_at',
+        'cancele_at',
+        'paid_status',
+        'snap_token'
     ];
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'foreign_key');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
     public function customerAddresses()
     {
-        return $this->belongsTo(CustomerAddresses::class, 'foreign_key');
+        return $this->belongsTo(CustomerAddresses::class, 'customer_addresses_id');
+    }
+
+    public function orderDetails(){
+
+        return $this->hasMany(OrderDetails::class, 'orders_id');
     }
     // public function district()
     // {
     //     return $this->hasMany(District::class, 'foreign_key');
     // }
+
+    public function detailJsonView(){
+
+    }
+
+    public function address(){
+        return $this->hasOne(CustomerAddresses::class, 'customer_addresses_id');
+    }
+
 }

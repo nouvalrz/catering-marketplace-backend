@@ -17,29 +17,33 @@ class CreateSnapTokenService extends Midtrans
 
     public function getSnapToken()
     {
+        $itemDetails = [];
+        foreach ($this->order->orderDetails()->get() as $product){
+            $itemDetails[] = [
+                'id' => $product->product_id,
+                'price' => $product->price,
+                'quantity' => $product->quantity,
+                'name' => $product->product()->get()->first()->name
+            ];
+        }
+
+        $itemDetails[] = [
+            'id' => 9999,
+            'price' => $this->order->delivery_cost,
+            'quantity' => 1,
+            'name' => "Delivery Cost"
+        ];
+
         $params = [
             'transaction_details' => [
-                'order_id' => $this->order->number,
+                'order_id' => $this->order->id,
                 'gross_amount' => $this->order->total_price,
             ],
-            'item_details' => [
-                [
-                    'id' => 1,
-                    'price' => '150000',
-                    'quantity' => 1,
-                    'name' => 'Flashdisk Toshiba 32GB',
-                ],
-                [
-                    'id' => 2,
-                    'price' => '60000',
-                    'quantity' => 2,
-                    'name' => 'Memory Card VGEN 4GB',
-                ],
-            ],
+            'item_details' => $itemDetails,
             'customer_details' => [
-                'first_name' => 'Martin Mulyo Syahidin',
-                'email' => 'mulyosyahidin95@gmail.com',
-                'phone' => '081234567890',
+                'first_name' => $this->order->customer()->get()->first()->user()->get()->first()->name,
+                'email' => $this->order->customer()->get()->first()->user()->get()->first()->email,
+                'phone' =>  $this->order->customer()->get()->first()->phone,
             ]
         ];
 

@@ -22,7 +22,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'type'
+        'type',
+        'fcm_token'
     ];
 
     /**
@@ -63,12 +64,23 @@ class User extends Authenticatable implements JWTSubject
         if ($this->type == "customer"){
             return $this->hasOne(Customer::class, 'user_id');
         }
-        
+
         else if ($this->type == "catering"){
             return $this->hasOne(Catering::class, 'user_id');
         }
         else if ($this->type == "administrator"){
             return $this->hasOne(Administrators::class, 'user_id');
         }
+    }
+
+
+    /**
+     * Specifies the user's FCM token
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }

@@ -43,6 +43,11 @@ Route::post('customer/address/add', [CustomerAddressController::class, 'addAddre
 
 Route::post('customer/cart/add-instant', [\App\Http\Controllers\CustomerCartController::class, 'createInstant']);
 Route::get('customer/cart/index', [\App\Http\Controllers\CustomerCartController::class, 'getAllCart']);
+Route::post('customer/preorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createPreOrder']);
+Route::post('customer/preorder/receive', [\App\Http\Controllers\CustomerOrderController::class, 'receive']);
+Route::get('customer/order/index', [\App\Http\Controllers\CustomerOrderController::class, 'index']);
+Route::get('customer/order/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'show']);
+Route::get('customer/order/{id}/show-paid-status', [\App\Http\Controllers\CustomerOrderController::class, 'getOrderPaidStatus']);
 
 
 
@@ -50,4 +55,6 @@ Route::post('catering/profile/upload-image', [CateringController::class, 'upload
 Route::post('catering/product/get', [\App\Http\Controllers\ProductToClientController::class, 'getProductDetail']);
 Route::post('catering/profile/add-product', [CateringController::class, 'addProduct']);
 Route::post('catering/client/get-relevant', [\App\Http\Controllers\CateringToClientController::class, 'getRelevantCatering']);
+Route::post('catering/client/get-search-result', [\App\Http\Controllers\CateringToClientController::class, 'getSearchResultCatering']);
 Route::get('catering/client/{id}/get-products', [CateringToClientController::class, 'getProductsFromCatering']);
+Route::get('catering/client/{id}/get-delivery-time-range', [CateringToClientController::class, 'getCateringDeliveryTimeRange']);

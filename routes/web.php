@@ -14,5 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return "ajsjas";
+});
+
+Route::get('/customer/preorder/showsnaptoken/{id}', [\App\Http\Controllers\CustomerOrderController::class, 'showSnapToken']);
+
+Route::get('/customer/preorder/test', function (){
+  return "test";
 });

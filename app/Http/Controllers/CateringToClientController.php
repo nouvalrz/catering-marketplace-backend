@@ -10,39 +10,46 @@ use Illuminate\Support\Facades\DB;
 class CateringToClientController extends Controller
 {
     //
-    public function getRelevantCatering(Request $request){
+    public function getRelevantCatering(Request $request)
+    {
         request()->validate([
             'district_name' => 'required'
         ]);
 
-//        $caterings = DB::table('caterings')->select(['caterings.id'])->join('villages', 'caterings.village_id', '=', 'villages.id')->join('districts', 'villages.district_id', '=', 'districts.id')->where('districts.name', 'like', '%' . request('district_name') . '%')->limit(15)->get();
-//
-//        $complete_caterings = array();
-//
-//        foreach ($caterings as $catering){
-//            $c = array();
-//            $c['catering'] = DB::table('caterings')->select(['caterings.id','caterings.name AS name','villages.name AS village_name','images.original_path', 'caterings.latitude', 'caterings.longitude', 'caterings.total_sales'])->join('villages', 'caterings.village_id', '=', 'villages.id')->join('images', 'caterings.image_id', '=', 'images.id')->where('caterings.id', $catering->id)->get()->first();
-//
-//
-//            $c['products'] = DB::table('products')->select(['products.id', 'products.name', 'products.price', 'images.original_path'])->join('caterings', 'caterings.id', '=', 'products.catering_id')->join('images', 'images.id', '=', 'products.image_id')->where('products.catering_id', $catering->id)->limit(2)->get();
-//
-//            $complete_caterings[] = $c;
-//            $finish_caterings = array('caterings'=>$complete_caterings);
-//        }
-
         $finish_caterings = array();
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->get()->map(function ($catering){
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
+
 
         return response()->json($finish_caterings);
 //        return json_encode($finish_caterings);
 
     }
 
-    public function getProductsFromCatering($id){
+    public function getSearchResultCatering(Request $request)
+    {
+
+        request()->validate([
+            'keyword' => 'required'
+        ]);
+
+        $finish_caterings = array();
+
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
+            $query->where("name", "like", "%" . request('keyword') . "%");
+        }, "village.district", "categories"])->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+            return $catering;
+        });
+
+        return response()->json($finish_caterings);
+    }
+
+    public function getProductsFromCatering($id)
+    {
 //        $p = DB::table('products')->select(['products.id','products.name', 'products.price', 'products.description', 'products.weight', 'products.minimum_quantity', 'products.maximum_quantity', 'products.is_free_delivery', 'products.is_hidden', 'products.is_available', 'images.original_path', 'products.is_customable'])->join('images', 'images.id', '=', 'products.image_id')->where([['products.catering_id', $id], ['products.is_hidden', 0]])->get();
 //
         $products = array();
@@ -52,5 +59,15 @@ class CateringToClientController extends Controller
 
         return response()->json($products);
 
+    }
+
+    public function getCateringDeliveryTimeRange($id)
+    {
+        $catering = Catering::find($id);
+
+        return response()->json([
+            "delivery_start_time" => $catering->delivery_start_time,
+            "delivery_end_time" => $catering->delivery_end_time,
+        ]);
     }
 }

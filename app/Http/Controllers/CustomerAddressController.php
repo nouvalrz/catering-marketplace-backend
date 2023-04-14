@@ -29,7 +29,6 @@ class CustomerAddressController extends Controller
             'phone' => 'required'
         ]);
 
-
         $village = Village::where('name', 'like', '%'. request('village_name') . '%')->get()->first();
 
         $address = CustomerAddresses::create([
