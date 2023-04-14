@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 
 class CateringRegisterController extends Controller
@@ -18,7 +20,7 @@ class CateringRegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required',
+            'phone' => 'required|unique:caterings,phone',
             'address' => 'required',
             'zipcode' => 'required',
             'password' => 'required|confirmed',
@@ -52,13 +54,62 @@ class CateringRegisterController extends Controller
 
         ]);
 
-        if($user) {
-            //return with Api Resource
-            return new CateringResource(true, 'Register Catering Berhasil', $user);
-        }
+        
+        $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
+        $otp_token = $otp->token;
 
-        //return failed with Api Resource
-        return new CateringResource(false, 'Register Catering Gagal!', null);
+        Mail::raw("Your OTP is $otp_token", function ($m) {
+            $m->to(request('email'))->subject('Email Verification OTP');
+        });
+
+        return $otp;
+
+        // if($user) {
+        //     //return with Api Resource
+        //     return new CateringResource(true, 'Register Catering Berhasil', $user);
+        // }
+
+        // //return failed with Api Resource
+        // return new CateringResource(false, 'Register Catering Gagal!', null);
+    }
+    
+    public function validateOtp(Request $request){
+        request()->validate([
+            'email' => 'required',
+            'otp' => 'required'
+            ]);
+        $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), request('otp'));
+
+        if(!$token = auth()->attempt($request->only('email', 'password'))){
+            return response()->json([
+                'message' => 'Password is incorrect'
+            ], 401);
+        }else if($otp->status){
+            $user = User::where('email', request('email'))->first();
+            $user->email_verified_at = Carbon::now()->timestamp;
+            $user->save();
+            return response()->json([
+                'status' => $otp->status,
+                'token' => $token,
+                'message' => 'OTP Validation is success'
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'OTP is not valid'
+            ], 401);
+        }
+    }
+
+    public function checkEmailAvail(Request $request){
+        request()->validate([
+            'email' => ['email', 'required', 'unique:users,email']
+            ]);
+    }
+
+    public function checkPhoneAvail(Request $request){
+        request()->validate([
+            'phone' => ['integer', 'unique:customers,phone']
+        ]);
     }
 
 }
