@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -36,9 +37,16 @@ class ProfileController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
+            
+            // 'image' =>[Rule::requiredIf(function (){
+            //     if ($request->file('image')) {
+            //        return false;
+            //     }
+            //       return true;
+            //    }),'image','mimes:jpeg,png,jpg','max:500'],
             'name' => 'required',
             // 'catering_id' => 'required',
-            'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
+            // 'image' => 'image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'email' => 'required',
             'description' => 'required',
             'phone' => 'required',

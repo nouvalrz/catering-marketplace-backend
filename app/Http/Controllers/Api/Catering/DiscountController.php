@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Carbon;
 
 
 class DiscountController extends Controller
@@ -25,14 +26,42 @@ class DiscountController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        //get products
-        // $products = Product::with('category')->when(request()->q,
+        // $now = Carbon::today()->format('Y-m-d')->toDateString();
+        $now = Carbon::today()->toDateString();
+        $active = request()->active;
+
+        if($active){
+            if($active == 'Aktif'){
+                $discounts = Discount::where('catering_id', '=', $cateringId)->whereDate('end_date', '>=', $now)->when(request()->q,
+                function($discounts) {
+                    $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
+                })->latest()->paginate(request()->pages);
+                //return with Api Resource
+                return new DiscountResource(true, 'List Data Discount', $discounts);
+            }else{
+                $discounts = Discount::where('catering_id', '=', $cateringId)->whereDate('end_date', '<', $now)->when(request()->q,
+                function($discounts) {
+                    $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
+                })->latest()->paginate(request()->pages);
+                //return with Api Resource
+                return new DiscountResource(true, 'List Data Discount', $discounts);
+            };
+        };
         $discounts = Discount::where('catering_id', $cateringId)->when(request()->q,
         function($discounts) {
             $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
-        })->latest()->paginate(5);
+        })->latest()->paginate(request()->pages);
         //return with Api Resource
         return new DiscountResource(true, 'List Data Discount', $discounts);
+
+        //get products
+        // $products = Product::with('category')->when(request()->q,
+        // $discounts = $discounts::where('catering_id', $cateringId)->when(request()->q,
+        // function($discounts) {
+        //     $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
+        // })->latest()->paginate(request()->pages);
+        // //return with Api Resource
+        // return new DiscountResource(true, 'List Data Discount', $discounts);
     }
     
     /**

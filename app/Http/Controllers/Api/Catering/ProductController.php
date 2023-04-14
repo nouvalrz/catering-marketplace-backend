@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Validation\Rule;
 
 
 class ProductController extends Controller
@@ -156,9 +157,16 @@ class ProductController extends Controller
         // dd($product);
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        $idProd = $product->id;
         
         $validator = Validator::make($request->all(), [
-            // 'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
+            // 'image' =>[Rule::requiredIf(function (){
+            //     if (Product::whereNotNull('image')->where('id', $idProd)->exists()) {
+            //        return false;
+            //     }
+            //       return true;
+            //    }),'image','mimes:jpeg,png,jpg','max:500'],
+            // 'image' => 'image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'name' => 'required',
             'category_id' => 'required',
             // 'catering_id' => 'required',
@@ -221,7 +229,7 @@ class ProductController extends Controller
         }
         if($product) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil Diupdate!', $request->name);
+            return new ProductResource(true, 'Data Product Berhasil Diupdate!', $product);
         }
         //return failed with Api Resource
         return new ProductResource(false, 'Data Product Gagal Diupdate!', null);
