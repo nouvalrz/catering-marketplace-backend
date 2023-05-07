@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Complaints extends Model
 {
     use HasFactory;
-    
-    protected $fillable = [
-        'order_id',
-        'status',
-        'message',
-    ];
+
+    protected $guarded = [];
 
     public function orders()
     {

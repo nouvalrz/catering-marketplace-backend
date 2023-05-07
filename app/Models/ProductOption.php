@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductOption extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
     public function product_option_details()
     {

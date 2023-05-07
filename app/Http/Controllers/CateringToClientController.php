@@ -72,7 +72,7 @@ class CateringToClientController extends Controller
 //        $p = DB::table('products')->select(['products.id','products.name', 'products.price', 'products.description', 'products.weight', 'products.minimum_quantity', 'products.maximum_quantity', 'products.is_free_delivery', 'products.is_hidden', 'products.is_available', 'images.original_path', 'products.is_customable'])->join('images', 'images.id', '=', 'products.image_id')->where([['products.catering_id', $id], ['products.is_hidden', 0]])->get();
 //
         $products = array();
-        $products['products'] = Product::with("product_options", "product_options.product_option_details")->where([['catering_id', $id], ['is_hidden', 0]])->get()->toArray();
+        $products['products'] = Product::with("product_options", "product_options.product_option_details")->where([['catering_id', $id], ['is_available', 1]])->get()->toArray();
 //        Product::with("product_options", "product_options.product_option_details")->get()->toJson(JSON_PRETTY_PRINT);
 
 

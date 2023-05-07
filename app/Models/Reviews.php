@@ -9,14 +9,7 @@ class Reviews extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'order_id',
-        'customer_id',
-        'star',
-        'has_image',
-        'description',
-        'catering_id'
-    ];
+    protected $guarded = [];
 
     public static function boot()
     {

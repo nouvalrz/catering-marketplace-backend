@@ -9,12 +9,9 @@ class District extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'regency_id',
-        'name'
-    ];
+    protected $guarded = [];
 
-    
+
     public function regency()
     {
         return $this->belongsTo(Regency::class, 'foreign_key');

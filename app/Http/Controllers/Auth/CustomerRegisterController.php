@@ -18,7 +18,6 @@ class CustomerRegisterController extends Controller
             'name' => 'required',
             'email' => ['email', 'required', 'unique:users,email'],
             'phone' => ['integer', 'unique:customers,phone'],
-            'gender' => ['required'],
             'password' => [
                 'required',
                 'min:10',             // must be at least 10 characters in length
@@ -37,7 +36,6 @@ class CustomerRegisterController extends Controller
         Customer::create([
             'user_id' => $user->id,
             'phone' => request('phone'),
-            'gender' => request('gender'),
             'points' => 0,
             'balance' => 0
         ]);

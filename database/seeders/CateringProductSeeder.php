@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class CateringProductSeeder extends Seeder
 {
@@ -15,6 +18,18 @@ class CateringProductSeeder extends Seeder
     public function run()
     {
         //
+
+        $productImages = array();
+
+        for ($i=1; $i<=36 ; $i++){
+            $path = "database/seeders/cateringproductimages/{$i}.png";
+            $imageFile =  File::get($path);
+            $imageResizeFile = \Intervention\Image\Facades\Image::make($imageFile)->resize(300, 300)->encode('jpg',80);
+            $imageName = "products/catering-product-{$i}-" . time() . '.jpg';
+            Storage::disk('public')->put( $imageName, $imageResizeFile);
+            $productImages[] = Storage::url($imageName);
+        }
+
         $products = array(
 
 
@@ -25,10 +40,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 28000,
                 'minimum_quantity' => 3,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 13,
+                'image' => $productImages[0],
                 'catering_id'=>1
             ),
             array(
@@ -38,10 +51,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 25000,
                 'minimum_quantity' => 3,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 14,
+                'image' => $productImages[1],
                 'catering_id'=>1
             ),
             array(
@@ -51,10 +62,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 32000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 80,
-                'is_free_delivery' => 0,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 15,
+                'image' => $productImages[2],
                 'catering_id'=>1
             ),
             array(
@@ -64,10 +73,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 25000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 16,
+                'image' => $productImages[3],
                 'catering_id'=>1
             ),
             array(
@@ -77,10 +84,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 23000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 17,
+                'image' => $productImages[4],
                 'catering_id'=>1
             ),
             array(
@@ -90,10 +95,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 21000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 18,
+                'image' => $productImages[5],
                 'catering_id'=>1
             ),
             array(
@@ -103,10 +106,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 28000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 120,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 19,
+                'image' => $productImages[6],
                 'catering_id'=>1
             ),
             array(
@@ -116,10 +117,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 26000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 20,
+                'image' => $productImages[7],
                 'catering_id'=>1
             ),
             array(
@@ -129,10 +128,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 22000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 80,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 21,
+                'image' => $productImages[8],
                 'catering_id'=>1
             ),
             array(
@@ -142,10 +139,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 19000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 120,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 22,
+                'image' => $productImages[9],
                 'catering_id'=>1
             ),
             array(
@@ -155,10 +150,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 8000,
                 'minimum_quantity' => 20,
                 'maximum_quantity' => 180,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 23,
+                'image' => $productImages[10],
                 'catering_id'=>1
             ),
             array(
@@ -168,10 +161,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 6000,
                 'minimum_quantity' => 20,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 24,
+                'image' => $productImages[11],
                 'catering_id'=>1
             ),
             array(
@@ -181,10 +172,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 128000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 5,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 25,
+                'image' => $productImages[12],
                 'catering_id'=>1
             ),
             array(
@@ -194,10 +183,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 24000,
                 'minimum_quantity' => 5,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 26,
+                'image' => $productImages[13],
                 'catering_id'=>1
             ),
             array(
@@ -207,10 +194,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 37000,
                 'minimum_quantity' => 3,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 27,
+                'image' => $productImages[14],
                 'catering_id'=>1
             ),
             array(
@@ -220,10 +205,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 18000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 28,
+                'image' => $productImages[15],
                 'catering_id'=>1
             ),
             array(
@@ -233,10 +216,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 32000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 29,
+                'image' => $productImages[16],
                 'catering_id'=>1
             ),
             array(
@@ -246,10 +227,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 45000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 100,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 30,
+                'image' => $productImages[17],
                 'catering_id'=>1
             ),
             array(
@@ -259,10 +238,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 80000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 20,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 31,
+                'image' => $productImages[18],
                 'catering_id'=>1
             ),
             array(
@@ -272,10 +249,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 62000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 20,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 32,
+                'image' => $productImages[19],
                 'catering_id'=>1
             ),
             array(
@@ -285,10 +260,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 32000,
                 'minimum_quantity' => 3,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 33,
+                'image' => $productImages[20],
                 'catering_id'=>1
             ),
             array(
@@ -298,10 +271,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 22000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 34,
+                'image' => $productImages[21],
                 'catering_id'=>1
             ),
             array(
@@ -311,10 +282,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 30000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 35,
+                'image' => $productImages[22],
                 'catering_id'=>1
             ),
             array(
@@ -324,10 +293,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 25000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 36,
+                'image' => $productImages[23],
                 'catering_id'=>1
             ),
             array(
@@ -337,10 +304,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 25000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 37,
+                'image' => $productImages[24],
                 'catering_id'=>1
             ),
             array(
@@ -350,10 +315,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 50000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 38,
+                'image' => $productImages[25],
                 'catering_id'=>1
             ),
             array(
@@ -363,10 +326,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 75000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 50,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 39,
+                'image' => $productImages[26],
                 'catering_id'=>1
             ),
             array(
@@ -376,10 +337,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 12000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 40,
+                'image' => $productImages[27],
                 'catering_id'=>1
             ),
             array(
@@ -389,10 +348,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 22000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 41,
+                'image' => $productImages[28],
                 'catering_id'=>1
             ),
             array(
@@ -402,10 +359,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 29000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 42,
+                'image' => $productImages[29],
                 'catering_id'=>1
             ),
             array(
@@ -415,10 +370,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 34000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 43,
+                'image' => $productImages[30],
                 'catering_id'=>1
             ),
             array(
@@ -428,10 +381,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 18000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 44,
+                'image' => $productImages[31],
                 'catering_id'=>1
             ),
             array(
@@ -441,10 +392,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 23000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 45,
+                'image' => $productImages[32],
                 'catering_id'=>1
             ),
             array(
@@ -454,10 +403,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 12000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 46,
+                'image' => $productImages[33],
                 'catering_id'=>1
             ),
             array(
@@ -467,10 +414,8 @@ class CateringProductSeeder extends Seeder
                 'price' => 48000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 47,
+                'image' => $productImages[34],
                 'catering_id'=>1
             ),
             array(
@@ -480,14 +425,10 @@ class CateringProductSeeder extends Seeder
                 'price' => 38000,
                 'minimum_quantity' => 1,
                 'maximum_quantity' => 200,
-                'is_free_delivery' => 1,
-                'is_hidden' => 0,
                 'is_available' => 1,
-                'image_id' => 48,
+                'image' => $productImages[35],
                 'catering_id'=>1
             )
-
-
 
             );
 
@@ -500,7 +441,6 @@ class CateringProductSeeder extends Seeder
             $randomProducts = array_slice($range, 0 , $n);
 
 //            print_r($randomProducts);
-
 
             foreach ($randomProducts as $randomProduct){
                 $products[$randomProduct]['catering_id'] = $i;

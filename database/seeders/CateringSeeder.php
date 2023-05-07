@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Catering;
+use App\Models\Image;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class CateringSeeder extends Seeder
 {
@@ -16,6 +19,18 @@ class CateringSeeder extends Seeder
     public function run()
     {
         //
+
+        $cateringImages = array();
+
+        for ($i=1; $i<=12 ; $i++){
+            $path = "database/seeders/cateringimages/{$i}.png";
+            $imageFile =  File::get($path);
+            $imageResizeFile = \Intervention\Image\Facades\Image::make($imageFile)->resize(150, 150)->encode('jpg',80);
+            $imageName = "caterings/catering_profile_image-{$i}-" . time() . '.jpg';
+            Storage::disk('public')->put( $imageName, $imageResizeFile);
+            $cateringImages[] = Storage::url($imageName);
+        }
+
         $caterings =
             [
             [
@@ -30,8 +45,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010003,
-                "image_id"=>1,
                 "user_id" =>1,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1,7
                 ]
@@ -48,8 +63,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"20:00:00",
                 "village_id"=>5171030009,
-                "image_id"=>2,
                 "user_id" =>2,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1,7
                 ]
@@ -66,8 +81,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3,
                 "user_id" =>3,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 7
                 ]
@@ -84,8 +99,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171010001,
-                "image_id"=>4,
                 "user_id" =>4,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 4
                 ]
@@ -102,8 +117,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5103030005,
-                "image_id"=>5,
                 "user_id" =>5,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 7
                 ]
@@ -120,8 +135,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171020001,
-                "image_id"=>6,
                 "user_id" =>6,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1
                 ]
@@ -138,8 +153,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171010006,
-                "image_id"=>7,
                 "user_id" =>7,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1
                 ]
@@ -156,8 +171,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"11:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020001,
-                "image_id"=>8,
                 "user_id" =>8,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 6
                 ]
@@ -174,8 +189,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171031004,
-                "image_id"=>9,
                 "user_id" =>9,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 3
                 ]
@@ -192,8 +207,8 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:30:00",
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010005,
-                "image_id"=>10,
                 "user_id" =>10,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 4
                 ]
@@ -210,7 +225,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"16:00:00",
                 "village_id"=>5171031006,
-                "image_id"=>11,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>11,
                 "categories" => [
                     1, 3
@@ -228,7 +243,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030006,
-                "image_id"=>12,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>12,
                 "categories" => [
                     1, 3
@@ -246,7 +261,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"18:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>1,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>13,
                 "categories" => [
                     1, 7
@@ -264,7 +279,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030011,
-                "image_id"=>2,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>14,
                 "categories" => [
                     1, 4
@@ -282,7 +297,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>5,
                 "categories" => [
                     1, 4
@@ -300,7 +315,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>4,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>16,
                 "categories" => [
                     1, 7
@@ -318,7 +333,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:30:00",
                 "village_id"=>5171010003,
-                "image_id"=>5,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>17,
                 "categories" => [
                     1, 3
@@ -337,7 +352,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171010008,
-                "image_id"=>6,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>18,
                 "categories" => [
                     1, 3
@@ -355,7 +370,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030002,
-                "image_id"=>7,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>19,
                 "categories" => [
                     1, 7
@@ -373,7 +388,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>8,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>20,
                 "categories" => [
                     1, 3
@@ -391,7 +406,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"09:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010005,
-                "image_id"=>9,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>21,
                 "categories" => [
                     1, 7
@@ -410,7 +425,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010001,
-                "image_id"=>10,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>22,
                 "categories" => [
                     1, 7
@@ -429,7 +444,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"10:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171010007,
-                "image_id"=>11,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>23,
                 "categories" => [
                     1, 4
@@ -448,7 +463,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"22:00:00",
                 "village_id"=>5171020006,
-                "image_id"=>12,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>24,
                 "categories" => [
                     1, 7
@@ -467,7 +482,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>1,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>25,
                 "categories" => [
                     1, 4
@@ -486,7 +501,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"19:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>2,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>26,
                 "categories" => [
                     1, 7
@@ -505,7 +520,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"07:00:00",
                 "delivery_end_time"=>"15:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>3,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>27,
                 "categories" => [
                     1, 3
@@ -524,7 +539,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171030004,
-                "image_id"=>4,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>28,
                 "categories" => [
                     1, 3
@@ -543,8 +558,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"21:00:00",
                 "village_id"=>5171030010,
-                "image_id"=>5
-                ,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>29,
                 "categories" => [
                     1, 7
@@ -563,7 +577,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
-                "image_id"=>6,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>30,
                 "categories" => [
                     1, 7
@@ -582,7 +596,7 @@ class CateringSeeder extends Seeder
                 "delivery_start_time"=>"08:00:00",
                 "delivery_end_time"=>"17:00:00",
                 "village_id"=>5171031009,
-                "image_id"=>7,
+                "image" => $cateringImages[array_rand($cateringImages)],
                 "user_id" =>31,
                 "categories" => [
                     1, 7
@@ -602,12 +616,15 @@ class CateringSeeder extends Seeder
 
         DB::table("caterings")->insert($cateringsWithoutCat);
 
+
         $cateringDataOnDB = Catering::all();
 
         foreach ($cateringDataOnDB as $index=>$catering){
 //            print $index;
             $catering->categories()->attach($caterings[$index]["categories"]);
         }
+
+
 
     }
 }

@@ -17,32 +17,25 @@ class CategorySeeder extends Seeder
         //
         $categories = [
             [
-                "name" => "Aneka Nasi",
-                "description" => ""
+                "name" => "Aneka Nasi"
             ],
                         [
-                "name" => "Vegertarian",
-                "description" => ""
+                "name" => "Vegertarian"
             ],
                         [
-                "name" => "Bali",
-                "description" => ""
+                "name" => "Bali"
             ],
                         [
-                "name" => "Jawa",
-                "description" => ""
+                "name" => "Jawa"
             ],
                         [
-                "name" => "Padang",
-                "description" => ""
+                "name" => "Padang"
             ],
                         [
-                "name" => "Mie",
-                "description" => ""
+                "name" => "Mie"
             ],
                         [
-                "name" => "Jajan",
-                "description" => ""
+                "name" => "Jajan"
             ],
 
         ];

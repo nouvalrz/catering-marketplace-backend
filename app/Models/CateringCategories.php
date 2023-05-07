@@ -9,10 +9,7 @@ class CateringCategories extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'catering_id',
-        'category_id'
-    ];
+    protected $guarded = [];
 
 //    public function catering()
 //    {

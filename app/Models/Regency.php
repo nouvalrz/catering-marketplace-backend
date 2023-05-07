@@ -9,12 +9,9 @@ class Regency extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'province_id',
-        'name'
-    ];
+    protected $guarded = [];
 
-    
+
     public function province()
     {
         return $this->belongsTo(Province::class, 'foreign_key');

@@ -9,16 +9,7 @@ class CustomerAddresses extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'customer_id',
-        'recipient_name',
-        'address',
-        'village_id',
-        'latitude',
-        'longitude',
-        'phone'
-
-    ];
+    protected $guarded = [];
 
     public function customer()
     {

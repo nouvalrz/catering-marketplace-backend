@@ -9,18 +9,7 @@ class Discounts extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'catering_id',
-        'type',
-        'title',
-        'description',
-        'percentage',
-        'minimum_spend',
-        'maximum_disc',
-        'start_date',
-        'end_date'
-
-    ];
+    protected $guarded = [];
 
     public function catering()
     {

@@ -9,6 +9,8 @@ class Village extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function caterings(){
         return $this->hasMany(Catering::class);
     }

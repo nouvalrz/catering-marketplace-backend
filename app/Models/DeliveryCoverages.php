@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class DeliveryCoverages extends Model
 {
     use HasFactory;
-    
-    protected $fillable = [
-        'catering_id',
-        'district_id'
 
-    ];
+    protected $guarded = [];
 
     public function catering()
     {

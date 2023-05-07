@@ -42,13 +42,13 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
 
         // Business Data
-        Image::truncate();
+//        Image::truncate();
         Catering::truncate();
         Product::truncate();
 
-        $this->call(CateringImageSeeder::class);
+//        $this->call(CateringImageSeeder::class);
         $this->call(CateringSeeder::class);
-        $this->call(CateringProductImageSeeder::class);
+//        $this->call(CateringProductImageSeeder::class);
         $this->call(CateringProductSeeder::class);
     }
 }

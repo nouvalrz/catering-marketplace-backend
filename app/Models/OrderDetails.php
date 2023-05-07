@@ -9,15 +9,7 @@ class OrderDetails extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'orders_id',
-        'product_id',
-        'quantity',
-        'price',
-        'package_number',
-        'delivery_datetime',
-        'status',
-    ];
+    protected $guarded = [];
 
     /**
      * The "booted" method of the model.

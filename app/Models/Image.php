@@ -9,8 +9,5 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'original_path',
-        'thumbnail_path'
-    ];
+    protected $guarded = [];
 }

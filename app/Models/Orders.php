@@ -9,22 +9,7 @@ class Orders extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'customer_id',
-        'customer_addresses_id',
-        'note',
-        'delivery_type',
-        'delivery_cost',
-        'total_price',
-        'order_type',
-        'start_date',
-        'end_date',
-        'cancele_at',
-        'paid_status',
-        'snap_token',
-        'invoice_number',
-        'has_review'
-    ];
+    protected $guarded = [];
 
     public function customer()
     {
