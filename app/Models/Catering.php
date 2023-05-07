@@ -27,6 +27,7 @@ class Catering extends Model
         'village_id',
         'isVerified',
         'user_id',
+        'rate'
     ];
 
     public function user()

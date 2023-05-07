@@ -9,6 +9,7 @@ use App\Models\OrderDetails;
 use App\Models\OrderProductOption;
 use App\Models\Orders;
 use App\Models\ProductOptionDetail;
+use App\Models\Reviews;
 use App\Models\User;
 use App\Models\Village;
 use App\Notifications\SendPushNotification;
@@ -31,7 +32,10 @@ class CustomerOrderController extends Controller
 
         $address = $this->getAddress($request, $customer, $user);
 
+        $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
+
         $order = Orders::create([
+            'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
             'customer_addresses_id' => $address->id,
             'delivery_type' => 'DELIVERY',
@@ -209,10 +213,13 @@ class CustomerOrderController extends Controller
 
         $products = [];
 
+        $review = Reviews::where('order_id', $order->id)->first();
+
         $cateringName = "";
         $cateringPhone = "";
         $cateringLocation = "";
         $cateringOriginalPath = "";
+        $cateringId = '';
 
         foreach ($productsRaws as $index=>$productsRaw){
             $productOptionSummary = [];
@@ -225,6 +232,7 @@ class CustomerOrderController extends Controller
                 $cateringPhone = $catering->phone;
                 $cateringLocation = $catering->village->name;
                 $cateringOriginalPath = $catering->original_path;
+                $cateringId = $catering->id;
             }
 
             if($productOptions){
@@ -248,7 +256,7 @@ class CustomerOrderController extends Controller
         $orderJson = [
             "id" => $order->id,
             "order_type" => $order->order_type,
-            "invoice_number" => "INV/21912912912",
+            "invoice_number" => $order->invoice_number,
             "address" => $address,
             "delivery_datetime" => $order->start_date,
             "products" => $products,
@@ -262,8 +270,13 @@ class CustomerOrderController extends Controller
             "catering_name" => $cateringName,
             "catering_phone" => $cateringPhone,
             "catering_location" => $cateringLocation,
-            "catering_original_path" => $cateringOriginalPath
+            "catering_original_path" => $cateringOriginalPath,
+            "catering_id" => $cateringId
         ];
+
+        if($review){
+            $orderJson['review'] = $review;
+        }
 
         return response()->json(["order" => $orderJson]);
 
@@ -272,5 +285,12 @@ class CustomerOrderController extends Controller
     public function getOrderPaidStatus($id){
         $orderPaidStatus = Orders::select('paid_status')->where('id', $id)->get()->first();
         return response()->json($orderPaidStatus);
+    }
+
+    public function setOrderToAccepted($id){
+        $order = Orders::find($id);
+        $order->order_status = "ACCEPTED";
+        $order->save();
+        return response()->json($order);
     }
 }

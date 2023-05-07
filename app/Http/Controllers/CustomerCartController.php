@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartDetail;
+use App\Models\CartProductOption;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,6 +45,42 @@ class CustomerCartController extends Controller
 
     }
 
+    public function createPreOrderCart(Request $request){
+//        return response()->json($request);
+        $customer = Customer::where('user_id', auth()->user()->id)->first();
+        $cart = Cart::create([
+           'catering_id' => request('catering_id'),
+           'order_type' => "PREORDER",
+            'customer_id' => $customer->id
+        ]);
+
+        $products = request('products');
+
+        foreach ($products as $product){
+            $cartDetail = CartDetail::create([
+                'cart_id' => $cart->id,
+                'product_id' => $product['id'],
+                'quantity' => $product['quantity']
+            ]);
+            if($product['product_options']){
+                $product_options = $product['product_options'];
+                foreach ($product_options as $product_option){
+                    $product_option_details = $product_option['product_option_details'];
+                    foreach ($product_option_details as $product_option_detail){
+                        CartProductOption::create([
+                            'cart_detail_id' => $cartDetail->id,
+                            'product_option_id' => $product_option['id'],
+                            'product_option_detail_id' => $product_option_detail['id']
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return response()->json($cart);
+    }
+
+
     public function getAllCart(Request $request){
         $user = auth()->user();
 
@@ -65,4 +103,26 @@ class CustomerCartController extends Controller
 
         return response()->json(["carts" => $all_cart_details]);
     }
+
+    public function index(){
+        $user = auth()->user();
+        $customer = Customer::where('user_id', auth()->user()->id)->first();
+        $carts = Cart::with(['catering','catering.categories', 'catering.village.district' ,'cart_details', 'cart_details.product', 'cart_details.product_options', 'cart_details.product_options.option_choice'])->where('customer_id', $customer->id)->orderBy('id', 'desc')->get();
+
+        return response()->json(['carts' => $carts]);
+
+    }
+
+
+    public function destroy($id){
+        Cart::find($id)->delete();
+        return response(null, 200);
+    }
+
+//    public function delete($id){
+//        $user = auth()->user();
+//        $customer = Customer::where('user_id', auth()->user()->id)->first();
+//
+//        $cart =
+//    }
 }

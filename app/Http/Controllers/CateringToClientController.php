@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Catering;
 use App\Models\Product;
+use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +19,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings = array();
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->orderByDesc('rate')->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -33,14 +34,32 @@ class CateringToClientController extends Controller
     {
 
         request()->validate([
-            'keyword' => 'required'
+            'keyword' => 'required',
+            'district_name' => 'required'
         ]);
 
         $finish_caterings = array();
 
         $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
             $query->where("name", "like", "%" . request('keyword') . "%");
-        }, "village.district", "categories"])->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+        }, "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+            return $catering;
+        });
+
+        return response()->json($finish_caterings);
+    }
+
+    public function getCategoryResultCatering(Request $request){
+        request()->validate([
+            'keyword' => 'required',
+            'district_name' => 'required'
+        ]);
+
+        $finish_caterings = array();
+
+
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -69,5 +88,15 @@ class CateringToClientController extends Controller
             "delivery_start_time" => $catering->delivery_start_time,
             "delivery_end_time" => $catering->delivery_end_time,
         ]);
+    }
+
+    public function getCateringReviews($id){
+        $rateCountGroup = Reviews::where('catering_id', $id)->groupBy('star')->select('star', DB::raw('count(*) as total'))->get();
+
+
+        $reviews = Reviews::with('customer.user:id,name')->where('catering_id', $id)->orderBy('created_at', 'desc')->get();
+        $catering = Catering::find($id);
+
+        return response()->json([ "catering_review" => ["rate" => $catering->rate ,"reviews" => $reviews, "rate_count" => $rateCountGroup]]);
     }
 }

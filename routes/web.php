@@ -14,11 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return "ajsjas";
+    return "Ini halaman utama";
+});
+
+Route::get('/inibeda', function () {
+    return "Ini halaman utama";
 });
 
 Route::get('/customer/preorder/showsnaptoken/{id}', [\App\Http\Controllers\CustomerOrderController::class, 'showSnapToken']);
 
-Route::get('/customer/preorder/test', function (){
-  return "test";
+Route::get('/customer/payment/back', function (){
+  return "back";
 });

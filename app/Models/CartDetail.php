@@ -11,4 +11,12 @@ class CartDetail extends Model
 
     protected $guarded = [
     ];
+
+    public function product(){
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function product_options(){
+        return $this->hasMany(CartProductOption::class, 'cart_detail_id');
+    }
 }

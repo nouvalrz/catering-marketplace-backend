@@ -21,7 +21,9 @@ class Orders extends Model
         'end_date',
         'cancele_at',
         'paid_status',
-        'snap_token'
+        'snap_token',
+        'invoice_number',
+        'has_review'
     ];
 
     public function customer()
@@ -49,5 +51,6 @@ class Orders extends Model
     public function address(){
         return $this->hasOne(CustomerAddresses::class, 'customer_addresses_id');
     }
+
 
 }

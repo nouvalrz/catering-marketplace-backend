@@ -8,22 +8,44 @@ use Illuminate\Database\Eloquent\Model;
 class Reviews extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'product_id',
+        'order_id',
         'customer_id',
         'star',
         'has_image',
         'description',
+        'catering_id'
     ];
 
-    
-    public function product()
+    public static function boot()
     {
-        return $this->belongsTo(Product::class, 'foreign_key');
+        parent::boot();
+
+
+        self::created(function($review){
+            // ... code here
+            $cateringAvgRate = Reviews::where('catering_id', $review->catering_id)->avg('star');
+            if($cateringAvgRate != 0.0 || $cateringAvgRate != 0){
+                $catering = Catering::find($review->catering_id);
+                $catering->rate = $cateringAvgRate;
+                $catering->save();
+            }
+        });
+
+    }
+
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'foreign_key');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
+
+//    public function user(){
+//        return $this->customer()->user();
+//    }
 }

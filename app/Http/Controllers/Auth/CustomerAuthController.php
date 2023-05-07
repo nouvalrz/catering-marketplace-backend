@@ -30,7 +30,10 @@ class CustomerAuthController extends Controller
     }
 
     public function logout(Request $request){
+        $user = auth()->user();
+        $user->fcm_token = null;
+        $user->save();
         auth()->logout();
-        return "logout";
+        response()->json(["status" => "success"]);
     }
 }

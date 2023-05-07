@@ -31,7 +31,7 @@ Route::post('customer/register/validate-otp', [CustomerRegisterController::class
 Route::post('customer/register/check-email', [CustomerRegisterController::class, 'checkEmailAvail']);
 Route::post('customer/register/check-phone', [CustomerRegisterController::class, 'checkPhoneAvail']);
 Route::post('customer/login', [CustomerAuthController::class, 'login']);
-Route::post('customer/logout', [CustomerAuthController::class, 'logout']);
+Route::get('customer/logout', [CustomerAuthController::class, 'logout']);
 
 
 Route::get('customer/profile', [CustomerController::class, 'profile']);
@@ -42,19 +42,33 @@ Route::post('customer/address/add', [CustomerAddressController::class, 'addAddre
 
 
 Route::post('customer/cart/add-instant', [\App\Http\Controllers\CustomerCartController::class, 'createInstant']);
-Route::get('customer/cart/index', [\App\Http\Controllers\CustomerCartController::class, 'getAllCart']);
+Route::post('customer/cart/preorder/add', [\App\Http\Controllers\CustomerCartController::class, 'createPreOrderCart']);
+Route::get('customer/cart/preorder/{id}/delete', [\App\Http\Controllers\CustomerCartController::class, 'destroy']);
+Route::get('customer/cart/index', [\App\Http\Controllers\CustomerCartController::class, 'index']);
+
+
+//Route::get('customer/cart/index', [\App\Http\Controllers\CustomerCartController::class, 'getAllCart']);
 Route::post('customer/preorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createPreOrder']);
 Route::post('customer/preorder/receive', [\App\Http\Controllers\CustomerOrderController::class, 'receive']);
 Route::get('customer/order/index', [\App\Http\Controllers\CustomerOrderController::class, 'index']);
 Route::get('customer/order/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'show']);
 Route::get('customer/order/{id}/show-paid-status', [\App\Http\Controllers\CustomerOrderController::class, 'getOrderPaidStatus']);
+Route::get('customer/order/{id}/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setOrderToAccepted']);
 
 
+// Chat Route
+Route::post('customer/chat/show', [\App\Http\Controllers\ChatController::class, 'show']);
+Route::get('customer/chat/index', [\App\Http\Controllers\ChatController::class, 'indexForCustomer']);
+Route::post('chat/send', [\App\Http\Controllers\ChatController::class, 'send']);
+
+Route::post('customer/review/create', [\App\Http\Controllers\ReviewController::class, 'create']);
+Route::get('catering/client/{id}/reviews', [\App\Http\Controllers\CateringToClientController::class, 'getCateringReviews']);
 
 Route::post('catering/profile/upload-image', [CateringController::class, 'uploadImage']);
 Route::post('catering/product/get', [\App\Http\Controllers\ProductToClientController::class, 'getProductDetail']);
 Route::post('catering/profile/add-product', [CateringController::class, 'addProduct']);
 Route::post('catering/client/get-relevant', [\App\Http\Controllers\CateringToClientController::class, 'getRelevantCatering']);
 Route::post('catering/client/get-search-result', [\App\Http\Controllers\CateringToClientController::class, 'getSearchResultCatering']);
+Route::post('catering/client/get-category-result', [\App\Http\Controllers\CateringToClientController::class, 'getCategoryResultCatering']);
 Route::get('catering/client/{id}/get-products', [CateringToClientController::class, 'getProductsFromCatering']);
 Route::get('catering/client/{id}/get-delivery-time-range', [CateringToClientController::class, 'getCateringDeliveryTimeRange']);
