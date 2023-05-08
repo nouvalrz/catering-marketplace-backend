@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Catering;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DiscountResource;
@@ -23,26 +23,21 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $userId = auth()->guard('api_catering')->user()->id;
-        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        $userId = auth()->guard('api_admin')->user()->id;
+        $cateringId = DB::table('administrators')->where('user_id', $userId)->value('id');
         $order = Orders::where('catering_id', '=', $cateringId)->get();
 
-        $unpaid = $order->where('status', '=', 'UNPAID')->count();
-        $void = $order->where('status', '=', 'VOID')->count();
-        $paid = $order->where('status', '=', 'PAID')->count();
-        $pending = $order->where('status', '=', 'PENDING')->count();
-        $notApproved = $order->where('status', '=', 'NOT_APPROVED')->count();
-        $proccesed = $order->where('status', '=', 'PROCESSED')->count();
-        $ongoing = $order->where('status', '=', 'ONGOING')->count();
-        $sending = $order->where('status', '=', 'SEND')->count();
-        $accepted = $order->where('status', '=', 'ACCEPTED')->count();
-        $complain = $order->where('status', '=', 'COMPLAINT')->count();
+        $pending = $order->where('status', '=', 'Menunggu Konfirmasi')->count();
+        $notApprove = $order->where('status', '=', 'Tidak Disetujui')->count();
+        $approve = $order->where('status', '=', 'Diproses')->count();
+        $sending = $order->where('status', '=', 'Dikirim')->count();
+        $received = $order->where('status', '=', 'Diterima')->count();
+        $complain = $order->where('status', '=', 'Dikomplain')->count();
 
-        if(!request()->year){
-            // $year = date('Y');
-            $year = 2023;
+        if(request()->q == null){
+            $year = date('Y');
         }else{
-            $year = request()->year;
+            $year = request()->q;
         }
 
         $transaction = DB::table('orders')
@@ -62,8 +57,8 @@ class DashboardController extends Controller
                 $total_price[] = $result->total_price;
             }
         }else{
-            $month_name[] = 'null';
-            $total_price[] = 'null';
+            $month_name[] = '';
+            $total_price[] = '';
         }
 
         //response
@@ -72,24 +67,17 @@ class DashboardController extends Controller
             'message' => 'Statistik Data',
             'data' => [
                 'count' => [
-                    'unpaid' => $unpaid,
-                    'void' => $void,
-                    'paid' => $paid,
                     'pending' => $pending,
-                    'notApproved' => $notApproved,
-                    'proccesed' => $proccesed,
-                    'ongoing' => $ongoing,
+                    'notApprove' => $notApprove,
+                    'approve' => $approve,
                     'sending' => $sending,
-                    'accepted' => $accepted,
-                    'complain' => $complain,
+                    'received' => $received,
+                    'complain' => $complain
                 ],
                 'chart' => [
                     'month_name' => $month_name,
-                    'total_price' => $total_price,
-                    'year' => $year
-                ],
-                'message' => request()->year . 'msg1',
-                'message2' => $year . 'msg2'
+                    'total_price' => $total_price
+                ]
             ]
         ], 200);
         

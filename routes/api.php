@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Catering\CategoryController;
 use App\Http\Controllers\Api\Catering\ProductController;
 use App\Http\Controllers\Api\Catering\CateringAuthController;
 use App\Http\Controllers\Api\Catering\CateringRegisterController;
+use App\Http\Controllers\Api\Catering\ChatController;
 use App\Http\Controllers\Api\Catering\ComplaintController;
 use App\Http\Controllers\Api\Catering\DeliveryCostsController;
 use App\Http\Controllers\Api\Catering\DeliveryCoveragesController;
@@ -59,7 +60,7 @@ Route::post('catering/client/get-relevant', [\App\Http\Controllers\CateringToCli
 
 Route::prefix('admin')->group(function(){
     //route register
-    // Route::post('/register', [CateringRegisterController::class, 'store'], ['as' => 'catering']);
+    Route::post('/register', [AdminAuthController::class, 'regist'], ['as' => 'admin']);
     //route login
     Route::post('/login', [AdminAuthController::class, 'index', ['as' => 'admin']]);
 
@@ -71,6 +72,10 @@ Route::prefix('admin')->group(function(){
         Route::get('/refresh', [AdminAuthController::class, 'refreshToken', ['as' => 'admin']]);
         //logout
         Route::post('/logout', [AdminAuthController::class, 'logout', ['as' => 'admin']]);
+        //catering
+        Route::apiResource('/caterings', App\Http\Controllers\Api\Admin\CateringController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
+        
+        Route::post('/cateringsA/{id}', 'App\Http\Controllers\Api\Admin\CateringController@changeVerifiedCatering');
     });
    
 });
@@ -84,6 +89,16 @@ Route::prefix('catering')->group(function($router){
     Route::post('/login', [CateringAuthController::class, 'index', ['as' => 'catering']]);
     //route get otp
     Route::post('/get-otp', [CateringAuthController::class, 'getOtp', ['as' => 'catering']]);
+    
+    Route::post('/check-email', [CateringAuthController::class, 'checkEmail', ['as' => 'catering']]);
+    
+    Route::post('/check-otp', [CateringAuthController::class, 'checkOtp', ['as' => 'catering']]);
+    
+    Route::post('/change-password', [CateringAuthController::class, 'changePassword', ['as' => 'catering']]);
+    
+    Route::post('/check-user', [CateringAuthController::class, 'checkUser', ['as' => 'catering']]);
+    
+    Route::post('/change-email-check', [CateringAuthController::class, 'changeEmailCheck', ['as' => 'catering']]);
 
     //group route with middleware "auth:api_catering"
     Route::group(['middleware' => 'auth:api_catering'], function($router) {
@@ -99,6 +114,12 @@ Route::prefix('catering')->group(function($router){
         Route::apiResource('/categories', CategoryController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //products resource
         Route::apiResource('/products', ProductController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        
+        Route::post('/products/updateOptionItem', 'App\Http\Controllers\Api\Catering\ProductController@updateOptionItem');
+        
+        Route::delete('/products/deleteOption/{id}', 'App\Http\Controllers\Api\Catering\ProductController@deleteOption');
+
+        Route::delete('/products/deleteItem/{id}', 'App\Http\Controllers\Api\Catering\ProductController@deleteItem');
         //products change available
         Route::post('/productsA/{id}', 'App\Http\Controllers\Api\Catering\ProductController@changeAvailableProduct');
         //discount resource
@@ -118,6 +139,13 @@ Route::prefix('catering')->group(function($router){
         
         Route::apiResource('/complaint', ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         
+        Route::post('/message', 'App\Http\Controllers\Api\Catering\ChatController@message');
+        
+        Route::get('/roomChats', 'App\Http\Controllers\Api\Catering\ChatController@roomChats');
+        
+        Route::get('/chats/{id}', 'App\Http\Controllers\Api\Catering\ChatController@chats');
+        
+        Route::post('/chats/send', 'App\Http\Controllers\Api\Catering\ChatController@sendMessage');
     });
    
 });

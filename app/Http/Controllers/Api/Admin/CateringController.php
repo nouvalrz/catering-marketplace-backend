@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api\Catering;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductDetailResource;
+use App\Http\Resources\CateringResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Categories;
 use App\Models\Catering;
 use App\Models\CategoriesProduct;
-use App\Models\ProductOption;
-use App\Models\ProductOptionDetail;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +19,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Validation\Rule;
 
 
-class ProductController extends Controller
+class CateringController extends Controller
 {
     // var userID = auth()->guard('api_catering')->user()->id;
     // var cateringID = 
@@ -34,16 +32,20 @@ class ProductController extends Controller
     {
         //get products
         // $products = Product::with('category')->when(request()->q,
-        $userId = auth()->guard('api_catering')->user()->id;
-        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        // $userId = auth()->guard('api_catering')->user()->id;
+        // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $productFilter = Product::where('catering_id', $cateringId)
 
-        $product = Product::where('is_available', 'like', '%' . request()->available . '%' );
+        $catering = Catering::where('isVerified', 'like', '%' . request()->verified . '%' );
 
         // asli
-        $products = $product->where('catering_id', $cateringId)->when(request()->q,
-        function($products) {
-            $products = $products->where('name', 'like', '%'. request()->q . '%');
+        $catering = $catering->when(request()->q,
+        // $catering = Catering::when(request()->q,
+        function($catering) {
+            $catering = $catering->where('name', 'like', '%'. request()->q . '%')
+            ->orWhere('email', 'like', '%'. request()->q . '%')
+            ->orWhere('phone', 'like', '%'. request()->q . '%')
+            ->orWhere('zipcode', 'like', '%'. request()->q . '%');
         })->latest()->paginate(request()->pages);
 
         // if(request()->filter != ''){
@@ -58,7 +60,7 @@ class ProductController extends Controller
         //     });
         // })->latest()->paginate(20);
         //return with Api Resource
-        return new ProductResource(true, 'List Data Products', $products);
+        return new CateringResource(true, 'List Data Caterings', $catering);
     }
     /**
      * Store a newly created resource in storage.
@@ -74,14 +76,16 @@ class ProductController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $validator = Validator::make($request->all(), [
-            // 'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:500|dimensions:ratio=1/1',
             'name' => 'required',
             // 'catering_id' => 'required',
             'description' => 'required',
-            'weight' => 'required|numeric|min:0',
-            'price' => 'required|numeric|min:0',
-            'minimum_quantity' => 'required|numeric|min:0',
-            'maximum_quantity' => 'required|numeric|min:0',
+            'weight' => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
+            'minimum_quantity' => 'required|numeric|min:1',
+            'maximum_quantity' => 'required|numeric|min:1',
+            'is_free_delivery' => 'required',
+            // 'is_hidden' => 'required',
             'is_available' => 'required',
             'category_id' => 'required',
         ]);
@@ -98,48 +102,18 @@ class ProductController extends Controller
             // 'slug' => Str::slug($request->title, '-'),
             'category_id' => $request->category_id,
             'catering_id' => $cateringId,
+            // 'user_id' => auth()->guard('api_admin')->user()->id,
             'description' => $request->description,
             'weight' => $request->weight,
             'price' => $request->price,
             'minimum_quantity' => $request->minimum_quantity,
             'maximum_quantity' => $request->maximum_quantity,
+            'is_free_delivery' => $request->is_free_delivery,
+            'is_hidden' => $request->is_hidden,
             'is_available' => $request->is_available,
+            // 'image_id' => $cateringId,
 
         ]);
-
-        // $index = 0;
-        $options = $request->options;
-        // return new ProductResource(true, $options, $options);
-        
-        foreach($options as $option){
-            // return new ProductResource(true, $options, $option);
-
-            $optionData = ProductOption::create([
-                // 'product_id' => 3,
-                'product_id' => $product->id,
-                'option_name' => $option['nameOption'],
-                'option_type' => $option['optionType'],
-                'minimum_selection' => $option['minSelect'],
-                'maximum_selection' => $option['maxSelect'],
-                'is_active' => $option['isActive'],
-
-            ]);
-
-            // $items = $option->flatten(1)->value()->all();
-            $items = $option['items'];
-            foreach($items as $item){
-                $itemData = ProductOptionDetail::create([
-                    'product_options_id' => $optionData->id,
-                    'option_choice_name' => $item['nameItem'],
-                    'additional_price' => $item['price'],
-                    'is_available' => $item['isAvailable'],
-
-                ]);
-            };
-            // $index+=1;
-        };
-        return new ProductResource(true, $options, $optionData);
-
         // dd($request->category_id);
         // Log::debug($request->category_id);
         // $category = Categories::find($request->category_id);
@@ -148,6 +122,8 @@ class ProductController extends Controller
         if($product) {
             //return success with Api Resource
             return new ProductResource(true, 'Data Product Berhasil Disimpan!', $request->category_id);
+
+
         }
         //return failed with Api Resource
         return new ProductResource(false, 'Data Product Gagal Disimpan!', null);
@@ -163,21 +139,20 @@ class ProductController extends Controller
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        $product = Product::whereId($id)->first();
+        // $product = Product::with('categories:id')->whereId($id)->first();
+        $catering = Catering::whereId($id)->first();
         // $product = Product::whereId($id)->first();
         // $product = DB::table('categories_product')->where('product_id', '=', $id)->get('id');
         // $product = DB::table('categories_product')->where('product_id', $id);
 
-        $product->link = asset('storage/products/');
+        $catering->link = asset('storage/caterings/');
 
-        $options = ProductOption::with('optionDetail')->where('product_id', $id)->get();
-
-        if($product) {
+        if($catering) {
             //return success with Api Resource
-            return new ProductDetailResource(true, 'Detail Data Product!', $product, $options);
+            return new CateringResource(true, 'Detail Data Catering!', $catering);
         }
         //return failed with Api Resource
-        return new ProductDetailResource(false, 'Detail Data Product Tidak Ditemukan!', null, null);
+        return new CateringResource(false, 'Detail Data Catering Tidak Ditemukan!', null);
     }
     /**
      * Update the specified resource in storage.
@@ -207,8 +182,10 @@ class ProductController extends Controller
             'description' => 'required',
             'weight' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:1',
-            'minimum_quantity' => 'required|numeric|min:0',
+            'minimum_quantity' => 'required|numeric|min:1',
             'maximum_quantity' => 'required|numeric|min:1',
+            'is_free_delivery' => 'required',
+            'is_hidden' => 'required',
             'is_available' => 'required',
         ]);
         if ($validator->fails()) {
@@ -234,6 +211,8 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'minimum_quantity' => $request->minimum_quantity,
                 'maximum_quantity' => $request->maximum_quantity,
+                'is_free_delivery' => $request->is_free_delivery,
+                'is_hidden' => $request->is_hidden,
                 'is_available' => $request->is_available,
                 'image_id' => $cateringId,
 
@@ -250,6 +229,8 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'minimum_quantity' => $request->minimum_quantity,
                 'maximum_quantity' => $request->maximum_quantity,
+                'is_free_delivery' => $request->is_free_delivery,
+                'is_hidden' => $request->is_hidden,
                 'is_available' => $request->is_available,
                 // 'image_id' => $cateringId,
     
@@ -263,92 +244,20 @@ class ProductController extends Controller
         return new ProductResource(false, 'Data Product Gagal Diupdate!', null);
     }
 
-    public function updateOptionItem(Request $request){
-        
-        if($request->type == 'item'){
-            if($request->idItem){
-                $items = ProductOptionDetail::whereId($request->idItem)->first();
-                $items->update([
-                    'option_choice_name' => $request->option_choice_name,
-                    'additional_price' => $request->additional_price,
-                    'is_available' => $request->is_available,
-                ]);
-                if($items){
-                    return new ProductResource(true, 'Data Items Berhasil Diupdate!', $items);
-                }
-                return new ProductResource(false, 'Data Items Gagal Diupdate!', null);
-            }
-            else{
-
-                $items = ProductOptionDetail::create([
-                    'product_options_id' => $request->product_options_id,
-                    'option_choice_name' => $request->option_choice_name,
-                    'additional_price' => $request->additional_price,
-                    'is_available' => $request->is_available,
-                ]);
     
-                if($items){
-                    return new ProductResource(true, 'Data Items Berhasil ditambah!', $items);
-                }
-                return new ProductResource(false, 'Data Items asd !', null);
-
-            }
-
-            return new ProductResource(false, 'Data Items salah !', null);
-
-        }
-        
-        if($request->type == 'option'){
-            
-            $options = ProductOption::whereId($request->idItem)->first();
-            $options->update([
-                'option_choice_name' => $request->option_choice_name,
-                'additional_price' => $request->additional_price,
-                'is_available' => $request->is_available,
-            ]);
-            if($options){
-                return new ProductResource(true, 'Data Items Berhasil Diupdate!', $options);
-            }
-            return new ProductResource(false, 'Data Items Gagal Diupdate!', null);
-        }
-        return $request;
-    }
-
-    public function deleteOption(ProductOption $option){
-        if($option->delete()) {
-            //return success with Api Resource
-            return new ProductResource(true, 'Data Item Berhasil Dihapus!', null);
-        }
-        //return failed with Api Resource
-        return new ProductResource(false, 'Data item Gagal Dihapus!', null);
-    
-    }
-
-    public function deleteItem($id){
-        $item = ProductOptionDetail::whereId($id)->first();
-        $item->delete();
-        // if($item->delete()) {
-        //     //return success with Api Resource
-        //     return new ProductResource(true, 'Data Item Berhasil Dihapus!', null);
-        // }
-        //return failed with Api Resource
-        return new ProductResource(false, 'Data item Gagal Dihapus!', $item);
-    
-    }
-
-    public function changeAvailableProduct(Request $request, $id)
+    public function changeVerifiedCatering(Request $request, $id)
     {
         // dd($request->status);
-        $product      = Product::findOrFail($id);
-        $product->is_available = $request->is_available;
-        $product->save();
+        $catering      = Catering::findOrFail($id);
+        $catering->isVerified = $request->isVerified;
+        $catering->save();
 
-        if($product) {
+        if($catering) {
             //return success with Api Resource
-            return new ProductResource(true, 'Data Product Berhasil!', $product);
+            return new CateringResource(true, 'Data Catering Berhasil!', $catering);
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Data Product Gagal Diupdate!', $product);
+        return new CateringResource(false, 'Data Catering Gagal Diupdate!', $catering);
     }
 
     /**
@@ -360,8 +269,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //remove image
-        Storage::disk('local')->delete('public/products/'.basename($product->image));
-            // Storage::disk('local')->delete('public/products/'.basename($product->image));
+        // Storage::disk('local')->delete('public/products/'.basename($product->image));
         if($product->delete()) {
             //return success with Api Resource
             return new ProductResource(true, 'Data Product Berhasil Dihapus!', null);

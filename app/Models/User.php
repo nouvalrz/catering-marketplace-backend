@@ -67,7 +67,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         else if ($this->type == "catering"){
             return $this->hasOne(Catering::class, 'user_id');
         }
-        else if ($this->type == "administrator"){
+        else if ($this->type == "admin"){
             return $this->hasOne(Administrators::class, 'user_id');
         }
     }

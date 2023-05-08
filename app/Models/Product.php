@@ -18,8 +18,6 @@ class Product extends Model
         'price',
         'minimum_quantity',
         'maximum_quantity',
-        'is_free_delivery',
-        'is_hidden',
         'is_available',
         'image',
     ];

@@ -23,6 +23,8 @@ class ProfileController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $catering = Catering::whereId($cateringId)->first();
+        $catering->link = asset('storage/caterings/');
+
         if($catering) {
             //return success with Api Resource
             return new CateringResource(true, 'Detail Data Product!', $catering);

@@ -21,4 +21,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'foreign_key');
     }
+    
+    public function getImageAttribute($image)
+    {
+        return asset('storage/customers/' . $image);
+    }
 }

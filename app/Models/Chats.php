@@ -10,8 +10,17 @@ class Chats extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sender_id',
-        'recipient_id',
-        'message'
+        'roomchats_id',
+        'message',
+        'sender',
     ];
+
+    
+    public function room()
+    {
+        // $rooms = $this->belongsTo(RoomChats::class, 'roomchats_id');
+        // return $rooms->belongsTo(Catering::class, 'catering_id');
+        return $this->belongsTo(RoomChats::class, 'roomchats_id');
+    }
+    
 }

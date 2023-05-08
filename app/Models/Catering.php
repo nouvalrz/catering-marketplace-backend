@@ -38,4 +38,5 @@ class Catering extends Model
     {
         return asset('storage/caterings/' . $image);
     }
+
 }

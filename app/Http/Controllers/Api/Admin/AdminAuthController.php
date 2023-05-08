@@ -3,17 +3,36 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Administrators;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminAuthController extends Controller
 {
+    public function regist(Request $request){
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'type' => 'admin'
+        ]);
+
+        $admin = Administrators::create([
+            'username' => 'admin',
+            'fullname' => 'admin',
+            'user_id' => $user->id
+        ]);
+    }
+
     public function index(Request $request)
     {
         //set validasi
         $validator = Validator::make($request->all(), [
-            'username' => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
         //response error validasi
@@ -21,13 +40,14 @@ class AdminAuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
         //get "email" dan "password" dari input
-        $credentials = $request->only('username', 'password');
+        $credentials = $request->only('email', 'password');
         //check jika "email" dan "password" tidak sesuai
         if(!$token = auth()->guard('api_admin')->attempt($credentials)){
         //response login "failed"
         return response()->json([
             'success' => false,
-            'message' => 'Email or Password is incorrect'
+            'message' => 'Email or Password is incorrect lah',
+            'aa' => auth()->guard('api_admin')->user(),
             ], 401);
    
         }
