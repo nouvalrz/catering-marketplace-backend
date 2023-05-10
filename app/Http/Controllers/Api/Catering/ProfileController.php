@@ -9,6 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CateringResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Catering;
+use App\Models\District;
+use App\Models\Province;
+use App\Models\Regency;
+use App\Models\Village;
+use Dotenv\Util\Regex;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +29,11 @@ class ProfileController extends Controller
         
         $catering = Catering::whereId($cateringId)->first();
         $catering->link = asset('storage/caterings/');
+
+        $catering->village = Village::whereId($catering->village_id)->first('name');
+        $catering->district = District::whereId($catering->district_id)->first('name');
+        $catering->regency = Regency::whereId($catering->regency_id)->first('name');
+        $catering->province = Province::whereId($catering->province_id)->first('name');
 
         if($catering) {
             //return success with Api Resource
@@ -53,11 +63,13 @@ class ProfileController extends Controller
             'description' => 'required',
             'phone' => 'required',
             'address' => 'required',
-            'zipcode' => 'required',
+            // 'zipcode' => 'required',
             'province_id' => 'required',
             'regency_id' => 'required',
             'district_id' => 'required',
             'village_id' => 'required',
+            'delivery_cost' => 'required',
+            'min_distance_delivery' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -86,6 +98,12 @@ class ProfileController extends Controller
                 'regency_id' => $request->regency_id,
                 'district_id' => $request->district_id,
                 'village_id' => $request->village_id,
+                'delivery_start_time' => $request->delivery_start_time,
+                'delivery_end_time' => $request->delivery_end_time,
+                'rate' => $request->rate,
+                'total_sales' => $request->total_sales,
+                'delivery_cost' => $request->delivery_cost,
+                'min_distance_delivery' => $request->min_distance_delivery,
 
             ]);
         }else{
@@ -106,6 +124,10 @@ class ProfileController extends Controller
                 'village_id' => $request->village_id,
                 'delivery_start_time' => $request->delivery_start_time,
                 'delivery_end_time' => $request->delivery_end_time,
+                'rate' => $request->rate,
+                'total_sales' => $request->total_sales,
+                'delivery_cost' => $request->delivery_cost,
+                'min_distance_delivery' => $request->min_distance_delivery,
     
             ]);
         }

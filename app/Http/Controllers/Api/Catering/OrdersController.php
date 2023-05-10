@@ -35,7 +35,7 @@ class OrdersController extends Controller
 
         $orders = $orders->where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
         function($orders) {
-            $orders = $orders->where('note', 'like', '%'. request()->q . '%');
+            $orders = $orders->where('invoice_number', 'like', '%'. request()->q . '%');
         })->latest()->paginate(request()->pages);
         //return with Api Resource
         return new OrderResource(true, 'List Data Orders', $orders);
@@ -69,7 +69,7 @@ class OrdersController extends Controller
         $customerPhone = Customer::whereId($orders->customer_id)->value('phone');
         $customerAddressRecipient = CustomerAddresses::whereId($orders->customer_addresses_id)->value('recipient_name');
         $customerAddress = CustomerAddresses::whereId($orders->customer_addresses_id)->value('address');
-        $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
+        // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
 
         if($orders) {
             //response
@@ -83,7 +83,7 @@ class OrdersController extends Controller
                         'phone' => $customerPhone,
                         'address_recipient' => $customerAddressRecipient,
                         'address' => $customerAddress,
-                        'address_zipcode' => $customerAddressZipcode,
+                        // 'address_zipcode' => $customerAddressZipcode,
                     ],
                     'order_detail' => $ordersDetail,
                 ]

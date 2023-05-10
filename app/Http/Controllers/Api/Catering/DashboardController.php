@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DiscountResource;
 use App\Models\Discount;
 use App\Models\Orders;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use LengthException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -37,34 +39,116 @@ class DashboardController extends Controller
         $sending = $order->where('status', '=', 'SEND')->count();
         $accepted = $order->where('status', '=', 'ACCEPTED')->count();
         $complain = $order->where('status', '=', 'COMPLAINT')->count();
+        
+        $month_label = ['','January', 'February', 'March', 'April', 
+            'May', 'June', 'July', 'August', 'September', 
+            'October', 'November', 'December'];
 
-        if(!request()->year){
+        if(request()->year == null){
             // $year = date('Y');
-            $year = 2023;
+            $year = Carbon::now()->isoFormat('Y');
         }else{
             $year = request()->year;
         }
 
+        $yearOption = DB::table('orders')
+            ->addSelect(DB::raw('YEAR(end_date) as years'))
+            // ->whereYear('end_date', '=', $year)
+            ->where('catering_id', '=', $cateringId)
+            ->groupBy('years')
+            ->orderByRaw('years ASC')
+            ->get();
+
+        if($yearOption){
+            foreach($yearOption as $result){
+                $yearSelect[] = $result->years;
+
+            }
+
+        }
+
+        $status = ['UNPAID', 'VOID', 'PAID', 'PENDING', 'NOT_APPROVED', 
+            'PROCESSED', 'ONGOING', 'SEND', 'ACCEPTED', 'COMPLAINT'];
+
+        $i = 0;
+        $value = array(array());
+        foreach($status as $result){
+            $transactionStatus = DB::table('orders')
+                ->addSelect(DB::raw('COUNT(id) as total'))
+                ->addSelect(DB::raw('MONTH(created_at) as month'))
+                ->where('catering_id', '=', $cateringId)
+                ->whereYear('created_at', '=', $year)
+                ->where('status', '=', $result)
+                ->groupBy('month')
+                ->orderByRaw('month ASC')
+                ->get();
+                $counter = [];
+                if($transactionStatus){
+                    $start_value = 1;
+                    foreach($transactionStatus as $result2){
+                        for($j=$start_value; $j <= $result2->month; $j++){
+                            if($j == $result2->month){
+                                $value[$i][] = $result2->total;
+                                $start_value = $result2->month+1;
+                                $counter[] = $i;
+                            }else{
+                                $value[$i][] = 0;
+                                $counter[] = $i;
+                            }
+                        };
+
+                    }
+                    $a = count($counter);
+                    if(count($counter) <=11){
+                        $start_value2 = count($counter)+1;
+                        for($jj=$start_value2; $jj<=11; $jj++){
+                            $value[$i][] = 0;
+                            $counter[] = $i;
+                        };
+                    }
+                }
+                $i++;
+        }
+
         $transaction = DB::table('orders')
             ->addSelect(DB::raw('SUM(total_price) as total_price'))
-            ->addSelect(DB::raw('MONTH(created_at) as month'))
-            ->addSelect(DB::raw('MONTHNAME(created_at) as month_name'))
-            ->addSelect(DB::raw('YEAR(created_at) as year'))
-            ->whereYear('created_at', '=', $year)
-            ->where('status', '=', 'Diterima')
+            ->addSelect(DB::raw('MONTH(end_date) as month'))
+            ->addSelect(DB::raw('MONTHNAME(end_date) as month_name'))
+            ->addSelect(DB::raw('YEAR(end_date) as years'))
+            ->where('catering_id', '=', $cateringId)
+            ->whereYear('end_date', '=', $year)
+            ->where('status', '=', 'ACCEPTED')
             ->groupBy('month')
             ->orderByRaw('month ASC')
             ->get();
 
-        if(count($transaction)){
-            foreach($transaction as $result){
-                $month_name[] = $result->month_name;
-                $total_price[] = $result->total_price;
+            if($transaction){
+                $month_name =[];
+                $mnt =[];
+                $start_value = 1;
+                foreach($transaction as $result){
+                    for($i=$start_value; $i <= $result->month; $i++){
+                        if($i == $result->month){
+                            $month_name[] = $result->month_name;
+                            $total_price[] = $result->total_price;
+                            $start_value = $result->month+1;
+                        }else{
+                            $month_name[] = $month_label[$i];
+                            $total_price[] = 0;
+                        }
+                    };
+                    $mnt[] = $result->years;
+
+                }
+                $a = count($month_name);
+                if(count($month_name) <=12){
+                    $start_value2 = count($month_name)+1;
+                    for($j=$start_value2; $j<=12; $j++){
+                        $month_name[] = $month_label[$j];
+                        $total_price[] = 0;
+                    };
+                }
             }
-        }else{
-            $month_name[] = 'null';
-            $total_price[] = 'null';
-        }
 
         //response
         return response()->json([
@@ -83,204 +167,32 @@ class DashboardController extends Controller
                     'accepted' => $accepted,
                     'complain' => $complain,
                 ],
-                'chart' => [
+                'chart_income' => [
                     'month_name' => $month_name,
                     'total_price' => $total_price,
-                    'year' => $year
+                    'year' => $year,
+                    'month' => request()->year,
                 ],
+                'chart_transaction' => [
+                    'month_name' => $month_name,
+                    // 'test' => $test,
+                    // 'value' => $value,
+                    'transactionUnpaid' => $value[0],
+                    'transactionVoid' => $value[1],
+                    'transactionPaid' => $value[2],
+                    'transactionPending' => $value[3],
+                    'transactionNotApproved' => $value[4],
+                    'transactionProccesed' => $value[5],
+                    'transactionOngoing' => $value[6],
+                    'transactionSending' => $value[7],
+                    'transactionAccepted' => $value[8],
+                    'transactionComplaint' => $value[9],
+                    'year' => $year,
+                ],
+                'year_option' => $yearSelect,
                 'message' => request()->year . 'msg1',
                 'message2' => $year . 'msg2'
             ]
         ], 200);
-        
-        //get products
-        // $products = Product::with('category')->when(request()->q,
-        // $discounts = Discount::where('catering_id', $cateringId)->when(request()->q,
-        // function($discounts) {
-        //     $discounts = $discounts->where('title', 'like', '%'. request()->q . '%');
-        // })->latest()->paginate(5);
-        // //return with Api Resource
-        // return new DiscountResource(true, 'List Data Discount', $discounts);
-    }
-    
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $userId = auth()->guard('api_catering')->user()->id;
-        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $validator = Validator::make($request->all(), [
-            // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
-            'type' => 'required',
-            'title' => 'required',
-            // 'catering_id' => 'required',
-            'description' => 'required',
-            'percentage' => 'required',
-            'minimum_spend' => 'required',
-            'maximum_disc' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        //upload image
-        // $image = $request->file('image');
-        // $image->storeAs('public/products', $image->hashName());
-        //create product
-        $discounts = Discount::create([
-            // 'image' => $image->hashName(),
-            'type' => $request->type,
-            'title' => $request->title,
-            // 'slug' => Str::slug($request->title, '-'),
-            'catering_id' => $cateringId,
-            // 'user_id' => auth()->guard('api_admin')->user()->id,
-            'description' => $request->description,
-            'percentage' => $request->percentage,
-            'minimum_spend' => $request->minimum_spend,
-            'maximum_disc' => $request->maximum_disc,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-
-        ]);
-        if($discounts) {
-            //return success with Api Resource
-            return new DiscountResource(true, 'Data Discounts Berhasil Disimpan!', $discounts);
-        }
-        //return failed with Api Resource
-        return new DiscountResource(false, 'Data Discounts Gagal Disimpan!', null);
-    }
-
-    
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        // $userId = auth()->guard('api_catering')->user()->id;
-        // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        
-        $discounts = Discount::whereId($id)->first();
-        if($discounts) {
-            //return success with Api Resource
-            return new DiscountResource(true, 'Detail Data Piscounts!', $discounts);
-        }
-        //return failed with Api Resource
-        return new DiscountResource(false, 'Detail Data Discounts Tidak Ditemukan!', null);
-    }
-
-    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, int $id)
-    {
-        $discounts = Discount::find($id);
-        // dd($discounts);
-        $userId = auth()->guard('api_catering')->user()->id;
-        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        
-        $validator = Validator::make($request->all(), [
-            'type' => 'required',
-            'title' => 'required',
-            'description' => 'required',
-            'percentage' => 'required',
-            'minimum_spend' => 'required',
-            'maximum_disc' => 'required',
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        //check image update
-        if ($request->file('image')) {
-        //     //remove old image
-        //     // Storage::disk('local')->delete('public/products/'.basename($product->image));
-        //     //upload new image
-        //     // $image = $request->file('image');
-        //     // $image->storeAs('public/products', $image->hashName());
-        //     //update product with new image
-            $discounts->update([
-                // 'image' => $image->hashName(),
-                'type' => $request->type,
-                'title' => $request->title,
-                // 'slug' => Str::slug($request->title, '-'),
-                'catering_id' => $cateringId,
-                // 'user_id' => auth()->guard('api_admin')->user()->id,
-                'description' => $request->description,
-                'percentage' => $request->percentage,
-                'minimum_spend' => $request->minimum_spend,
-                'maximum_disc' => $request->maximum_disc,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-
-            ]);
-        }
-        //update product without image
-        // $discounts->update([
-        //     'name' => $request->name,
-        //     // 'slug' => Str::slug($request->title, '-'),
-        //     'catering_id' => $cateringId,
-        //     'description' => $request->description,
-        //     'weight' => $request->weight,
-        //     'price' => $request->price,
-        //     'minimum_quantity' => $request->minimum_quantity,
-        //     'maximum_quantity' => $request->maximum_quantity,
-        //     'is_free_delivery' => $request->is_free_delivery,
-        //     'is_hidden' => $request->is_hidden,
-        //     'is_available' => $request->is_available,
-        //     // 'image_id' => $cateringId,
-
-        // ]);
-        $discounts->update([
-            'type' => $request->type,
-            'title' => $request->title,
-            'catering_id' => $cateringId,
-            'description' => $request->description,
-            'percentage' => $request->percentage,
-            'minimum_spend' => $request->minimum_spend,
-            'maximum_disc' => $request->maximum_disc,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-
-        ]);
-        // dd($discounts);
-        if($discounts) {
-            //return success with Api Resource
-            return new DiscountResource(true, 'Data Discounts Berhasil Diupdate!', $discounts);
-        }
-        //return failed with Api Resource
-        return new DiscountResource(false, 'Data Discounts Gagal Diupdate!', null);
-    }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-    * @param int $id
-    * @return \Illuminate\Http\Response
-    */
-    public function destroy(int $id)
-    {
-        $discounts = Discount::find($id);
-        //remove image
-        // Storage::disk('local')->delete('public/products/'.basename($product->image));
-        if($discounts->delete()) {
-            //return success with Api Resource
-            return new DiscountResource(true, 'Data Discount Berhasil Dihapus!', null);
-        }
-        //return failed with Api Resource
-        return new DiscountResource(false, 'Data Discount Gagal Dihapus!', null);
     }
 }

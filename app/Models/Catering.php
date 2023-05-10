@@ -26,7 +26,12 @@ class Catering extends Model
         'delivery_end_time',
         'image',
         'isVerified',
-        'user_id'
+        'user_id',
+        'rate',
+        'total_sales',
+        'delivery_cost',
+        'min_distance_delivery',
+
     ];
 
     public function user()

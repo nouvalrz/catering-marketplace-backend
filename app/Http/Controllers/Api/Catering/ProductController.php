@@ -299,17 +299,36 @@ class ProductController extends Controller
         }
         
         if($request->type == 'option'){
-            
-            $options = ProductOption::whereId($request->idItem)->first();
-            $options->update([
-                'option_choice_name' => $request->option_choice_name,
-                'additional_price' => $request->additional_price,
-                'is_available' => $request->is_available,
-            ]);
-            if($options){
-                return new ProductResource(true, 'Data Items Berhasil Diupdate!', $options);
+            if($request->idOption){
+                $options = ProductOption::whereId($request->idOption)->first();
+                $options->update([
+                    'option_name' => $request->option_name,
+                    'option_type' => $request->option_type,
+                    'minimum_selection' => $request->minimum_selection,
+                    'maximum_selection' => $request->maximum_selection,
+                    'is_active' => $request->is_active,
+                ]);
+                if($options){
+                    return new ProductResource(true, 'Data Option Berhasil Diupdate!', $options);
+                }
+                return new ProductResource(false, 'Data Option Gagal Diupdate!', null);
+            }else{
+                
+                $options = ProductOption::create([
+                    'product_id' => $request->product_id,
+                    'option_name' => $request->option_name,
+                    'option_type' => $request->option_type,
+                    'minimum_selection' => $request->minimum_selection,
+                    'maximum_selection' => $request->maximum_selection,
+                    'is_active' => $request->is_active,
+                ]);
+    
+                if($options){
+                    return new ProductResource(true, 'Data Option Berhasil ditambah!', $options);
+                }
+                return new ProductResource(false, 'Data Option asd !', null);
+
             }
-            return new ProductResource(false, 'Data Items Gagal Diupdate!', null);
         }
         return $request;
     }
