@@ -27,20 +27,34 @@ class CategoryController extends Controller
     * @param int $id
     * @return \Illuminate\Http\Response
     */
-    public function show($slug)
-    {
-        $category = Categories::with('products.category')
-        //get count review and average review
-        ->with('products', function ($query) {
-        $query->withCount('reviews');
-        $query->withAvg('reviews', 'rating');
-        })
-        ->where('slug', $slug)->first();
-        if($category) {
-            //return success with Api Resource
-            return new CategoriesResource(true, 'Data Product By Category : '.$category->name.'', $category);
-        }
-        //return failed with Api Resource
-        return new CategoriesResource(false, 'Detail Data Category Tidak Ditemukan!', null);
+    // public function show($slug)
+    // {
+    //     $category = Categories::with('products.category')
+    //     //get count review and average review
+    //     ->with('products', function ($query) {
+    //     $query->withCount('reviews');
+    //     $query->withAvg('reviews', 'rating');
+    //     })
+    //     ->where('slug', $slug)->first();
+    //     if($category) {
+    //         //return success with Api Resource
+    //         return new CategoriesResource(true, 'Data Product By Category : '.$category->name.'', $category);
+    //     }
+    //     //return failed with Api Resource
+    //     return new CategoriesResource(false, 'Detail Data Category Tidak Ditemukan!', null);
+    // }
+
+    public function categoriesProduct(){
+        $categories = Categories::where('type', '=', 'PRODUCT')->get(['id','name']);
+        
+        return new CategoriesResource(true, 'List Data Categories Product', $categories);
+
+    }
+
+    public function categoriesCatering(){
+        $categories = Categories::where('type', 'CATERING')->latest()->get(['id','name']);
+        
+        return new CategoriesResource(true, 'List Data Categories Product', $categories);
+
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CateringResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Catering;
+use App\Models\CateringCategories;
 use App\Models\District;
 use App\Models\Province;
 use App\Models\Regency;
@@ -36,6 +37,18 @@ class ProfileController extends Controller
         $catering->province = Province::whereId($catering->province_id)->first('name');
 
         $catering->workday = json_decode($catering->workday);
+
+        // $catering->categories = CateringCategories::with('categories')->where('catering_id', $cateringId)->get('categories_id');
+        $categories = CateringCategories::with('categories')->where('catering_id', $cateringId)->get('categories_id');
+        $categoryName = [];
+        $i = 0;
+        foreach($categories as $category){
+            // $categoryName[$i] = $category[$i]->categories->name;
+            $categoryName[$i] = $categories[$i]->categories;
+            $i++;
+        };
+        $catering->categories = $categoryName;
+        // $catering->aa = $categories[]->categories->name;
 
         if($catering) {
             //return success with Api Resource
@@ -142,10 +155,53 @@ class ProfileController extends Controller
     
             ]);
         }
+
+        $notAvailableCategories = [];
+        $avail = false;
+        $i = 0;
+        foreach($request->oldCategories as $oldCategory){
+            $avail = false;
+            foreach($request->categories as $category){
+                if($oldCategory['id'] == $category['id']){
+                    $avail = true;
+                };
+            };
+            if(!$avail){
+                $notAvailableCategories[$i] = $oldCategory['id'];
+            };
+            $i++;
+        };
+
+
+        $i = 0;
+        foreach($request->categories as $category){
+            $aa[$i] = $category['id'];
+            $categoriesDatas = CateringCategories::where('categories_id', $category['id'])->first();
+            if(!$categoriesDatas){
+                CateringCategories::create([
+                    'catering_id' => $userId,
+                    'categories_id' => $category['id'],
+                ]);
+            }
+            $i++;
+        };
+
+        $i = 0;
+        foreach($notAvailableCategories as $notCategory){
+            $notCategoriesDatas = CateringCategories::where('categories_id', $notCategory)->first();
+            if($notCategoriesDatas){
+                DB::table('catering_categories')->where('categories_id', $notCategory)->delete();
+            };
+            $i++;
+        };
+
+        // $aa = CateringCategories::where('categories_id', $request->categories->id)->first();
+
+
         //update product without image
         if($catering) {
             //return success with Api Resource
-            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $catering);
+            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $notAvailableCategories);
         }
         //return failed with Api Resource
         return new CateringResource(false, 'Data Product Gagal Diupdate!', null);

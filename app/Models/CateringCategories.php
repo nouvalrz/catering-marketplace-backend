@@ -11,7 +11,7 @@ class CateringCategories extends Model
     
     protected $fillable = [
         'catering_id',
-        'category_id'
+        'categories_id'
     ];
     
     public function catering()
@@ -20,6 +20,6 @@ class CateringCategories extends Model
     }
     public function categories()
     {
-        return $this->belongsTo(Categories::class, 'foreign_key');
+        return $this->belongsTo(Categories::class, 'categories_id')->select(['id','name']);
     }
 }

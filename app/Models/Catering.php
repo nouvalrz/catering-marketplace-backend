@@ -46,6 +46,11 @@ class Catering extends Model
         return asset('storage/caterings/' . $image);
     }
 
+    public function categoryCatering()
+    {
+        return $this->hasMany(CateringCategories::class, 'catering_id');
+    }
+
     // protected function data(): Attribute
     // {
     //     return Attribute::make(

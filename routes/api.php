@@ -153,8 +153,13 @@ Route::prefix('catering')->group(function($router){
 //group route with prefix "web"
 Route::prefix('web')->group(function () {
     //categories resource
-    Route::apiResource('/categories', App\Http\Controllers\Api\Web\CategoryController::class, ['except' =>
-    ['create', 'store', 'edit', 'update', 'destroy'], 'as' => 'web']);
+    // Route::apiResource('/categories', App\Http\Controllers\Api\Web\CategoryController::class, ['except' =>
+    // ['create', 'store', 'edit', 'update', 'destroy'], 'as' => 'web']);
+
+    Route::get('/categories/product', 'App\Http\Controllers\Api\Web\CategoryController@categoriesProduct');
+
+    Route::get('/categories/catering', 'App\Http\Controllers\Api\Web\CategoryController@categoriesCatering');
+
     //province resource
     Route::apiResource('/province', App\Http\Controllers\Api\Web\ProvinceController::class, ['except' =>
     ['create', 'store', 'edit', 'update', 'destroy'], 'as' => 'web']);
