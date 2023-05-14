@@ -35,6 +35,8 @@ class ProfileController extends Controller
         $catering->regency = Regency::whereId($catering->regency_id)->first('name');
         $catering->province = Province::whereId($catering->province_id)->first('name');
 
+        $catering->workday = json_decode($catering->workday);
+
         if($catering) {
             //return success with Api Resource
             return new CateringResource(true, 'Detail Data Product!', $catering);
@@ -69,11 +71,18 @@ class ProfileController extends Controller
             'district_id' => 'required',
             'village_id' => 'required',
             'delivery_cost' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
             'min_distance_delivery' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+
+        // foreach($request->workday as $day){
+        //     $workday = $day['name']
+        // }
+
         //check image update
         if ($request->file('image')) {
             //remove old image
@@ -100,8 +109,9 @@ class ProfileController extends Controller
                 'village_id' => $request->village_id,
                 'delivery_start_time' => $request->delivery_start_time,
                 'delivery_end_time' => $request->delivery_end_time,
-                'rate' => $request->rate,
-                'total_sales' => $request->total_sales,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'workday' => $request->workday,
                 'delivery_cost' => $request->delivery_cost,
                 'min_distance_delivery' => $request->min_distance_delivery,
 
@@ -124,8 +134,9 @@ class ProfileController extends Controller
                 'village_id' => $request->village_id,
                 'delivery_start_time' => $request->delivery_start_time,
                 'delivery_end_time' => $request->delivery_end_time,
-                'rate' => $request->rate,
-                'total_sales' => $request->total_sales,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'workday' => $request->workday,
                 'delivery_cost' => $request->delivery_cost,
                 'min_distance_delivery' => $request->min_distance_delivery,
     
@@ -134,7 +145,7 @@ class ProfileController extends Controller
         //update product without image
         if($catering) {
             //return success with Api Resource
-            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $catering->image);
+            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $catering);
         }
         //return failed with Api Resource
         return new CateringResource(false, 'Data Product Gagal Diupdate!', null);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,8 +21,8 @@ class Catering extends Model
         'district_id',
         'village_id',
         'zipcode',
-        'latiude',
-        'longtitude',
+        'latitude',
+        'longitude',
         'delivery_start_time',
         'delivery_end_time',
         'image',
@@ -29,6 +30,7 @@ class Catering extends Model
         'user_id',
         'rate',
         'total_sales',
+        'workday',
         'delivery_cost',
         'min_distance_delivery',
 
@@ -44,4 +46,11 @@ class Catering extends Model
         return asset('storage/caterings/' . $image);
     }
 
+    // protected function data(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => json_decode($value, true),
+    //         set: fn ($value) => json_encode($value),
+    //     );
+    // } 
 }

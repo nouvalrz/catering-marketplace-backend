@@ -115,6 +115,7 @@ class DashboardController extends Controller
             ->addSelect(DB::raw('MONTH(end_date) as month'))
             ->addSelect(DB::raw('MONTHNAME(end_date) as month_name'))
             ->addSelect(DB::raw('YEAR(end_date) as years'))
+            ->addSelect(DB::raw('COUNT(id) as total_transaction'))
             ->where('catering_id', '=', $cateringId)
             ->whereYear('end_date', '=', $year)
             ->where('status', '=', 'ACCEPTED')
@@ -124,20 +125,21 @@ class DashboardController extends Controller
 
             if($transaction){
                 $month_name =[];
-                $mnt =[];
+                $total_transaction =[];
                 $start_value = 1;
                 foreach($transaction as $result){
                     for($i=$start_value; $i <= $result->month; $i++){
                         if($i == $result->month){
                             $month_name[] = $result->month_name;
                             $total_price[] = $result->total_price;
+                            $total_transaction[] = $result->total_transaction;
                             $start_value = $result->month+1;
                         }else{
                             $month_name[] = $month_label[$i];
                             $total_price[] = 0;
+                            $total_transaction[] = 0;
                         }
                     };
-                    $mnt[] = $result->years;
 
                 }
                 $a = count($month_name);
@@ -146,6 +148,7 @@ class DashboardController extends Controller
                     for($j=$start_value2; $j<=12; $j++){
                         $month_name[] = $month_label[$j];
                         $total_price[] = 0;
+                        $total_transaction[] = 0;
                     };
                 }
             }
@@ -171,12 +174,9 @@ class DashboardController extends Controller
                     'month_name' => $month_name,
                     'total_price' => $total_price,
                     'year' => $year,
-                    'month' => request()->year,
                 ],
                 'chart_transaction' => [
                     'month_name' => $month_name,
-                    // 'test' => $test,
-                    // 'value' => $value,
                     'transactionUnpaid' => $value[0],
                     'transactionVoid' => $value[1],
                     'transactionPaid' => $value[2],
@@ -187,6 +187,7 @@ class DashboardController extends Controller
                     'transactionSending' => $value[7],
                     'transactionAccepted' => $value[8],
                     'transactionComplaint' => $value[9],
+                    'total_transcation' => $total_transaction,
                     'year' => $year,
                 ],
                 'year_option' => $yearSelect,
