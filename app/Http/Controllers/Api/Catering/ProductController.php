@@ -333,23 +333,35 @@ class ProductController extends Controller
         return $request;
     }
 
-    public function deleteOption(ProductOption $option){
-        if($option->delete()) {
-            //return success with Api Resource
-            return new ProductResource(true, 'Data Item Berhasil Dihapus!', null);
+    public function deleteOption($id){
+        $option = ProductOption::whereId($id)->first();
+
+        $items = ProductOptionDetail::where('product_options_id', $id)->get('id');
+        if($items){
+            foreach($items as $item){
+                ProductOptionDetail::whereId($item->id)->first()->delete();
+            }
+        }
+
+        if($option){
+            $option->delete();
+            // if($option->delete()) {
+                // return success with Api Resource
+                return new ProductResource(true, 'Data Option Berhasil Dihapus!',  $item);
+            // }
         }
         //return failed with Api Resource
-        return new ProductResource(false, 'Data item Gagal Dihapus!', null);
+        return new ProductResource(false, 'Data Option Gagal Dihapus!', $item);
     
     }
 
     public function deleteItem($id){
         $item = ProductOptionDetail::whereId($id)->first();
         $item->delete();
-        // if($item->delete()) {
-        //     //return success with Api Resource
-        //     return new ProductResource(true, 'Data Item Berhasil Dihapus!', null);
-        // }
+        if($item->delete()) {
+            //return success with Api Resource
+            return new ProductResource(true, 'Data Item Berhasil Dihapus!', null);
+        }
         //return failed with Api Resource
         return new ProductResource(false, 'Data item Gagal Dihapus!', $item);
     

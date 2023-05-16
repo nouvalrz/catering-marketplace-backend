@@ -76,9 +76,7 @@ class DiscountController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $validator = Validator::make($request->all(), [
             // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
-            'type' => 'required',
             'title' => 'required',
-            // 'catering_id' => 'required',
             'description' => 'required',
             'percentage' => 'required',
             'minimum_spend' => 'required',
@@ -131,7 +129,7 @@ class DiscountController extends Controller
         $discounts = Discount::whereId($id)->first();
         if($discounts) {
             //return success with Api Resource
-            return new DiscountResource(true, 'Detail Data Piscounts!', $discounts);
+            return new DiscountResource(true, 'Detail Data Discounts!', $discounts);
         }
         //return failed with Api Resource
         return new DiscountResource(false, 'Detail Data Discounts Tidak Ditemukan!', null);
@@ -153,7 +151,6 @@ class DiscountController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
-            'type' => 'required',
             'title' => 'required',
             'description' => 'required',
             'percentage' => 'required',
@@ -175,7 +172,6 @@ class DiscountController extends Controller
         //     //update product with new image
             $discounts->update([
                 // 'image' => $image->hashName(),
-                'type' => $request->type,
                 'title' => $request->title,
                 // 'slug' => Str::slug($request->title, '-'),
                 'catering_id' => $cateringId,
@@ -206,7 +202,6 @@ class DiscountController extends Controller
 
         // ]);
         $discounts->update([
-            'type' => $request->type,
             'title' => $request->title,
             'catering_id' => $cateringId,
             'description' => $request->description,

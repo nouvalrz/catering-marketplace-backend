@@ -11,7 +11,6 @@ class Discount extends Model
 
     protected $fillable = [
         'catering_id',
-        'type',
         'title',
         'description',
         'percentage',
