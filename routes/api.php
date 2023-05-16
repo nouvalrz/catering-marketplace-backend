@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Catering\DiscountController;
 use App\Http\Controllers\Api\Catering\OrdersController;
 use App\Http\Controllers\Api\Catering\ProfileController;
 use App\Http\Controllers\Api\Catering\DashboardController;
+use App\Http\Controllers\Api\Catering\ReviewController;
 use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\CateringController;
@@ -124,6 +125,8 @@ Route::prefix('catering')->group(function($router){
         Route::post('/productsA/{id}', 'App\Http\Controllers\Api\Catering\ProductController@changeAvailableProduct');
         //discount resource
         Route::apiResource('/discounts', DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        //review resource
+        Route::apiResource('/reviews', ReviewController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //delivery cost resource
         Route::apiResource('/deliverycost', DeliveryCostsController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         //delivery coverage resource

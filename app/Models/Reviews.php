@@ -10,20 +10,21 @@ class Reviews extends Model
     use HasFactory;
     
     protected $fillable = [
-        'product_id',
+        'order_id',
+        'catering_id',
         'customer_id',
         'star',
         'has_image',
         'description',
     ];
 
-    
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'foreign_key');
-    }
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'foreign_key');
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Orders::class, 'order_id');
     }
 }
