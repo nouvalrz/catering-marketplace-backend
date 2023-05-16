@@ -31,11 +31,16 @@ class OrdersController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
 
-        $orders = Orders::where('status', 'like', '%' . request()->status . '%' );
+        $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
 
         $orders = $orders->where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
         function($orders) {
-            $orders = $orders->where('invoice_number', 'like', '%'. request()->q . '%');
+            $orders = $orders->where('invoice_number', 'like', '%'. request()->q . '%')
+                ->orWhereHas('customer', 
+            function($orders) {
+                $orders = $orders->where('name', 'like', '%'. request()->q . '%')
+                    ->where('status', 'like', '%' . request()->status . '%' ); 
+            });
         })->latest()->paginate(request()->pages);
         //return with Api Resource
         return new OrderResource(true, 'List Data Orders', $orders);

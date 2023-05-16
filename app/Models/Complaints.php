@@ -12,11 +12,11 @@ class Complaints extends Model
     protected $fillable = [
         'order_id',
         'status',
-        'message',
+        'problem',
     ];
 
     public function orders()
     {
-        return $this->belongsTo(Orders::class, 'foreign_key');
+        return $this->belongsTo(Orders::class, 'orders_id');
     }
 }

@@ -26,10 +26,14 @@ class ComplaintController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $complaints = Complaints::when(request()->q,
+        $complaints = Complaints::with('orders')->where('status', 'like', '%'. request()->status . '%')->when(request()->q,
         function($complaints) {
-            $complaints = $complaints->where('status', 'like', '%'. request()->q . '%');
-        })->latest()->paginate(5);
+            $complaints = $complaints->whereHas('orders', 
+                function($complaints) {
+                    $complaints = $complaints->where('invoice_number', 'like', '%'. request()->q . '%');
+        });
+        })->latest()->paginate(request()->pages);
+
         //return with Api Resource
         return new ComplaintResource(true, 'List Data Complaints', $complaints);
     }

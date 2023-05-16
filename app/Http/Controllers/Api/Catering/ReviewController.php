@@ -26,20 +26,19 @@ class ReviewController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $reviews = Reviews::with(['order', 'customer:id,name'])
-        ->where('star', 'like', '%'. request()->rating . '%')
-        // ->with('customer:id,name')
-        // ->where('star', 'like', '%'. request()->rating . '%')
-        ->when(request()->q,
-        function($reviews) {
-            $reviews = $reviews->whereHas('customer', 
+            ->where('star', 'like', '%'. request()->rating . '%')
+            ->when(request()->q,
                 function($reviews) {
-                    $reviews = $reviews->where('name', 'like', '%'. request()->q . '%');
-                })->orWhereHas('order',
-                function($reviews) {
-                    $reviews = $reviews->where('invoice_number', 'like', '%'. request()->q . '%');
-                });
-        })
-        ->latest()->paginate(request()->pages);
+                    $reviews = $reviews->whereHas('customer', 
+                        function($reviews) {
+                            $reviews = $reviews->where('name', 'like', '%'. request()->q . '%');
+                        })->orWhereHas('order',
+                        function($reviews) {
+                            $reviews = $reviews->where('invoice_number', 'like', '%'. request()->q . '%')
+                                ->where('star', 'like', '%'. request()->rating . '%');
+                        });
+                })
+            ->latest()->paginate(request()->pages);
         //return with Api Resource
         return new ReviewResource(true, 'List Data Review', $reviews);
     }
