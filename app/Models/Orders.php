@@ -43,6 +43,14 @@ class Orders extends Model
     {
         return $this->hasMany(OrderDetails::class, 'orders_id');
     }
+    public function review()
+    {
+        return $this->hasOne(Reviews::class, 'order_id');
+    }
+    public function complaint()
+    {
+        return $this->hasOne(Complaints::class, 'orders_id');
+    }
     // public function district()
     // {
     //     return $this->hasMany(District::class, 'foreign_key');

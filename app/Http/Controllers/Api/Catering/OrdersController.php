@@ -58,10 +58,10 @@ class OrdersController extends Controller
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
         
-        $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->first();
+        $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review', 'complaint'])->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
-
+        $orders->diskon = json_decode($orders->diskon);
         if($orders) {
             //response
             return response()->json([
