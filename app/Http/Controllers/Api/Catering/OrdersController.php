@@ -31,7 +31,7 @@ class OrdersController extends Controller
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
 
-        $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
+        $orders = Orders::with('customer:id,name,image')->where('status', 'like', '%' . request()->status . '%' );
 
         $orders = $orders->where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
         function($orders) {
@@ -47,17 +47,6 @@ class OrdersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-    
-    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -67,13 +56,10 @@ class OrdersController extends Controller
     {
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        // $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
         
-        $orders = Orders::whereId($id)->first();
-        $ordersDetail = OrderDetails::where('orders_id', '=', $id)->get();
-        $customerName = Customer::whereId($orders->customer_id)->value('name');
-        $customerPhone = Customer::whereId($orders->customer_id)->value('phone');
-        $customerAddressRecipient = CustomerAddresses::whereId($orders->customer_addresses_id)->value('recipient_name');
-        $customerAddress = CustomerAddresses::whereId($orders->customer_addresses_id)->value('address');
+        $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->first();
+        $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
 
         if($orders) {
@@ -83,13 +69,6 @@ class OrdersController extends Controller
                 'message' => 'Detail Data Order',
                 'data' => [
                     'order' => $orders,
-                    'customer' => [
-                        'name' => $customerName,
-                        'phone' => $customerPhone,
-                        'address_recipient' => $customerAddressRecipient,
-                        'address' => $customerAddress,
-                        // 'address_zipcode' => $customerAddressZipcode,
-                    ],
                     'order_detail' => $ordersDetail,
                 ]
             ], 200);

@@ -25,6 +25,6 @@ class OrderDetails extends Model
     }
     public function product()
     {
-        return $this->belongsTo(Product::class, 'foreign_key');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

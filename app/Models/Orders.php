@@ -39,6 +39,10 @@ class Orders extends Model
     {
         return $this->belongsTo(Catering::class, 'catering_id');
     }
+    public function detailOrder()
+    {
+        return $this->hasMany(OrderDetails::class, 'orders_id');
+    }
     // public function district()
     // {
     //     return $this->hasMany(District::class, 'foreign_key');
