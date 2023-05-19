@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Catering;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ComplaintResource;
@@ -26,17 +26,12 @@ class ComplaintController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $complaints = Complaints::with('orders')->whereHas('orders', 
-            function($complaints) {
-                $userId = auth()->guard('api_catering')->user()->id;
-                $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-                $complaints = $complaints->where('catering_id', $cateringId);
-                })->where('status', 'like', '%'. request()->status . '%')->when(request()->q,
-                    function($complaints) {
-                        $complaints = $complaints->whereHas('orders', 
-                            function($complaints) {
-                                $complaints = $complaints->where('invoice_number', 'like', '%'. request()->q . '%');
-                    });
+        $complaints = Complaints::with('orders')->where('status', 'like', '%'. request()->status . '%')->when(request()->q,
+        function($complaints) {
+            $complaints = $complaints->whereHas('orders', 
+                function($complaints) {
+                    $complaints = $complaints->where('invoice_number', 'like', '%'. request()->q . '%');
+        });
         })->latest()->paginate(request()->pages);
 
         //return with Api Resource

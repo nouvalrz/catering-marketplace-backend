@@ -83,6 +83,10 @@ Route::prefix('admin')->group(function(){
         Route::apiResource('/customers', App\Http\Controllers\Api\Admin\CustomerController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
         
         Route::apiResource('/discounts', App\Http\Controllers\Api\Admin\DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+        
+        Route::apiResource('/complaint', App\Http\Controllers\Api\Admin\ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+        
+        Route::apiResource('/order', App\Http\Controllers\Api\Admin\OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
     });
    
 });
