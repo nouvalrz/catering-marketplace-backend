@@ -8,10 +8,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CateringResource;
 use App\Http\Resources\CateringResourceAdmin;
+use App\Http\Resources\CustomerResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Categories;
 use App\Models\Catering;
 use App\Models\CategoriesProduct;
+use App\Models\Customer;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +22,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Validation\Rule;
 
 
-class CateringController extends Controller
+class CustomerController extends Controller
 {
     // var userID = auth()->guard('api_catering')->user()->id;
     // var cateringID = 
@@ -31,50 +33,13 @@ class CateringController extends Controller
      */
     public function index()
     {
-        //get products
-        // $products = Product::with('category')->when(request()->q,
-        // $userId = auth()->guard('api_catering')->user()->id;
-        // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        // $productFilter = Product::where('catering_id', $cateringId)
-
-        $catering = Catering::where('isVerified', 'like', '%' . request()->verified . '%' );
-        
-        $linkImage = asset('storage/caterings/');
-        // $catering->la = $linkImage;
-        // asli
-        $catering = $catering->when(request()->q,
-        function($catering) {
-            $catering = $catering->where('name', 'like', '%'. request()->q . '%')
-            ->orWhere('email', 'like', '%'. request()->q . '%')
-            ->orWhere('phone', 'like', '%'. request()->q . '%')
-            ->orWhere('zipcode', 'like', '%'. request()->q . '%');
+        $customer = Customer::when(request()->q,
+        function($customer) {
+            $customer = $customer->where('name', 'like', '%'. request()->q . '%')
+            ->orWhere('phone', 'like', '%'. request()->q . '%');
         })->latest()->paginate(request()->pages);
         
-
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Data catering',
-        //     'data' => [
-        //         'catering' => [
-        //             $catering
-        //         ],
-        //         'link' => $link
-        //     ]
-        // ], 200);
-
-        // if(request()->filter != ''){
-        //     $products = Product::where('catering_id', $cateringId)->where('is_available', '=', request()->filter)->latest();
-        // }
-        // $products = $products->where('name', 'like', '%'. request()->q . '%')->latest()->paginate(20);
-        // function($products) {
-        //     $products = $products->when(request()->q,
-        //     function($products){
-        //         $products = $products->where('name', 'like', '%'. request()->q . '%')
-        //         ->orWhere('is_available', 'like', '%'. request()->q . '%');
-        //     });
-        // })->latest()->paginate(20);
-        //return with Api Resource
-        return new CateringResourceAdmin(true, 'List Data Caterings', $catering, $linkImage);
+        return new CustomerResource(true, 'List Data Customer', $customer);
     }
     /**
      * Store a newly created resource in storage.
@@ -154,22 +119,22 @@ class CateringController extends Controller
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         // $product = Product::with('categories:id')->whereId($id)->first();
-        $catering = Catering::whereId($id)->first();
+        $customer = Customer::whereId($id)->first();
         // $product = Product::whereId($id)->first();
         // $product = DB::table('categories_product')->where('product_id', '=', $id)->get('id');
         // $product = DB::table('categories_product')->where('product_id', $id);
 
-        $catering->workday = json_decode($catering->workday);
-        $catering->link = asset('storage/caterings/');
-        $catering->linkProduct = asset('storage/products/');
-        $catering->product_catering = Product::where('catering_id', $id)->with('categoryProduct:id,name')->get();
+        // $catering->workday = json_decode($catering->workday);
+        // $catering->link = asset('storage/caterings/');
+        // $catering->linkProduct = asset('storage/products/');
+        // $catering->product_catering = Product::where('catering_id', $id)->with('categoryProduct:id,name')->get();
 
-        if($catering) {
+        if($customer) {
             //return success with Api Resource
-            return new CateringResource(true, 'Detail Data Catering!', $catering);
+            return new CateringResource(true, 'Detail Data Customer!', $customer);
         }
         //return failed with Api Resource
-        return new CateringResource(false, 'Detail Data Catering Tidak Ditemukan!', null);
+        return new CateringResource(false, 'Detail Data Customer Tidak Ditemukan!', null);
     }
     /**
      * Update the specified resource in storage.

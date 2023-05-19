@@ -79,6 +79,10 @@ Route::prefix('admin')->group(function(){
         Route::post('/cateringsA/{id}', 'App\Http\Controllers\Api\Admin\CateringController@changeVerifiedCatering');
         
         Route::apiResource('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
+        
+        Route::apiResource('/customers', App\Http\Controllers\Api\Admin\CustomerController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
+        
+        Route::apiResource('/discounts', App\Http\Controllers\Api\Admin\DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
     });
    
 });
