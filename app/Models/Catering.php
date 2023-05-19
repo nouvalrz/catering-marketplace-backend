@@ -51,6 +51,10 @@ class Catering extends Model
         return $this->hasMany(CateringCategories::class, 'catering_id');
     }
 
+    public function productCatering()
+    {
+        return $this->hasMany(Product::class, 'catering_id');
+    }
     // protected function data(): Attribute
     // {
     //     return Attribute::make(

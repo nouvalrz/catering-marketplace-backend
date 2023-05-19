@@ -145,7 +145,10 @@ class CateringController extends Controller
         // $product = DB::table('categories_product')->where('product_id', '=', $id)->get('id');
         // $product = DB::table('categories_product')->where('product_id', $id);
 
+        $catering->workday = json_decode($catering->workday);
         $catering->link = asset('storage/caterings/');
+        $catering->linkProduct = asset('storage/products/');
+        $catering->product_catering = Product::where('catering_id', $id)->with('categoryProduct:id,name')->get();
 
         if($catering) {
             //return success with Api Resource

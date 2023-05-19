@@ -31,4 +31,9 @@ class Product extends Model
     {
         return asset('storage/products/' . $image);
     }
+    
+    public function categoryProduct()
+    {
+        return $this->belongsTo(Categories::class, 'category_id');
+    }
 }
