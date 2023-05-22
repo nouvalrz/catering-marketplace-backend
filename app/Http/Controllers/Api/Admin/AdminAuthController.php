@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Administrators;
 use App\Models\User;
+use Database\Seeders\AdminSeed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -40,14 +41,17 @@ class AdminAuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
         //get "email" dan "password" dari input
-        $credentials = $request->only('email', 'password');
+        $credentials = ['email' => $request->email, 'password' => $request->password, 'type' => 'admin'];
+        // $credentials = $request->only('email', 'password');
+        // $credentials->type = 'admin';
         //check jika "email" dan "password" tidak sesuai
         if(!$token = auth()->guard('api_admin')->attempt($credentials)){
         //response login "failed"
         return response()->json([
             'success' => false,
             'message' => 'Email or Password is incorrect lah',
-            'aa' => auth()->guard('api_admin')->user(),
+            'aa' => $credentials,
+            // 'aa' => auth()->guard('api_admin')->user(),
             ], 401);
    
         }

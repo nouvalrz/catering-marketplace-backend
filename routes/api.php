@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Catering\CategoryController;
 use App\Http\Controllers\Api\Catering\ProductController;
+use App\Http\Controllers\Api\Catering\CashWidithrawalController;
 use App\Http\Controllers\Api\Catering\CateringAuthController;
 use App\Http\Controllers\Api\Catering\CateringRegisterController;
 use App\Http\Controllers\Api\Catering\ChatController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Api\Web\ProvinceController;
 use App\Http\Controllers\Api\Web\RegencyController;
 use App\Http\Controllers\Api\Web\DistrictController;
 use App\Http\Controllers\Api\Web\VillageController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -159,6 +161,8 @@ Route::prefix('catering')->group(function($router){
         Route::get('/chats/{id}', 'App\Http\Controllers\Api\Catering\ChatController@chats');
         
         Route::post('/chats/send', 'App\Http\Controllers\Api\Catering\ChatController@sendMessage');
+        
+        Route::apiResource('/cashWidithrawal', CashWidithrawalController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
     });
    
 });

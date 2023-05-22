@@ -27,7 +27,8 @@ class CateringAuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
         //get "email" dan "password" dari input
-        $credentials = $request->only('email', 'password');
+        // $credentials = $request->only('email', 'password');
+        $credentials = ['email' => $request->email, 'password' => $request->password, 'type' => 'catering'];
 
         //check jika "email" dan "password" tidak sesuai
         if(!$token = auth()->guard('api_catering')->attempt($credentials)){
