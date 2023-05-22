@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Catering;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CashWidithrawalResource;
+use App\Http\Resources\CashWithdrawalResource;
 use App\Http\Resources\DiscountResource;
-use App\Models\CashWidithrawal;
+use App\Models\CashWithdrawal;
+use App\Models\Catering;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Carbon;
 
 
-class CashWidithrawalController extends Controller
+class CashWithdrawalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,8 +26,6 @@ class CashWidithrawalController extends Controller
      */
     public function index()
     {
-        $userId = auth()->guard('api_catering')->user()->id;
-        $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         // $now = Carbon::today()->format('Y-m-d')->toDateString();
         $now = Carbon::today()->toDateString();
@@ -49,16 +48,16 @@ class CashWidithrawalController extends Controller
         //         return new DiscountResource(true, 'List Data Discount', $discounts);
         //     };
         // };
-        $cashWidithrawal = CashWidithrawal::where('approved', 'like', '%'. request()->status . '%');
-        $cashWidithrawal = $cashWidithrawal->where('role', 'catering')->where('catering_id', $cateringId)->when(request()->q,
-        function($cashWidithrawal) {
-            $cashWidithrawal = $cashWidithrawal->where('account_name', 'like', '%'. request()->q . '%');
+        $cashWithdrawal = CashWithdrawal::where('approved', 'like', '%'. request()->status . '%');
+        $cashWithdrawal = $cashWithdrawal->where('role', 'catering')->when(request()->q,
+        function($cashWithdrawal) {
+            $cashWithdrawal = $cashWithdrawal->where('account_name', 'like', '%'. request()->q . '%');
         })->latest()->paginate(request()->pages);
         //return with Api Resource
-        if($cashWidithrawal){
-            return new CashWidithrawalResource(true, 'List Data Pencairan', $cashWidithrawal);
+        if($cashWithdrawal){
+            return new CashWithdrawalResource(true, 'List Data Pencairan', $cashWithdrawal);
         }
-        return new CashWidithrawalResource(false, 'List Data Pencairan Tidak Ada', null);
+        return new CashWithdrawalResource(false, 'List Data Pencairan Tidak Ada', null);
 
         //get products
         // $products = Product::with('category')->when(request()->q,
@@ -82,13 +81,10 @@ class CashWidithrawalController extends Controller
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         $validator = Validator::make($request->all(), [
             // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
-            'title' => 'required',
-            'description' => 'required',
-            'percentage' => 'required',
-            'minimum_spend' => 'required',
-            'maximum_disc' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'bank_name' => 'required',
+            'account_name' => 'required',
+            'bank_account' => 'required',
+            'nominal' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -97,27 +93,23 @@ class CashWidithrawalController extends Controller
         // $image = $request->file('image');
         // $image->storeAs('public/products', $image->hashName());
         //create product
-        $discounts = Discount::create([
-            // 'image' => $image->hashName(),
-            'type' => $request->type,
-            'title' => $request->title,
+        $cashWithdrawal = CashWithdrawal::create([
+            'bank_name' => $request->bank_name,
+            'account_name' => $request->account_name,
             // 'slug' => Str::slug($request->title, '-'),
             'catering_id' => $cateringId,
-            // 'user_id' => auth()->guard('api_admin')->user()->id,
-            'description' => $request->description,
-            'percentage' => $request->percentage,
-            'minimum_spend' => $request->minimum_spend,
-            'maximum_disc' => $request->maximum_disc,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
+            'bank_account' => $request->bank_account,
+            'nominal' => $request->nominal,
+            'approved' => 'pending',
+            'role' => 'catering',
 
         ]);
-        if($discounts) {
+        if($cashWithdrawal) {
             //return success with Api Resource
-            return new DiscountResource(true, 'Data Discounts Berhasil Disimpan!', $discounts);
+            return new CashWithdrawalResource(true, 'Data Cash Withdrawal Berhasil Disimpan!', $cashWithdrawal);
         }
         //return failed with Api Resource
-        return new DiscountResource(false, 'Data Discounts Gagal Disimpan!', null);
+        return new CashWithdrawalResource(false, 'Data Cash Withdrawal Gagal Disimpan!', null);
     }
 
     
@@ -132,13 +124,15 @@ class CashWidithrawalController extends Controller
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
-        $discounts = Discount::whereId($id)->first();
-        if($discounts) {
+        $cashWithdrawal = CashWithdrawal::whereId($id)->first();
+        $cashWithdrawal->balance = Catering::whereId($cashWithdrawal->catering_id)->first('balance');
+
+        if($cashWithdrawal) {
             //return success with Api Resource
-            return new DiscountResource(true, 'Detail Data Discounts!', $discounts);
+            return new CashWithdrawalResource(true, 'Detail Data Withdrawal!', $cashWithdrawal);
         }
         //return failed with Api Resource
-        return new DiscountResource(false, 'Detail Data Discounts Tidak Ditemukan!', null);
+        return new CashWithdrawalResource(false, 'Detail Data Withdrawal Tidak Ditemukan!', null);
     }
 
     
@@ -151,82 +145,67 @@ class CashWidithrawalController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $discounts = Discount::find($id);
+        $cashWithdrawal = CashWithdrawal::find($id);
         // dd($discounts);
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'description' => 'required',
-            'percentage' => 'required',
-            'minimum_spend' => 'required',
-            'maximum_disc' => 'required',
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
+            'bank_name' => 'required',
+            'account_name' => 'required',
+            'bank_account' => 'required',
+            'nominal' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
         //check image update
-        if ($request->file('image')) {
-        //     //remove old image
-        //     // Storage::disk('local')->delete('public/products/'.basename($product->image));
-        //     //upload new image
-        //     // $image = $request->file('image');
-        //     // $image->storeAs('public/products', $image->hashName());
-        //     //update product with new image
-            $discounts->update([
-                // 'image' => $image->hashName(),
-                'title' => $request->title,
-                // 'slug' => Str::slug($request->title, '-'),
-                'catering_id' => $cateringId,
-                // 'user_id' => auth()->guard('api_admin')->user()->id,
-                'description' => $request->description,
-                'percentage' => $request->percentage,
-                'minimum_spend' => $request->minimum_spend,
-                'maximum_disc' => $request->maximum_disc,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
 
-            ]);
-        }
-        //update product without image
-        // $discounts->update([
-        //     'name' => $request->name,
-        //     // 'slug' => Str::slug($request->title, '-'),
-        //     'catering_id' => $cateringId,
-        //     'description' => $request->description,
-        //     'weight' => $request->weight,
-        //     'price' => $request->price,
-        //     'minimum_quantity' => $request->minimum_quantity,
-        //     'maximum_quantity' => $request->maximum_quantity,
-        //     'is_free_delivery' => $request->is_free_delivery,
-        //     'is_hidden' => $request->is_hidden,
-        //     'is_available' => $request->is_available,
-        //     // 'image_id' => $cateringId,
 
-        // ]);
-        $discounts->update([
-            'title' => $request->title,
+        $cashWithdrawal->update([
+            'bank_name' => $request->bank_name,
+            'account_name' => $request->account_name,
+            // 'slug' => Str::slug($request->title, '-'),
             'catering_id' => $cateringId,
-            'description' => $request->description,
-            'percentage' => $request->percentage,
-            'minimum_spend' => $request->minimum_spend,
-            'maximum_disc' => $request->maximum_disc,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
+            'bank_account' => $request->bank_account,
+            'nominal' => $request->nominal,
+            'approved' => 'pending',
+            'role' => 'catering',
 
         ]);
         // dd($discounts);
-        if($discounts) {
+        if($cashWithdrawal) {
             //return success with Api Resource
-            return new DiscountResource(true, 'Data Discounts Berhasil Diupdate!', $discounts);
+            return new CashWithdrawalResource(true, 'Data Withdrawal Berhasil Diupdate!', $cashWithdrawal);
         }
         //return failed with Api Resource
-        return new DiscountResource(false, 'Data Discounts Gagal Diupdate!', null);
+        return new CashWithdrawalResource(false, 'Data Withdrawal Gagal Diupdate!', null);
     }
     
+    public function changeStatus(Request $request, $id)
+    {
+        // dd($request->status);
+        $cashWithdrawal      = CashWithdrawal::findOrFail($id);
+        $cashWithdrawal->approved = $request->approved;
+        $cashWithdrawal->save();
+
+        // $cashWithdrawal->balance = Catering::whereId($cashWithdrawal->catering_id)->first('balance');
+
+        // $balance = $cashWithdrawal->balance - $cashWithdrawal->nominal;
+
+        // $catering = Catering::find($cashWithdrawal->catering_id);
+
+        // $catering->update([
+        //     'balance' => $balance
+        // ]);
+
+        if($cashWithdrawal) {
+            //return success with Api Resource
+            return new CashWithdrawalResource(true, 'Data Product Berhasil!', $cashWithdrawal);
+        }
+        //return failed with Api Resource
+        return new CashWithdrawalResource(false, 'Data Product Gagal Diupdate!', $cashWithdrawal);
+    }
     /**
      * Remove the specified resource from storage.
      *

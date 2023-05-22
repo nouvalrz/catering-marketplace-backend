@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Catering\CategoryController;
 use App\Http\Controllers\Api\Catering\ProductController;
 use App\Http\Controllers\Api\Catering\CashWidithrawalController;
+use App\Http\Controllers\Api\Catering\CashWithdrawalController;
 use App\Http\Controllers\Api\Catering\CateringAuthController;
 use App\Http\Controllers\Api\Catering\CateringRegisterController;
 use App\Http\Controllers\Api\Catering\ChatController;
@@ -89,6 +90,10 @@ Route::prefix('admin')->group(function(){
         Route::apiResource('/complaint', App\Http\Controllers\Api\Admin\ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
         
         Route::apiResource('/order', App\Http\Controllers\Api\Admin\OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+        
+        Route::apiResource('/cashWithdrawal', App\Http\Controllers\Api\Admin\CashWithdrawalController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+        
+        Route::post('/cashWithdrawalStatus/{id}', 'App\Http\Controllers\Api\Admin\CashWithdrawalController@changeStatus');
     });
    
 });
@@ -162,7 +167,7 @@ Route::prefix('catering')->group(function($router){
         
         Route::post('/chats/send', 'App\Http\Controllers\Api\Catering\ChatController@sendMessage');
         
-        Route::apiResource('/cashWidithrawal', CashWidithrawalController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        Route::apiResource('/cashWithdrawal', CashWithdrawalController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
     });
    
 });

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CashWidithrawalResource extends JsonResource
+class CashWithdrawalResource extends JsonResource
 {
     //public properti
     public $status;
