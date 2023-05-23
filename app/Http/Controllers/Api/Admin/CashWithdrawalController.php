@@ -189,9 +189,13 @@ class CashWithdrawalController extends Controller
         $cashWithdrawal->approved = $request->approved;
         $cashWithdrawal->save();
 
-        // $cashWithdrawal->balance = Catering::whereId($cashWithdrawal->catering_id)->first('balance');
+        if($request->approved == 'done'){
+            $catering = Catering::findOrFail($cashWithdrawal->catering_id);
+            $catering->balance = $request->balance;
+            $catering->save();
+        }
 
-        // $balance = $cashWithdrawal->balance - $cashWithdrawal->nominal;
+        // $balance = ($cashWithdrawal->balance - $cashWithdrawal->nominal);
 
         // $catering = Catering::find($cashWithdrawal->catering_id);
 

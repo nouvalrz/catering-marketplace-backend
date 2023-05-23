@@ -60,8 +60,11 @@ class CateringAuthController extends Controller
         $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
         $otp_token = $otp->token;
 
-        Mail::raw("Your OTP is $otp_token", function ($m) {
-            $m->to(request('email'))->subject('Email Verification OTP');
+        Mail::raw("Mohon jaga kerahasiaan kode ini 
+            \ndan jangan berikan kode ini kepada siapapun 
+            \n\nKode OTP anda adalah $otp_token
+            \n\n- CateringKu -", function ($m) {
+            $m->to(request('email'))->subject('CateringKu Email Verification OTP');
         });
         //response login "success" dengan generate "Token"
         return response()->json([
@@ -79,8 +82,11 @@ class CateringAuthController extends Controller
         $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
         $otp_token = $otp->token;
 
-        Mail::raw("Your OTP is $otp_token", function ($m) {
-            $m->to(request('email'))->subject('Email Verification OTP');
+        Mail::raw("Mohon jaga kerahasiaan kode ini 
+            \ndan jangan berikan kode ini kepada siapapun 
+            \n\nKode OTP anda adalah $otp_token
+            \n\n- CateringKu -", function ($m) {
+            $m->to(request('email'))->subject('CateringKu Email Verification OTP');
         });
 
         return response()->json([
@@ -111,8 +117,11 @@ class CateringAuthController extends Controller
             $otp = (new \Ichtrojan\Otp\Otp)->generate(request('email'), 6, 10);
             $otp_token = $otp->token;
     
-            Mail::raw("Your OTP is $otp_token", function ($m) {
-                $m->to(request('email'))->subject('Email Verification OTP');
+            Mail::raw("Mohon jaga kerahasiaan kode ini 
+                \ndan jangan berikan kode ini kepada siapapun 
+                \n\nKode OTP anda adalah $otp_token
+                \n\n- CateringKu -", function ($m) {
+                $m->to(request('email'))->subject('CateringKu Email Verification OTP');
             });
             //response login "success" dengan generate "Token"
             return response()->json([
@@ -283,8 +292,11 @@ class CateringAuthController extends Controller
         $otp = (new \Ichtrojan\Otp\Otp)->generate(request('emailNew'), 6, 10);
         $otp_token = $otp->token;
 
-        Mail::raw("Your OTP is $otp_token", function ($m) {
-            $m->to(request('emailNew'))->subject('Email Verification OTP');
+        Mail::raw("Mohon jaga kerahasiaan kode ini 
+            \ndan jangan berikan kode ini kepada siapapun 
+            \n\nKode OTP anda adalah $otp_token
+            \n\n- CateringKu -", function ($m) {
+            $m->to(request('email'))->subject('CateringKu Email Verification OTP');
         });
 
         return response()->json([
