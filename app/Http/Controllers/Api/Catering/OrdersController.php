@@ -9,6 +9,7 @@ use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Models\Catering;
+use App\Models\ComplaintImages;
 use App\Models\Customer;
 use App\Models\CustomerAddresses;
 use App\Models\OrderDetails;
@@ -60,8 +61,18 @@ class OrdersController extends Controller
         
         $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review', 'complaint'])->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
+        if(!$ordersDetail){
+            $ordersDetail = null;
+        }
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
         $orders->diskon = json_decode($orders->diskon);
+
+        if($orders->complaint){
+            $complaintImage = ComplaintImages::where('complaint_id', $orders->complaint->id)->get();
+        }else{
+            $complaintImage = null;
+        }
+
         if($orders) {
             //response
             return response()->json([
@@ -70,6 +81,7 @@ class OrdersController extends Controller
                 'data' => [
                     'order' => $orders,
                     'order_detail' => $ordersDetail,
+                    'complaint_image' => $complaintImage,
                 ]
             ], 200);
         }
@@ -82,12 +94,17 @@ class OrdersController extends Controller
     {
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        
+        if(!$id){
+            return new OrderResource(true, 'Data List Product Tidak Ada!', null);
+        }
         // $orders = Orders::whereId($id)->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->get();
         
         //return failed with Api Resource
-        return new OrderResource(true, 'Data List Product!', $ordersDetail);
+        if($ordersDetail){
+            return new OrderResource(true, 'Data List Product!', $ordersDetail);
+        }
+        return new OrderResource(true, 'Data List Product Tidak Ada!', null);
     }
 
     
@@ -107,9 +124,33 @@ class OrdersController extends Controller
     public function changeStatus(Request $request, $id)
     {
         // dd($request->status);
-        $order      = Orders::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+        
+        if($request->tanggal){
+            // $order      = Orders::findOrFail($id);
+            $orderDetails = OrderDetails::where('orders_id', $id)->where('delivery_datetime', $request->tanggal)->get();
+            
+            foreach($orderDetails as $orderDetail){
+                $orderDetail->status = 'sending';
+                $orderDetail->save();
+            }
+            return new ProductResource(true, 'Data Product Berhasil!', $orderDetail);
+            
+        }else{
+            
+            $order      = Orders::findOrFail($id);
+            $order->status = $request->status;
+            $order->save();
+    
+            if($request->status == 'SEND'){
+                $orderDetails = OrderDetails::where('orders_id', $id)->get();
+    
+                // foreach($orderDetails as $orderDetail){
+                foreach($orderDetails as $orderDetail){
+                    $orderDetail->status = 'sending';
+                    $orderDetail->save();
+                }
+            }
+        }
 
         if($order) {
             //return success with Api Resource

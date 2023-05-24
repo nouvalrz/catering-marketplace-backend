@@ -9,6 +9,7 @@ use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Models\Catering;
+use App\Models\ComplaintImages;
 use App\Models\Customer;
 use App\Models\CustomerAddresses;
 use App\Models\OrderDetails;
@@ -60,8 +61,19 @@ class OrdersController extends Controller
         
         $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review', 'complaint'])->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
+        
+        if(!$ordersDetail){
+            $ordersDetail = null;
+        }
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
         $orders->diskon = json_decode($orders->diskon);
+        
+        if($orders->complaint){
+            $complaintImage = ComplaintImages::where('complaint_id', $orders->complaint->id)->get();
+        }else{
+            $complaintImage = null;
+        }
+
         if($orders) {
             //response
             return response()->json([
@@ -70,6 +82,7 @@ class OrdersController extends Controller
                 'data' => [
                     'order' => $orders,
                     'order_detail' => $ordersDetail,
+                    'complaint_image' => $complaintImage,
                 ]
             ], 200);
         }

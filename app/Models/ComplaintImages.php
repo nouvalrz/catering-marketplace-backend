@@ -5,28 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Complaints extends Model
+class ComplaintImages extends Model
 {
     use HasFactory;
     
     protected $fillable = [
-        'order_id',
-        'status',
-        'problem',
+        'complaint_id',
+        'image',
     ];
 
-    public function orders()
+    public function complaints()
     {
-        return $this->belongsTo(Orders::class, 'orders_id');
+        return $this->belongsToMany(Complaints::class, 'complaint_id');
     }
-    
-    public function complaintImages()
-    {
-        return $this->hasMany(ComplaintImages::class, 'complaint_id');
-    }
-    
+
     public function getImageAttribute($image)
     {
         return asset('storage/complaints/' . $image);
     }
+    
 }
