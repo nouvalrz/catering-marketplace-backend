@@ -181,6 +181,8 @@ Route::prefix('web')->group(function () {
     Route::get('/categories/product', 'App\Http\Controllers\Api\Web\CategoryController@categoriesProduct');
 
     Route::get('/categories/catering', 'App\Http\Controllers\Api\Web\CategoryController@categoriesCatering');
+    
+    Route::apiResource('/catering', App\Http\Controllers\Api\Web\CateringController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
 
     //province resource
     Route::apiResource('/province', App\Http\Controllers\Api\Web\ProvinceController::class, ['except' =>
