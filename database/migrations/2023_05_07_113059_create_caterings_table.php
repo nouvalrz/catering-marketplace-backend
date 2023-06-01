@@ -34,7 +34,7 @@ class CreateCateringsTable extends Migration
             $table->text('image');
             $table->enum('isVerified',['yes','no']);
             $table->bigInteger('user_id',)->unsigned();
-            $table->integer('total_sales',)->nullable();
+            $table->integer('total_sales',)->default(0);
             $table->text('workday');
             $table->integer('delivery_cost',)->nullable();
             $table->integer('min_distance_delivery',)->nullable();

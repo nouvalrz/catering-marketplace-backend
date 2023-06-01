@@ -38,16 +38,16 @@ class CustomerOrderController extends Controller
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
             'customer_addresses_id' => $address->id,
-            'delivery_type' => 'DELIVERY',
             'delivery_cost' => request('delivery_price'),
             'total_price' => request('total_price'),
-            'order_type' => "PREORDER",
+            'order_type' => "preorder",
             'start_date' => request('delivery_date'),
             'end_date' => request('delivery_date'),
-            'paid_status' => 'CREATED',
+            'catering_id' => request('catering_id'),
+            'status' => 'PENDING',
             'snap_token' => "s",
-            'note' => 'n',
-            'cancele_at' => "2023-04-07 12:00:00"
+            'cancele_at' => "2023-04-07 12:00:00",
+            'discount' => request('discount') ? stripslashes(request('discount')) : null
         ]);
 
         $products = request('products');
@@ -58,9 +58,8 @@ class CustomerOrderController extends Controller
                 'product_id' => $product['id'],
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
-                'package_number' => 1,
                 'delivery_datetime' => request('delivery_date'),
-                'status' => 0,
+                'status' => "PENDING",
             ]);
             foreach ($productOptions as $productOption){
                 $productOptionDetails = $productOption['product_option_details'];
@@ -82,6 +81,52 @@ class CustomerOrderController extends Controller
 //        return $address;
     }
 
+    public function createSubsOrder(Request $request){
+        $user = auth()->user();
+//        dd($user->id);
+        $customer = Customer::where('user_id', $user->id)->get()->first();
+
+        $address = $this->getAddress($request, $customer, $user);
+
+        $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/SUBS/" . mt_rand(10000000, 99999999);
+        $order = Orders::create([
+            'invoice_number' => $invoiceNumber,
+            'customer_id' => $customer->id,
+            'customer_addresses_id' => $address->id,
+            'delivery_cost' => request('delivery_cost'),
+            'total_price' => request('total_price'),
+            'order_type' => "subs",
+            'start_date' => request('start_date'),
+            'end_date' => request('end_date'),
+            'catering_id' => request('catering_id'),
+            'status' => 'PENDING',
+            'snap_token' => "s",
+            'cancele_at' => "2023-04-07 12:00:00",
+            'discount' => request('discount') ? stripslashes(request('discount')) : null
+        ]);
+
+        $orderDetails = request('order_details');
+
+        foreach ($orderDetails as $orderDetail){
+            $orderDetailCreated = OrderDetails::create([
+                'orders_id' => $order->id,
+                'product_id' => $orderDetail['product_id'],
+                'quantity' => $orderDetail['quantity'],
+                'price' => $orderDetail['price'],
+                'delivery_datetime' => $orderDetail["delivery_datetime"],
+                'custom_desc' => $orderDetail['custom_desc'] == null ? "NULL" : $orderDetail['custom_desc'],
+                'status' => "PENDING",
+            ]);
+        }
+
+        $midtrans = new CreateSnapTokenService($order);
+        $snapToken = $midtrans->getSnapTokenForSubs();
+        $order->snap_token = $snapToken;
+        $order->save();
+
+        return response()->json($order);
+    }
+
     public function receive()
     {
         $callback = new CallbackService;
@@ -92,7 +137,7 @@ class CustomerOrderController extends Controller
 
             if ($callback->isSuccess()) {
                 Orders::where('id', $notification->order_id)->update([
-                    'paid_status' => 'PAID',
+                    'status' => 'PAID',
                 ]);
                 $user = Orders::where('id', $notification->order_id)->first()->customer()->first()->user()->get()->first();
 
@@ -103,19 +148,19 @@ class CustomerOrderController extends Controller
 
             if ($callback->isExpire()) {
                 Orders::where('id', $notification->order_id)->update([
-                    'paid_status' => 'VOID',
+                    'status' => 'VOID',
                 ]);
             }
 
             if ($callback->isCancelled()) {
                 Orders::where('id', $notification->order_id)->update([
-                    'paid_status' => "VOID",
+                    'status' => "VOID",
                 ]);
             }
 
             if ($callback->isPending()) {
                 Orders::where('id', $notification->order_id)->update([
-                    'paid_status' => "UNPAID",
+                    'status' => "UNPAID",
                     'payment_expiry' => Carbon::parse($notification->expiry_time)->addHour()
                 ]);
             }
@@ -166,13 +211,15 @@ class CustomerOrderController extends Controller
 
         $orders = $customer->orders()->orderBy('id', 'desc')->get();
 
+//        dd($orders);
+
         $orderList = [];
 
         foreach ($orders as $order){
             $orderTemp = [];
             $orderQuanity = 0;
             $itemSummary = [];
-            $cateringName = $order->orderDetails()->get()->first()->product()->get()->first()->catering()->get()->first()->name;
+            $cateringName = Catering::find($order->catering_id)->name;
             $orderDetails = $order->orderDetails()->get();
 
             foreach ($orderDetails as $orderDetail){
@@ -191,8 +238,7 @@ class CustomerOrderController extends Controller
             $orderTemp['order_type'] = $order->order_type;
             $orderTemp['start_date'] = $order->start_date;
             $orderTemp['end_date'] = $order->end_date;
-            $orderTemp['paid_status'] = $order->paid_status;
-            $orderTemp['order_status'] = $order->order_status;
+            $orderTemp['order_status'] = $order->status;
             $orderTemp['catering_name'] = $cateringName;
             $orderTemp['order_quantity'] = $orderQuanity;
             $orderTemp['item_summary'] = join(", ", $itemSummary);
@@ -231,7 +277,7 @@ class CustomerOrderController extends Controller
                 $cateringName = $catering->name;
                 $cateringPhone = $catering->phone;
                 $cateringLocation = $catering->village->name;
-                $cateringOriginalPath = $catering->original_path;
+                $cateringOriginalPath = $catering->image;
                 $cateringId = $catering->id;
             }
 
@@ -247,7 +293,7 @@ class CustomerOrderController extends Controller
             $product["name"] = $productsRaw->product->name;
             $product["quantity"] = $productsRaw->quantity;
             $product["price"] = $productsRaw->price;
-            $product["original_path"] = $productsRaw->product->original_path;
+            $product["image"] = $productsRaw->product->image;
             $product["product_option_summary"] = join(", ", $productOptionSummary);
 
             $products[] = $product;
@@ -263,14 +309,14 @@ class CustomerOrderController extends Controller
             "subtotal" => $order->total_price - $order->delivery_cost,
             "delivery_price" => $order->delivery_cost,
             "total_price" => $order->total_price,
-            "paid_status" => $order->paid_status,
             "payment_expiry" =>$order->payment_expiry,
-            "order_status" => $order->order_status,
+            "order_status" => $order->status,
             "created_at" =>$order->created_at,
+            "discount" => $order->discount,
             "catering_name" => $cateringName,
             "catering_phone" => $cateringPhone,
             "catering_location" => $cateringLocation,
-            "catering_original_path" => $cateringOriginalPath,
+            "image" => $cateringOriginalPath,
             "catering_id" => $cateringId
         ];
 
@@ -283,13 +329,13 @@ class CustomerOrderController extends Controller
     }
 
     public function getOrderPaidStatus($id){
-        $orderPaidStatus = Orders::select('paid_status')->where('id', $id)->get()->first();
+        $orderPaidStatus = Orders::select('status')->where('id', $id)->get()->first();
         return response()->json($orderPaidStatus);
     }
 
     public function setOrderToAccepted($id){
         $order = Orders::find($id);
-        $order->order_status = "ACCEPTED";
+        $order->status = "ACCEPTED";
         $order->save();
         return response()->json($order);
     }

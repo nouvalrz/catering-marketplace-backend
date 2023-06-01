@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catering;
+use App\Models\Discounts;
 use App\Models\Product;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings = array();
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->orderByDesc('rate')->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->orderByDesc('rate')->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -42,7 +43,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
             $query->where("name", "like", "%" . request('keyword') . "%");
-        }, "village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+        }, "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -59,7 +60,7 @@ class CateringToClientController extends Controller
         $finish_caterings = array();
 
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories"])->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -72,7 +73,7 @@ class CateringToClientController extends Controller
 //        $p = DB::table('products')->select(['products.id','products.name', 'products.price', 'products.description', 'products.weight', 'products.minimum_quantity', 'products.maximum_quantity', 'products.is_free_delivery', 'products.is_hidden', 'products.is_available', 'images.original_path', 'products.is_customable'])->join('images', 'images.id', '=', 'products.image_id')->where([['products.catering_id', $id], ['products.is_hidden', 0]])->get();
 //
         $products = array();
-        $products['products'] = Product::with("product_options", "product_options.product_option_details")->where([['catering_id', $id], ['is_available', 1]])->get()->toArray();
+        $products['products'] = Product::with("product_options", "product_options.product_option_details", )->where([['catering_id', $id], ['is_available', 1]])->get()->toArray();
 //        Product::with("product_options", "product_options.product_option_details")->get()->toJson(JSON_PRETTY_PRINT);
 
 
@@ -98,5 +99,20 @@ class CateringToClientController extends Controller
         $catering = Catering::find($id);
 
         return response()->json([ "catering_review" => ["rate" => $catering->rate ,"reviews" => $reviews, "rate_count" => $rateCountGroup]]);
+    }
+
+    public function getCateringDiscounts($id){
+        $discounts = Discounts::where('catering_id', $id)->active()->get();
+        return response()->json(["discounts" => $discounts]);
+    }
+
+
+    public function getCateringWorkDay($id){
+        $workdays =  json_decode(Catering::find($id)->workday);
+        $workday = array();
+        foreach ($workdays as $workdaye){
+            $workday[] = strtolower($workdaye->name);
+        }
+        return response()->json(["workday" => $workday]);
     }
 }

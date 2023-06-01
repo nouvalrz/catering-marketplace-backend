@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Catering;
 use App\Models\Chats;
 use App\Models\Customer;
+use App\Models\RoomChat;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kutia\Larafirebase\Facades\Larafirebase;
 
@@ -14,91 +16,60 @@ class ChatController extends Controller
     //
 
     public function indexForCustomer(){
-        $user = auth()->user();
+        $customer = Customer::where('user_id', auth()->user()->id)->first();
 
-        $chats = Chats::where('sender_id', $user->id)->orWhere('recipient_id', $user->id)->groupBy('sender_id', 'recipient_id')->orderBy('created_at', 'desc')->get();
-
-//        return response()->json($chats);
-
-        $cateringUserIds = [];
-
-        $chatGroup = [];
-
-        foreach ($chats as $chat){
-            $cateringUserId = $chat->sender_id == $user->id ? $chat->recipient_id : $chat->sender_id;
-            $cateringUserIds[] = $cateringUserId;
-        }
-        $removeDuplicate = array_unique($cateringUserIds);
-        $cateringUserIdsComplete = [];
-        foreach ($removeDuplicate as $value){
-            $cateringUserIdsComplete[] = $value;
-        }
-
-        foreach ($cateringUserIdsComplete as $value){
-            $lastChat = Chats::where('sender_id', $value)->orWhere('recipient_id', $value)->orderBy('created_at', 'desc')->first();
-            $catering = Catering::where('user_id', $value)->first();
-
-            $newChatGroup = [
-                "catering_name" => $catering->name,
-                "catering_image" => $catering->original_path,
-                "catering_id" => $catering->id,
-                "last_chat" => $lastChat
-            ];
-            $chatGroup[] = $newChatGroup;
-        }
+        $roomChat = RoomChat::with(['latestChat', 'catering:id,name,image'])->where('customer_id', $customer->id)->get()->sortBy('latestChat.created_at', SORT_REGULAR, true)->values()->all();;
 
 
-        return response()->json(["chats" => $chatGroup]);
+        return response()->json(["chats" => $roomChat]);
 
     }
 
-    public function show(Request $request){
-        $currentUser = auth()->user();
+    public function showForCustomer(Request $request){
+        $customer = Customer::where('user_id', auth()->user()->id)->first();
 
         request()->validate([
-           'recipient_id' => 'required'
+           'catering_id' => 'required'
         ]);
 
-        $respondenUser = User::find(request('recipient_id'));
+        $roomChat = RoomChat::where([['customer_id', '=', $customer->id], ['catering_id', '=', request('catering_id')]])->first();
 
-        $chats = Chats::where([['sender_id', '=', $currentUser->id],['recipient_id', '=', $respondenUser->id]])->orWhere([['sender_id', '=', $respondenUser->id],['recipient_id', '=', $currentUser->id]])->orderBy('created_at', 'asc')->get();
+        if($roomChat == null){
+            return response()->json(["chats" => []]);
+        }
+
+//        $chats = Chats::where([['sender_id', '=', $currentUser->id],['recipient_id', '=', $respondenUser->id]])->orWhere([['sender_id', '=', $respondenUser->id],['recipient_id', '=', $currentUser->id]])->orderBy('created_at', 'asc')->get();
+
+        $chats = Chats::where('roomchats_id', $roomChat->id)->get();
 
         return response()->json(["chats" => $chats]);
 
     }
 
-    public function send(Request $request){
-        $senderUser = auth()->user();
-        $senderName = null;
+    public function sendForCustomer(Request $request){
+        $customer = Customer::where('user_id', auth()->user()->id)->first();
 
         request()->validate([
-            'recipient_id' => 'required',
-            'recipient_type' => 'required',
+            'catering_id' => 'required',
             'message' => 'required'
         ]);
 
-        $recipientUser = null;
-        $recipientName = null;
+        $roomChat = RoomChat::where([['customer_id', '=', $customer->id], ['catering_id', '=', request('catering_id')]])->first();
 
-        if(request('recipient_type') == "customer"){
-            $customer = Customer::find(request('recipient_id'));
-            $recipientUser = User::find($customer->user_id);
-            $recipientName = $recipientUser->name;
-            $senderName = Catering::where('user_id', $senderUser->id)->first()->name;
-        }else if(request('recipient_type') == "catering"){
-            $catering = Catering::find(request('recipient_id'));
-            $recipientUser = User::find($catering->user_id);
-            $recipientName = $catering->name;
-            $senderName = $senderUser->name;
+        if($roomChat == null){
+            $roomChat = RoomChat::create(['customer_id' => $customer->id, 'catering_id' => request('catering_id')]);
         }
 
         $chat = Chats::create([
-            'sender_id' => $senderUser->id,
-            'recipient_id' => $recipientUser->id,
+            'roomchats_id' => $roomChat->id,
+            'sender' => "customer",
             'message' => request('message')
         ]);
 
-        Larafirebase::withTitle("Pesan Baru dari {$senderName}")->withBody($chat->message)->withAdditionalData( array_merge(["type" => "chat"], $chat->toArray()))->sendNotification($recipientUser->fcm_token);
+        $roomChat->updated_at = Carbon::now();
+        $roomChat->save();
+
+//        Larafirebase::withTitle("Pesan Baru dari {$senderName}")->withBody($chat->message)->withAdditionalData( array_merge(["type" => "chat"], $chat->toArray()))->sendNotification($recipientUser->fcm_token);
 
         return response()->json(["chat" => $chat]);
     }

@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->integer('maximum_quantity',);
             $table->tinyInteger('is_available',);
             $table->text('image');
-            $table->integer('total_sales',)->nullable();
+            $table->integer('total_sales',)->default(0);
             $table->timestamps();
         });
     }

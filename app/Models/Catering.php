@@ -33,4 +33,9 @@ class Catering extends Model
     public function village(){
         return $this->belongsTo(Village::class);
     }
+
+    public function discounts(){
+        return $this->hasMany(Discounts::class, 'catering_id');
+    }
+
 }

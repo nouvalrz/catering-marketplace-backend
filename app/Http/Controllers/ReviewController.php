@@ -23,12 +23,12 @@ class ReviewController extends Controller
             $nama_gambar = 'reviews/review-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
             Storage::disk('public')->put( $nama_gambar, $photo_resize);
 
-            $image = Image::create(
-                [
-                    'original_path'=>Storage::url($nama_gambar),
-                    'thumbnail_path'=>'null'
-                ]
-            );
+//            $image = Image::create(
+//                [
+//                    'original_path'=>Storage::url($nama_gambar),
+//                    'thumbnail_path'=>'null'
+//                ]
+//            );
 
             $review = Reviews::create([
                 'order_id' => request('order_id'),

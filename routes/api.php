@@ -55,11 +55,12 @@ Route::get('customer/order/{id}/show', [\App\Http\Controllers\CustomerOrderContr
 Route::get('customer/order/{id}/show-paid-status', [\App\Http\Controllers\CustomerOrderController::class, 'getOrderPaidStatus']);
 Route::get('customer/order/{id}/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setOrderToAccepted']);
 
+Route::post('customer/subsorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createSubsOrder']);
 
 // Chat Route
-Route::post('customer/chat/show', [\App\Http\Controllers\ChatController::class, 'show']);
+Route::post('customer/chat/show', [\App\Http\Controllers\ChatController::class, 'showForCustomer']);
 Route::get('customer/chat/index', [\App\Http\Controllers\ChatController::class, 'indexForCustomer']);
-Route::post('chat/send', [\App\Http\Controllers\ChatController::class, 'send']);
+Route::post('customer/chat/send', [\App\Http\Controllers\ChatController::class, 'sendForCustomer']);
 
 Route::post('customer/review/create', [\App\Http\Controllers\ReviewController::class, 'create']);
 Route::get('catering/client/{id}/reviews', [\App\Http\Controllers\CateringToClientController::class, 'getCateringReviews']);
@@ -72,3 +73,5 @@ Route::post('catering/client/get-search-result', [\App\Http\Controllers\Catering
 Route::post('catering/client/get-category-result', [\App\Http\Controllers\CateringToClientController::class, 'getCategoryResultCatering']);
 Route::get('catering/client/{id}/get-products', [CateringToClientController::class, 'getProductsFromCatering']);
 Route::get('catering/client/{id}/get-delivery-time-range', [CateringToClientController::class, 'getCateringDeliveryTimeRange']);
+Route::get('catering/client/{id}/get-catering-work-day', [CateringToClientController::class, 'getCateringWorkDay']);
+Route::get('catering/client/{id}/get-discounts', [CateringToClientController::class, 'getCateringDiscounts']);

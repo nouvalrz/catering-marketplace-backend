@@ -42,6 +42,6 @@ class OrderDetails extends Model
     }
 
     public function productOptions(){
-        return $this->hasMany(OrderProductOption::class, 'order_details_id');
+        return $this->hasMany(OrderProductOption::class, 'order_detail_id');
     }
 }

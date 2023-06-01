@@ -13,6 +13,6 @@ class ProductOptionDetail extends Model
 
     public function product_option()
     {
-        return $this->belongsTo(ProductOption::class, 'product_option_id');
+        return $this->belongsTo(ProductOption::class, 'product_options_id');
     }
 }

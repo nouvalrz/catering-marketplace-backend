@@ -12,7 +12,7 @@ class ProductOption extends Model
 
     public function product_option_details()
     {
-        return $this->hasMany(ProductOptionDetail::class);
+        return $this->hasMany(ProductOptionDetail::class, 'product_options_id');
     }
 
     public function product()

@@ -35,4 +35,6 @@ class Product extends Model
     public function scopeTop($query){
         $query->orderByDesc("total_sales")->limit(2);
     }
+
+
 }

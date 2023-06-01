@@ -37,5 +37,10 @@ class Orders extends Model
         return $this->hasOne(CustomerAddresses::class, 'customer_addresses_id');
     }
 
+    public function subsOrderDetails(){
+
+        return $this->hasMany(OrderDetails::class, 'orders_id')->get()->groupBy('delivery_datetime')->all();
+    }
+
 
 }
