@@ -51,9 +51,21 @@ class Catering extends Model
         return $this->hasMany(CateringCategories::class, 'catering_id');
     }
 
+    public function categories(){
+        return $this->belongsToMany(Categories::class, "catering_categories");
+    }
+
     public function productCatering()
     {
         return $this->hasMany(Product::class, 'catering_id');
+    }
+    
+    public function recommendation_products(){
+        return $this->hasMany(Product::class, 'catering_id')->orderByDesc("total_sales");
+    }
+
+    public function district(){
+        return $this->belongsTo(District::class, 'district_id');
     }
     // protected function data(): Attribute
     // {

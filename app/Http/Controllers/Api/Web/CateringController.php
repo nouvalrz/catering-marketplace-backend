@@ -12,6 +12,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Categories;
 use App\Models\Catering;
 use App\Models\CategoriesProduct;
+use App\Models\CateringCategories;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -37,18 +38,39 @@ class CateringController extends Controller
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $productFilter = Product::where('catering_id', $cateringId)
 
-        $catering = Catering::where('isVerified', 'like', '%' . request()->verified . '%' );
+        $catering = Catering::where('isVerified', 'yes')->with(["categories:id,name", "district:id,name", "recommendation_products"])->get()->map(function ($catering) {
+            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+            return $catering;
+        });
         
-        $linkImage = asset('storage/caterings/');
+        $imageCatering = asset('storage/caterings/');
+        $imageProduct = asset('storage/products/');
+        $linkImage = (object)[];
+        $linkImage->catering = $imageCatering;
+        $linkImage->product = $imageProduct;
+        
+        // $catering->categories = CateringCategories::with('categories')->where('catering_id', $cateringId)->get('categories_id');
+        // $categories = CateringCategories::with('categories')->where('catering_id', $cateringId)->get('categories_id');
+        // $categoryName = [];
+        // $i = 0;
+        // foreach($categories as $category){
+        //     // $categoryName[$i] = $category[$i]->categories->name;
+        //     $categoryName[$i] = $categories[$i]->categories;
+        //     $i++;
+        // };
+        // $catering->categories = $categoryName;
+        // $catering->aa = $categories[]->categories->name;
+
         // $catering->la = $linkImage;
         // asli
-        $catering = $catering->when(request()->q,
-        function($catering) {
-            $catering = $catering->where('name', 'like', '%'. request()->q . '%');
-            // ->orWhere('email', 'like', '%'. request()->q . '%')
-            // ->orWhere('phone', 'like', '%'. request()->q . '%')
-            // ->orWhere('zipcode', 'like', '%'. request()->q . '%');
-        })->latest()->paginate(request()->pages);
+        // $catering = $catering->when(request()->q,
+        // function($catering) {
+        //     $catering = $catering->where('name', 'like', '%'. request()->q . '%');
+        //     // ->orWhere('email', 'like', '%'. request()->q . '%')
+        //     // ->orWhere('phone', 'like', '%'. request()->q . '%')
+        //     // ->orWhere('zipcode', 'like', '%'. request()->q . '%');
+        // // })->latest()->paginate(request()->pages);
+        // })->latest()->paginate(request()->pages);
         
 
         // return response()->json([
@@ -74,6 +96,13 @@ class CateringController extends Controller
         //     });
         // })->latest()->paginate(20);
         //return with Api Resource
+
+
+        $finish_caterings = Catering::with(["recommendation_products"])->get()->map(function ($catering) {
+            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+            return $catering;
+        });
+
         return new CateringResourceAdmin(true, 'List Data Caterings', $catering, $linkImage);
     }
     /**
