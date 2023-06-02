@@ -15,4 +15,8 @@ class Complaints extends Model
     {
         return $this->belongsTo(Orders::class, 'foreign_key');
     }
+
+    public function images(){
+        return $this->hasMany(ComplaintImage::class, 'complaint_id');
+    }
 }

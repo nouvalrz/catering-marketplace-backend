@@ -51,9 +51,11 @@ Route::get('customer/cart/index', [\App\Http\Controllers\CustomerCartController:
 Route::post('customer/preorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createPreOrder']);
 Route::post('customer/preorder/receive', [\App\Http\Controllers\CustomerOrderController::class, 'receive']);
 Route::get('customer/order/index', [\App\Http\Controllers\CustomerOrderController::class, 'index']);
-Route::get('customer/order/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'show']);
+Route::get('customer/preorder/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'showPreOrder']);
+Route::get('customer/subsorder/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'showSubsOrder']);
 Route::get('customer/order/{id}/show-paid-status', [\App\Http\Controllers\CustomerOrderController::class, 'getOrderPaidStatus']);
 Route::get('customer/order/{id}/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setOrderToAccepted']);
+Route::post('customer/subsorder/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setSubsOrdertoAccepted']);
 
 Route::post('customer/subsorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createSubsOrder']);
 
@@ -63,6 +65,7 @@ Route::get('customer/chat/index', [\App\Http\Controllers\ChatController::class, 
 Route::post('customer/chat/send', [\App\Http\Controllers\ChatController::class, 'sendForCustomer']);
 
 Route::post('customer/review/create', [\App\Http\Controllers\ReviewController::class, 'create']);
+Route::post('customer/complaint/create', [\App\Http\Controllers\ComplaintController::class, 'create']);
 Route::get('catering/client/{id}/reviews', [\App\Http\Controllers\CateringToClientController::class, 'getCateringReviews']);
 
 Route::post('catering/profile/upload-image', [CateringController::class, 'uploadImage']);

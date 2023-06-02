@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catering;
+use App\Models\Complaints;
 use App\Models\Customer;
 use App\Models\CustomerAddresses;
 use App\Models\OrderDetails;
@@ -65,7 +66,7 @@ class CustomerOrderController extends Controller
                 $productOptionDetails = $productOption['product_option_details'];
                 foreach ($productOptionDetails as $productOptionDetail){
                     OrderProductOption::create([
-                        'order_details_id' => $orderDetail->id,
+                        'order_detail_id' => $orderDetail->id,
                         'product_option_id' => $productOption['id'],
                         'product_option_detail_id' => $productOptionDetail['id']
                     ]);
@@ -250,7 +251,7 @@ class CustomerOrderController extends Controller
         return response()->json(["orders" => $orderList]);
     }
 
-    public function show($id){
+    public function showPreOrder($id){
         $order = Orders::find($id);
 
         $address = $order->customerAddresses()->get()->first();
@@ -260,6 +261,7 @@ class CustomerOrderController extends Controller
         $products = [];
 
         $review = Reviews::where('order_id', $order->id)->first();
+        $complaint = Complaints::with('images')->where('orders_id', $order->id)->first();
 
         $cateringName = "";
         $cateringPhone = "";
@@ -323,6 +325,126 @@ class CustomerOrderController extends Controller
         if($review){
             $orderJson['review'] = $review;
         }
+        if($complaint){
+            $orderJson['complaint'] = $complaint;
+        }
+
+        return response()->json(["order" => $orderJson]);
+
+    }
+
+    public function showSubsOrder($id){
+        $order = Orders::find($id);
+
+        $cateringName = "";
+        $cateringPhone = "";
+        $cateringLocation = "";
+        $cateringOriginalPath = "";
+        $cateringId = '';
+
+        $address = $order->customerAddresses()->get()->first();
+
+        $orders = $order->orderDetails()->with('product')->get()->groupBy('delivery_datetime')->all();
+
+//        return response()->json($orders);
+
+        $review = Reviews::where('order_id', $order->id)->first();
+
+        $ordersFix = array();
+
+
+        foreach ($orders as $date => $orderSingle){
+            $orderRaw = array();
+            $orderRaw["delivery_datetime"] = $date;
+            $orderRaw["subtotal_price"] = 0;
+
+            foreach ($orderSingle as $orderDetail){
+                $orderProductDetail = array();
+                $orderProductDetail["id"] = $orderDetail["product"]->id;
+                $orderProductDetail["name"] = $orderDetail["product"]->name;
+                $orderProductDetail["quantity"] = $orderDetail["quantity"];
+                $orderProductDetail["price"] = $orderDetail["price"];
+                $orderProductDetail["custom_desc"] = $orderDetail["custom_desc"];
+                $orderProductDetail["image"] = $orderDetail["product"]->image;
+
+                $orderRaw["subtotal_price"] += $orderDetail["price"];
+                $orderRaw["status"] = $orderDetail["status"];
+                $orderRaw["products"][] = $orderProductDetail;
+            }
+            $ordersFix[] = $orderRaw;
+        }
+
+//        return response()->json($ordersFix);
+
+
+
+//        foreach ($productsRaws as $index=>$productsRaw){
+//            $productOptionSummary = [];
+//
+//            $productOptions =  $productsRaw->productOptions()->get();
+//
+//            if($index == 0){
+//                $catering = Catering::with('village')->where('id', $productsRaw->product->catering_id)->get()->first();
+//                $cateringName = $catering->name;
+//                $cateringPhone = $catering->phone;
+//                $cateringLocation = $catering->village->name;
+//                $cateringOriginalPath = $catering->image;
+//                $cateringId = $catering->id;
+//            }
+//
+//            if($productOptions){
+//                foreach ($productOptions as $productOption){
+//                    $productOptionName = ProductOptionDetail::find($productOption->product_option_detail_id)->option_choice_name;
+//                    $productOptionSummary[] = $productOptionName;
+//                }
+//            }
+//
+//
+//            $product["id"] = $productsRaw->product->id;
+//            $product["name"] = $productsRaw->product->name;
+//            $product["quantity"] = $productsRaw->quantity;
+//            $product["price"] = $productsRaw->price;
+//            $product["image"] = $productsRaw->product->image;
+//            $product["product_option_summary"] = join(", ", $productOptionSummary);
+//
+//            $products[] = $product;
+//        }
+
+//        return response()->json($order);
+
+        $catering = Catering::find($order->catering_id);
+        $cateringName = $catering->name;
+        $cateringPhone = $catering->phone;
+        $cateringLocation = $catering->village->name;
+        $cateringOriginalPath = $catering->image;
+        $cateringId = $catering->id;
+
+        $orderJson = [
+            "id" => $order->id,
+            "catering_name" => $cateringName,
+            "catering_phone" => $cateringPhone,
+            "catering_location" => $cateringLocation,
+            "image" => $cateringOriginalPath,
+            "catering_id" => $cateringId,
+            "order_type" => $order->order_type,
+            "invoice_number" => $order->invoice_number,
+            "address" => $address,
+            "start_date" => $order->start_date,
+            "end_date" => $order->end_date,
+//            "products" => $products,
+            "subtotal" => $order->total_price - $order->delivery_cost,
+            "delivery_price" => $order->delivery_cost,
+            "total_price" => $order->total_price,
+            "payment_expiry" =>$order->payment_expiry,
+            "order_status" => $order->status,
+            "created_at" =>$order->created_at,
+            "discount" => $order->discount,
+            "orders" => $ordersFix,
+        ];
+
+        if($review){
+            $orderJson['review'] = $review;
+        }
 
         return response()->json(["order" => $orderJson]);
 
@@ -338,5 +460,15 @@ class CustomerOrderController extends Controller
         $order->status = "ACCEPTED";
         $order->save();
         return response()->json($order);
+    }
+
+    public function setSubsOrdertoAccepted(Request $request){
+        $orderDetail = Orders::find(request('order_id'))->orderDetails()->get();
+        $selectedOrder = $orderDetail->where('delivery_datetime', request('delivery_datetime'));
+        foreach ($selectedOrder as $value){
+            $value->status = "delivered";
+            $value->save();
+        }
+        return response()->json($selectedOrder);
     }
 }
