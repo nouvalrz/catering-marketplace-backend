@@ -33,6 +33,7 @@ class Catering extends Model
         'workday',
         'delivery_cost',
         'min_distance_delivery',
+        'is_open',
 
     ];
 

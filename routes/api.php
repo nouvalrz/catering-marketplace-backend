@@ -83,6 +83,8 @@ Route::prefix('admin')->group(function(){
         
         Route::apiResource('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
         
+        Route::apiResource('/slider', App\Http\Controllers\Api\Admin\SliderController::class, ['as' => 'admin']);
+        
         Route::apiResource('/customers', App\Http\Controllers\Api\Admin\CustomerController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
         
         Route::apiResource('/discounts', App\Http\Controllers\Api\Admin\DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
@@ -182,7 +184,9 @@ Route::prefix('web')->group(function () {
 
     Route::get('/categories/catering', 'App\Http\Controllers\Api\Web\CategoryController@categoriesCatering');
     
-    Route::apiResource('/catering', App\Http\Controllers\Api\Web\CateringController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
+    Route::apiResource('/catering', App\Http\Controllers\Api\Web\CateringController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'web']);
+    
+    Route::apiResource('/slider', App\Http\Controllers\Api\Web\SliderController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'web']);
 
     //province resource
     Route::apiResource('/province', App\Http\Controllers\Api\Web\ProvinceController::class, ['except' =>

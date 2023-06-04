@@ -87,6 +87,7 @@ class ProfileController extends Controller
             'latitude' => 'required',
             'longitude' => 'required',
             'min_distance_delivery' => 'required',
+            'is_open' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -127,6 +128,7 @@ class ProfileController extends Controller
                 'workday' => $request->workday,
                 'delivery_cost' => $request->delivery_cost,
                 'min_distance_delivery' => $request->min_distance_delivery,
+                'is_open' => $request->is_open,
 
             ]);
         }else{
@@ -152,6 +154,7 @@ class ProfileController extends Controller
                 'workday' => $request->workday,
                 'delivery_cost' => $request->delivery_cost,
                 'min_distance_delivery' => $request->min_distance_delivery,
+                'is_open' => $request->is_open,
     
             ]);
         }
