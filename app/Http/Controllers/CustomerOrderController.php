@@ -33,6 +33,8 @@ class CustomerOrderController extends Controller
 
         $address = $this->getAddress($request, $customer, $user);
 
+        dd($address);
+
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
         if(request('use_balance') > 0){
