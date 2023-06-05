@@ -33,7 +33,7 @@ class CustomerOrderController extends Controller
 
         $address = $this->getAddress($request, $customer, $user);
 
-        dd($address);
+        dd($address->id);
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
@@ -45,7 +45,7 @@ class CustomerOrderController extends Controller
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
-            'customer_addresses_id' => "$address->id",
+            'customer_addresses_id' => (string)$address->id,
             'delivery_cost' => request('delivery_price'),
             'total_price' => request('total_price'),
             'order_type' => "preorder",
