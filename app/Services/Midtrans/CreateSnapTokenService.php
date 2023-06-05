@@ -45,6 +45,15 @@ class CreateSnapTokenService extends Midtrans
             ];
         }
 
+        if($this->order->use_balance != 0){
+            $itemDetails[] = [
+                'id' => 99999,
+                'price' => -($this->order->use_balance),
+                'quantity' => 1,
+                'name' => "Pakai Saldo"
+            ];
+        }
+
         $params = [
             'transaction_details' => [
                 'order_id' => $this->order->id,
@@ -96,6 +105,16 @@ class CreateSnapTokenService extends Midtrans
             'quantity' => 1,
             'name' => "Delivery Cost"
         ];
+
+        if($this->order->use_balance != 0){
+            $itemDetails[] = [
+                'id' => 99999,
+                'price' => -($this->order->use_balance),
+                'quantity' => 1,
+                'name' => "Pakai Saldo"
+            ];
+        }
+
 
         if($this->order->discount != null){
             $discountDecode = json_decode($this->order->discount);

@@ -35,6 +35,11 @@ class CustomerOrderController extends Controller
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
+        if(request('use_balance') > 0){
+            $customer->balance -= request('use_balance');
+            $customer->save();
+        }
+
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
@@ -48,6 +53,7 @@ class CustomerOrderController extends Controller
             'status' => 'PENDING',
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
+            'use_balance' => request('use_balance') ?? null,
             'discount' => request('discount') ? stripslashes(request('discount')) : null
         ]);
 
@@ -89,6 +95,11 @@ class CustomerOrderController extends Controller
 
         $address = $this->getAddress($request, $customer, $user);
 
+        if(request('use_balance') > 0){
+            $customer->balance -= request('use_balance');
+            $customer->save();
+        }
+
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/SUBS/" . mt_rand(10000000, 99999999);
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
@@ -96,6 +107,7 @@ class CustomerOrderController extends Controller
             'customer_addresses_id' => $address->id,
             'delivery_cost' => request('delivery_cost'),
             'total_price' => request('total_price'),
+            'use_balance' => request('use_balance'),
             'order_type' => "subs",
             'start_date' => request('start_date'),
             'end_date' => request('end_date'),
@@ -240,6 +252,7 @@ class CustomerOrderController extends Controller
             $orderTemp['start_date'] = $order->start_date;
             $orderTemp['end_date'] = $order->end_date;
             $orderTemp['order_status'] = $order->status;
+            $orderTemp['use_balance'] = $order->use_balance;
             $orderTemp['catering_name'] = $cateringName;
             $orderTemp['order_quantity'] = $orderQuanity;
             $orderTemp['item_summary'] = join(", ", $itemSummary);
@@ -312,6 +325,7 @@ class CustomerOrderController extends Controller
             "delivery_price" => $order->delivery_cost,
             "total_price" => $order->total_price,
             "payment_expiry" =>$order->payment_expiry,
+            "use_balance" =>$order->use_balance,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
             "discount" => $order->discount,
@@ -357,6 +371,12 @@ class CustomerOrderController extends Controller
             $orderRaw = array();
             $orderRaw["delivery_datetime"] = $date;
             $orderRaw["subtotal_price"] = 0;
+
+            $complaint = Complaints::with('images')->where('orders_id', $order->id)->where('delivery_datetime', $date)->get();
+
+            if(count($complaint) !== 0){
+                $orderRaw['complaint'] = $complaint->first();
+            }
 
             foreach ($orderSingle as $orderDetail){
                 $orderProductDetail = array();
@@ -431,6 +451,7 @@ class CustomerOrderController extends Controller
             "address" => $address,
             "start_date" => $order->start_date,
             "end_date" => $order->end_date,
+            "use_balance" => $order->use_balance,
 //            "products" => $products,
             "subtotal" => $order->total_price - $order->delivery_cost,
             "delivery_price" => $order->delivery_cost,

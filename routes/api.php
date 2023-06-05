@@ -66,6 +66,7 @@ Route::post('customer/chat/send', [\App\Http\Controllers\ChatController::class, 
 
 Route::post('customer/review/create', [\App\Http\Controllers\ReviewController::class, 'create']);
 Route::post('customer/complaint/create', [\App\Http\Controllers\ComplaintController::class, 'create']);
+Route::post('customer/complaint-subs/create', [\App\Http\Controllers\ComplaintController::class, 'createSubs']);
 Route::get('catering/client/{id}/reviews', [\App\Http\Controllers\CateringToClientController::class, 'getCateringReviews']);
 
 Route::post('catering/profile/upload-image', [CateringController::class, 'uploadImage']);
