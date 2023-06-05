@@ -27,6 +27,11 @@ class Orders extends Model
         'snap_token',
     ];
 
+    protected $casts = [
+        "customer_addresses_id" => "json",
+    ];
+
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
