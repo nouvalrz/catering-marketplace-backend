@@ -9,7 +9,14 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'balance',
+        'points',
+        'phone',
+        'image',
+        'user_id'
+    ];
 
     public function user()
     {
@@ -18,5 +25,10 @@ class Customer extends Model
 
     public function orders(){
         return $this->hasMany(Orders::class, 'customer_id');
+    }
+    
+    public function getImageAttribute($image)
+    {
+        return asset('storage/customers/' . $image);
     }
 }

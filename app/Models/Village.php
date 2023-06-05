@@ -9,7 +9,6 @@ class Village extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
 
     public function caterings(){
         return $this->hasMany(Catering::class);
@@ -18,4 +17,15 @@ class Village extends Model
     public function district(){
         return $this->belongsTo(District::class);
     }
+    
+    protected $fillable = [
+        'district_id',
+        'name'
+    ];
+
+    
+    // public function district()
+    // {
+    //     return $this->belongsTo(District::class, 'district_id');
+    // }
 }

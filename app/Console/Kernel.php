@@ -17,15 +17,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call($this->updateProductTotalSales())->hourly();
-    }
 
-    public function updateProductTotalSales(){
-        $products = Product::all();
-
-        foreach ($products as $product){
-
-        }
+        $schedule->command('otp:clean')->daily();
     }
 
     /**

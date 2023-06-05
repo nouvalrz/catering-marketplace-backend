@@ -11,10 +11,16 @@ class Categories extends Model
 
     protected $fillable = [
         'name',
-        'description',
+        'type',
     ];
-//
-//    public function catering_categories(){
-//        return $this->hasMany(CateringCategories::class, "categories_id");
-//    }
+
+    public function product()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function categoryCatering()
+    {
+        return $this->hasMany(CateringCategories::class, 'categorie_id');
+    }
 }

@@ -36,9 +36,24 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
+        ],
+        'api_catering' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+        'api_admin' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            // 'provider' => 'admins',
+            'hash' => false,
         ],
     ],
 
@@ -64,6 +79,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrators::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -88,6 +107,12 @@ return [
 
     'passwords' => [
         'users' => [
+            'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admin' => [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,

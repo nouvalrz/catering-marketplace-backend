@@ -9,7 +9,20 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'catering_id',
+        'category_id',
+        'description',
+        'weight',
+        'price',
+        'minimum_quantity',
+        'maximum_quantity',
+        'is_available',
+        'image',
+    ];
+
+    // protected $guarded = [];
 
     //Add extra attribute
 //    protected $attributes = ['original_path'];
@@ -36,5 +49,18 @@ class Product extends Model
         $query->orderByDesc("total_sales")->limit(2);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Categories::class)->withTimestamps();
+    }
 
+    public function getImageAttribute($image)
+    {
+        return asset('storage/products/' . $image);
+    }
+    
+    public function categoryProduct()
+    {
+        return $this->belongsTo(Categories::class, 'category_id');
+    }
 }

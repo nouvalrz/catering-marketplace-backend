@@ -13,3 +13,4 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+database/migrations/2022_12_11_150621_create_images_table.php

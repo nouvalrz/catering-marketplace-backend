@@ -9,7 +9,23 @@ class Orders extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'customer_id',
+        'customer_address_id',
+        'catering_id',
+        'invoice_number',
+        'note',
+        'delivery_cost',
+        'total_price',
+        'order_type',
+        'status',
+        'start_date',
+        'end_date',
+        'canceled_at',
+        'has_review',
+        'payment_expiry',
+        'snap_token',
+    ];
 
     public function customer()
     {
@@ -24,14 +40,31 @@ class Orders extends Model
 
         return $this->hasMany(OrderDetails::class, 'orders_id');
     }
+
+    public function catering()
+    {
+        return $this->belongsTo(Catering::class, 'catering_id');
+    }
+    public function detailOrder()
+    {
+        return $this->hasMany(OrderDetails::class, 'orders_id');
+    }
+    public function review()
+    {
+        return $this->hasOne(Reviews::class, 'order_id');
+    }
+    public function complaint()
+    {
+        return $this->hasOne(Complaints::class, 'orders_id');
+    }
     // public function district()
     // {
     //     return $this->hasMany(District::class, 'foreign_key');
     // }
 
-    public function detailJsonView(){
+    // public function detailJsonView(){
 
-    }
+    // }
 
     public function address(){
         return $this->hasOne(CustomerAddresses::class, 'customer_addresses_id');

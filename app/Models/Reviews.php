@@ -9,13 +9,20 @@ class Reviews extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'order_id',
+        'catering_id',
+        'customer_id',
+        'star',
+        'has_image',
+        'description',
+    ];
+
+    // protected $guarded = [];
 
     public static function boot()
     {
         parent::boot();
-
-
         self::created(function($review){
             // ... code here
             $cateringAvgRate = Reviews::where('catering_id', $review->catering_id)->avg('star');
@@ -37,6 +44,10 @@ class Reviews extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+    
+
+
+
 
 //    public function user(){
 //        return $this->customer()->user();

@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -62,7 +62,7 @@ class User extends Authenticatable implements JWTSubject
         else if ($this->type == "catering"){
             return $this->hasOne(Catering::class, 'user_id');
         }
-        else if ($this->type == "administrator"){
+        else if ($this->type == "admin"){
             return $this->hasOne(Administrators::class, 'user_id');
         }
     }

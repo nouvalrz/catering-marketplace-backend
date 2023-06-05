@@ -16,7 +16,6 @@ class CreateDiscountsTable extends Migration
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-
             $table->bigInteger('catering_id',)->unsigned();
             $table->string('title',191);
             $table->string('description',191);

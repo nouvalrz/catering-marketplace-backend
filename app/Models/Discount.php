@@ -6,11 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Discounts extends Model
+class Discount extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
 
     public function catering()
     {
@@ -22,4 +21,21 @@ class Discounts extends Model
         $date = Carbon::parse($now)->toDateString();
         return $query->whereDate('start_date', '>=', $date)->orWhereDate('end_date', '<=', $date);
     }
+    
+    protected $fillable = [
+        'catering_id',
+        'title',
+        'description',
+        'percentage',
+        'minimum_spend',
+        'maximum_disc',
+        'start_date',
+        'end_date'
+
+    ];
+
+    // public function catering()
+    // {
+    //     return $this->belongsTo(Catering::class, 'foreign_key');
+    // }
 }

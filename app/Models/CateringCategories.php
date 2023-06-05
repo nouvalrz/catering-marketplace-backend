@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class CateringCategories extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
-
-//    public function catering()
-//    {
-//        return $this->belongsTo(Catering::class, 'catering_id');
-//    }
-//    public function category()
-//    {
-//        return $this->belongsTo(Categories::class, 'categories_id');
-//    }
+    
+    protected $fillable = [
+        'catering_id',
+        'categories_id'
+    ];
+    
+    public function categories()
+    {
+        return $this->belongsTo(Categories::class, 'categories_id')->select(['id','name']);
+    }
 }
