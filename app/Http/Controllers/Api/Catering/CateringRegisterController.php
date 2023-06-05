@@ -36,7 +36,8 @@ class CateringRegisterController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request->password),
+            // 'password' => Hash::make($request->password),
             'type' => 'catering'
         ]);
 
@@ -80,6 +81,33 @@ class CateringRegisterController extends Controller
 
         // //return failed with Api Resource
         // return new CateringResource(false, 'Register Catering Gagal!', null);
+    }
+
+    public function validateOtp(Request $request){
+        request()->validate([
+            'email' => 'required',
+            'otp' => 'required'
+            ]);
+        $otp = (new \Ichtrojan\Otp\Otp)->validate(request('email'), request('otp'));
+
+        if(!$token = auth()->attempt($request->only('email', 'password'))){
+            return response()->json([
+                'message' => 'Password is incorrect'
+            ], 401);
+        }else if($otp->status){
+            $user = User::where('email', request('email'))->first();
+            $user->email_verified_at = Carbon::now()->timestamp;
+            $user->save();
+            return response()->json([
+                'status' => $otp->status,
+                'token' => $token,
+                'message' => 'OTP Validation is success'
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'OTP is not valid'
+            ], 401);
+        }
     }
 
     public function checkEmailAvail(Request $request){

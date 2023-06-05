@@ -17,7 +17,7 @@ class AdminSeed extends Seeder
     {
         DB::table("administrators")->insert([
             [
-                "username"=>"admin",
+                "username"=>"admin@gmail.com",
                 "password"=>"admin123",
                 "fullname"=>"admin",
                 "user_id"=>"5"
