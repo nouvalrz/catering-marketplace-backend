@@ -26,9 +26,10 @@ class CateringSeeder extends Seeder
             $path = "database/seeders/cateringimages/{$i}.png";
             $imageFile =  File::get($path);
             $imageResizeFile = \Intervention\Image\Facades\Image::make($imageFile)->resize(150, 150)->encode('jpg',80);
-            $imageName = "caterings/catering_profile_image-{$i}-" . time() . '.jpg';
-            Storage::disk('public')->put( $imageName, $imageResizeFile);
-            $cateringImages[] = Storage::url($imageName);
+            $imageName = "catering_profile_image-{$i}-" . time() . '.jpg';
+            $imageNameWithFolder = "caterings/" . $imageName;
+            Storage::disk('public')->put( $imageNameWithFolder, $imageResizeFile);
+            $cateringImages[] = $imageName;
         }
 
         $caterings =

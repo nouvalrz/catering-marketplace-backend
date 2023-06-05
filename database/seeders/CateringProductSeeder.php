@@ -25,9 +25,10 @@ class CateringProductSeeder extends Seeder
             $path = "database/seeders/cateringproductimages/{$i}.png";
             $imageFile =  File::get($path);
             $imageResizeFile = \Intervention\Image\Facades\Image::make($imageFile)->resize(300, 300)->encode('jpg',80);
-            $imageName = "products/catering-product-{$i}-" . time() . '.jpg';
-            Storage::disk('public')->put( $imageName, $imageResizeFile);
-            $productImages[] = Storage::url($imageName);
+            $imageName = "catering-product-{$i}-" . time() . '.jpg';
+            $imageNameWithFolder = 'products/' . $imageName;
+            Storage::disk('public')->put( $imageNameWithFolder, $imageResizeFile);
+            $productImages[] = $imageName;
         }
 
         $products = array(
