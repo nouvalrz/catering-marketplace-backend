@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Catering extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -41,7 +41,7 @@ class Catering extends Model
     {
         return $this->belongsTo(User::class, 'foreign_key');
     }
-    
+
     public function getImageAttribute($image)
     {
         return asset('storage/caterings/' . $image);
@@ -70,14 +70,14 @@ class Catering extends Model
     }
 
     public function discounts(){
-        return $this->hasMany(Discounts::class, 'catering_id');
+        return $this->hasMany(Discount::class, 'catering_id');
     }
 
     public function productCatering()
     {
         return $this->hasMany(Product::class, 'catering_id');
     }
-    
+
     // PUNYA BAGAS
     // public function recommendation_products(){
     //     return $this->hasMany(Product::class, 'catering_id')->orderByDesc("total_sales");
@@ -92,5 +92,5 @@ class Catering extends Model
     //         get: fn ($value) => json_decode($value, true),
     //         set: fn ($value) => json_encode($value),
     //     );
-    // } 
+    // }
 }
