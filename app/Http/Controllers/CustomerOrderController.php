@@ -43,7 +43,7 @@ class CustomerOrderController extends Controller
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
-            'customer_addresses_id' => $address->id,
+            'customer_addresses_id' => "$address->id",
             'delivery_cost' => request('delivery_price'),
             'total_price' => request('total_price'),
             'order_type' => "preorder",
