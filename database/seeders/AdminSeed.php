@@ -15,12 +15,13 @@ class AdminSeed extends Seeder
      */
     public function run()
     {
-        DB::table("administrators")->insert([
+        DB::table("users")->insert([
             [
-                "username"=>"admin@gmail.com",
+                "name"=>"admin",
+                "email"=>"admin@gmail.com",
                 "password"=>bcrypt("admin123"),
-                "fullname"=>"admin",
-                "user_id"=>"5"
+                "type"=>"admin",
+                // "user_id"=>"5"
             ],
         ]);
     }

@@ -65,6 +65,8 @@ class DashboardController extends Controller
 
             }
 
+        }else{
+            $yearSelect = null;
         }
 
         $status = ['UNPAID', 'VOID', 'PAID', 'PENDING', 'NOT_APPROVED', 
