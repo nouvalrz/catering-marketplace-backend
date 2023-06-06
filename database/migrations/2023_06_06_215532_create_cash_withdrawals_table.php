@@ -24,7 +24,7 @@ class CreateCashWithdrawalsTable extends Migration
             $table->string('bank_account',191);
             $table->integer('nominal');
             $table->enum('approved',['pending','accepted','rejected','done'])->nullable();
-            $table->enum('approved',['catering','customer'])->nullable();
+            $table->enum('role',['catering','customer'])->nullable();
         });
     }
 
