@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDiscountInOrders extends Migration
+class CreateSliderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class AddDiscountInOrders extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            //
-            $table->integer('discount')->nullable();
+        Schema::create('slider', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+
+            $table->string('title',191);
+            $table->text('image');
+            $table->tinyInteger('is_active',);
         });
     }
 
@@ -26,8 +30,6 @@ class AddDiscountInOrders extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('slider');
     }
 }

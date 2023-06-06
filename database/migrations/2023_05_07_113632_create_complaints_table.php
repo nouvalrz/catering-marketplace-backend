@@ -20,6 +20,7 @@ class CreateComplaintsTable extends Migration
             $table->bigInteger('orders_id',)->unsigned();
             $table->enum('status',['pending','approve','reject']);
             $table->enum('problem',['not_received','damaged','incomplete']);
+            $table->dateTime('delivery_datetime')->nullable();
         });
     }
 

@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name',70);
+            $table->enum('type',['CATERING','PRODUCT']);
 
         });
     }

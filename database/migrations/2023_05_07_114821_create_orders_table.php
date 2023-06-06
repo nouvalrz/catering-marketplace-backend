@@ -32,6 +32,8 @@ class CreateOrdersTable extends Migration
             $table->tinyInteger('has_review')->nullable();
             $table->datetime('payment_expiry')->nullable();
             $table->text('snap_token');
+            $table->text('diskon')->nullable();
+            $table->integer('use_balance')->nullable();
         });
     }
 
