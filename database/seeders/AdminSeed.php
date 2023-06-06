@@ -18,8 +18,8 @@ class AdminSeed extends Seeder
         DB::table("users")->insert([
             [
                 "name"=>"admin",
-                "email"=>"admin@gmail.com",
-                "password"=>bcrypt("admin123"),
+                "email"=>"admin1@gmail.com",
+                "password"=>bcrypt("password"),
                 "type"=>"admin",
                 // "user_id"=>"5"
             ],

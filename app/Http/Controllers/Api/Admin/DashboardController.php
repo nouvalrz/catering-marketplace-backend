@@ -59,7 +59,7 @@ class DashboardController extends Controller
             ->orderByRaw('years ASC')
             ->get();
 
-        if($yearOption){
+        if(count($yearOption) != 0){
             foreach($yearOption as $result){
                 $yearSelect[] = $result->years;
 
