@@ -58,6 +58,9 @@ class CustomerOrderController extends Controller
             'use_balance' => request('use_balance') ?? null,
             'discount' => request('discount') ? stripslashes(request('discount')) : null
         ]);
+        
+        $order->customer_addresses_id = $address->id;
+        $order->save();
 
         $products = request('products');
         foreach ($products as $product){
@@ -119,6 +122,9 @@ class CustomerOrderController extends Controller
             'cancele_at' => "2023-04-07 12:00:00",
             'discount' => request('discount') ? stripslashes(request('discount')) : null
         ]);
+        
+        $order->customer_addresses_id = $address->id;
+        $order->save();
 
         $orderDetails = request('order_details');
 
