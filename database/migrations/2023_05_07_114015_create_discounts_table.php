@@ -19,6 +19,7 @@ class CreateDiscountsTable extends Migration
             $table->bigInteger('catering_id',)->unsigned();
             $table->string('title',191);
             $table->string('description',191);
+            $table->double('percentage',8,2);
             $table->bigInteger('minimum_spend',);
             $table->bigInteger('maximum_disc',);
             $table->date('start_date');

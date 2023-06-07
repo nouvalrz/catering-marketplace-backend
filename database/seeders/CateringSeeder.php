@@ -35,8 +35,8 @@ class CateringSeeder extends Seeder
         $caterings =
             [
             [
-                "name"=>"Vegan Food Nayla",
-                "email"=>"14244@gmail.com",
+                "name"=>"Bagas Catering",
+                "email"=>"untukdatabase1@gmail.com",
                 "description"=>"Menjual aneka ragam makanan vegetarian",
                 "phone"=>"628518772829",
                 "address"=>"Jalan Dukuh Sari Gg. Telaga Sari No.15",

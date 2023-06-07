@@ -6,7 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class AdminSeed extends Seeder
+class SliderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,11 @@ class AdminSeed extends Seeder
      */
     public function run()
     {
-        DB::table("users")->insert([
+        DB::table("sliders")->insert([
             [
-                "name"=>"admin",
-                "email"=>"admin1@gmail.com",
-                "password"=>bcrypt("password"),
-                "type"=>"admin",
-                // "user_id"=>"5"
+                "title"=>"Download",
+                "image"=>"2hZGPsRuSzrVC1Y19GATlQQwYjk7LlJdxEKPsD13.png",
+                "is_active"=>1,
             ],
         ]);
     }
