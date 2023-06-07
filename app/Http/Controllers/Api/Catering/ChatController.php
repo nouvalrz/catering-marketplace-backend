@@ -9,6 +9,7 @@ use App\Models\Catering;
 use App\Models\Chats;
 use App\Models\Customer;
 use App\Models\RoomChats;
+use Kutia\Larafirebase\Facades\Larafirebase;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -36,8 +37,10 @@ class ChatController extends Controller
 
         // dd($roomChats);
 
+        $linkImageCustomer = asset('storage/customers/');
+        $linkImageCatering = asset('storage/caterings/');
         if($roomChats){
-            return new ChatResource(true, 'List Data Chats', $roomChats, null, null);
+            return new ChatResource(true, 'List Data Chats', $roomChats, $linkImageCustomer, $linkImageCatering);
         }
 
         //return with Api Resource
@@ -48,8 +51,10 @@ class ChatController extends Controller
         $chats = Chats::with('room')->where('roomchats_id', $id)->orderBy('created_at')->get();
         $room = RoomChats::whereId($id)->first();
         $profileCustomer = Customer::whereId($room->customer_id)->first(['id','name','image']);
+        $profileCustomer->link = asset('storage/customers/');
+
         $profileCatering = Catering::whereId($room->catering_id)->first(['id','name','image']);
-        // $chats->link = asset('storage/caterings/');
+        $profileCatering->link = asset('storage/caterings/');
         
         // $roomChats = RoomChats::with('imageCustomer')->where('id', $id)->first();
         // $chats->image = $roomChats;
@@ -85,8 +90,15 @@ class ChatController extends Controller
             'message' => $request->message,
             'sender' => $request->sender,
         ]);
+        
+        $roomchat = Roomchats::find($request->roomchats_id);
+        $customerId = $roomchat->customer_id;
+        $cateringId = $roomchat->catering_id;
+        $customer = Customer::find($customerId);
+        $catering = Catering::find($cateringId);
 
         if($chats){   
+            Larafirebase::withTitle("Pesan Baru dari {$catering->name}")->withBody($chats->message)->withAdditionalData( array_merge(["type" => "chat", "catering_id" => $cateringId], $chats->toArray()))->sendNotification($customer->user()->get()->first()->fcm_token);
             return new ChatResource(true, 'Data chat Berhasil Disimpan!', null, null, null);
         }
         return new ChatResource(false, 'Data chat gagal Disimpan!', null, null, null);

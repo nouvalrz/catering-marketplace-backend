@@ -13,13 +13,13 @@ class CreateSliderTable extends Migration
      */
     public function up()
     {
-        Schema::create('slider', function (Blueprint $table) {
+        Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
             $table->string('title',191);
             $table->text('image');
-            $table->tinyInteger('is_active',);
+            $table->tinyInteger('is_active');
         });
     }
 
