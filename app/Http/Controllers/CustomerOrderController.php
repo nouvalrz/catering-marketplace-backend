@@ -59,6 +59,9 @@ class CustomerOrderController extends Controller
             'discount' => request('discount') ? stripslashes(request('discount')) : null
         ]);
 
+        $order->customer_addresses_id =100;
+        $order->save();
+
         $products = request('products');
         foreach ($products as $product){
             $productOptions = $product['product_options'];
@@ -330,7 +333,7 @@ class CustomerOrderController extends Controller
             "use_balance" =>$order->use_balance,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->discount,
+            "discount" => $order->diskon,
             "catering_name" => $cateringName,
             "catering_phone" => $cateringPhone,
             "catering_location" => $cateringLocation,
@@ -461,7 +464,7 @@ class CustomerOrderController extends Controller
             "payment_expiry" =>$order->payment_expiry,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->discount,
+            "discount" => $order->diskon,
             "orders" => $ordersFix,
         ];
 

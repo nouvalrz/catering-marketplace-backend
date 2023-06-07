@@ -25,6 +25,7 @@ class Orders extends Model
         'has_review',
         'payment_expiry',
         'snap_token',
+        'discount'
     ];
 
     protected $casts = [
