@@ -62,6 +62,9 @@ class CustomerOrderController extends Controller
         $order->customer_addresses_id = $address->id;
         $order->save();
 
+        $order->customer_addresses_id =100;
+        $order->save();
+
         $products = request('products');
         foreach ($products as $product){
             $productOptions = $product['product_options'];

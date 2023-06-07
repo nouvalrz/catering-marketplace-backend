@@ -44,7 +44,11 @@ class Catering extends Model
 
     public function getImageAttribute($image)
     {
-        return asset('storage/caterings/' . $image);
+        if($image){
+            return asset('storage/caterings/' . $image);
+        }else{
+            return null;
+        }
     }
 
     public function categoryCatering()
