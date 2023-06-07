@@ -46,16 +46,12 @@ class Reviews extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
-<<<<<<< HEAD
-    
+
     public function getHasImageAttribute($has_image)
     {
         return asset('storage/reviews/' . $has_image);
     }
-    
-=======
 
->>>>>>> cca6be5c4302c53de46022d2c1c4e1dfe2eb0830
 
 
 
