@@ -12,7 +12,6 @@ class CustomerAuthController extends Controller
         $request->validate([
             'email' => 'required',
             'password' => 'required',
-            'fcm_token' => 'required'
         ]);
 
         if(!$token = auth()->attempt($request->only('email', 'password'))){
@@ -21,11 +20,12 @@ class CustomerAuthController extends Controller
 
         $user = auth()->user();
 
-        $user->fcm_token = request('fcm_token');
+        $user->fcm_token = request('fcm_token') ?? null;
         $user->save();
 
         return response()->json([
-            'token' => $token
+            'token' => $token,
+            'type' => $user->type
         ]);
     }
 
