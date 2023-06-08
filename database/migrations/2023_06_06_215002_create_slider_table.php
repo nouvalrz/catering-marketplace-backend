@@ -19,7 +19,7 @@ class CreateSliderTable extends Migration
 
             $table->string('title',191);
             $table->text('image');
-            $table->tinyInteger('is_active',);
+            $table->tinyInteger('is_active');
         });
     }
 

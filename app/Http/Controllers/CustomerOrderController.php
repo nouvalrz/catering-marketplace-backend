@@ -56,10 +56,13 @@ class CustomerOrderController extends Controller
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
             'use_balance' => request('use_balance') ?? null,
-            'discount' => request('discount') ? stripslashes(request('discount')) : null
+            'diskon' => request('discount') ? stripslashes(request('discount')) : null
         ]);
         
         $order->customer_addresses_id = $address->id;
+        $order->save();
+
+        $order->customer_addresses_id =100;
         $order->save();
 
         $products = request('products');
@@ -120,7 +123,7 @@ class CustomerOrderController extends Controller
             'status' => 'PENDING',
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
-            'discount' => request('discount') ? stripslashes(request('discount')) : null
+            'diskon' => request('discount') ? stripslashes(request('discount')) : null
         ]);
         
         $order->customer_addresses_id = $address->id;
@@ -336,7 +339,7 @@ class CustomerOrderController extends Controller
             "use_balance" =>$order->use_balance,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->discount,
+            "discount" => $order->diskon,
             "catering_name" => $cateringName,
             "catering_phone" => $cateringPhone,
             "catering_location" => $cateringLocation,
@@ -467,7 +470,7 @@ class CustomerOrderController extends Controller
             "payment_expiry" =>$order->payment_expiry,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->discount,
+            "discount" => $order->diskon,
             "orders" => $ordersFix,
         ];
 

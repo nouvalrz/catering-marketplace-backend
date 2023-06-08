@@ -9,6 +9,7 @@ use App\Models\Catering;
 use App\Models\Chats;
 use App\Models\Customer;
 use App\Models\RoomChats;
+use Kutia\Larafirebase\Facades\Larafirebase;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -35,7 +36,7 @@ class ChatController extends Controller
         })->get()->sortBy('latestChat.created_at', SORT_REGULAR, true)->values()->all();
 
         // dd($roomChats);
-        // $linkImage = ;
+
         $linkImageCustomer = asset('storage/customers/');
         $linkImageCatering = asset('storage/caterings/');
         if($roomChats){
@@ -54,7 +55,6 @@ class ChatController extends Controller
 
         $profileCatering = Catering::whereId($room->catering_id)->first(['id','name','image']);
         $profileCatering->link = asset('storage/caterings/');
-        // $chats->link = asset('storage/caterings/');
         
         // $roomChats = RoomChats::with('imageCustomer')->where('id', $id)->first();
         // $chats->image = $roomChats;
@@ -90,8 +90,15 @@ class ChatController extends Controller
             'message' => $request->message,
             'sender' => $request->sender,
         ]);
+        
+        $roomchat = Roomchats::find($request->roomchats_id);
+        $customerId = $roomchat->customer_id;
+        $cateringId = $roomchat->catering_id;
+        $customer = Customer::find($customerId);
+        $catering = Catering::find($cateringId);
 
         if($chats){   
+            Larafirebase::withTitle("Pesan Baru dari {$catering->name}")->withBody($chats->message)->withAdditionalData( array_merge(["type" => "chat", "catering_id" => $cateringId], $chats->toArray()))->sendNotification($customer->user()->get()->first()->fcm_token);
             return new ChatResource(true, 'Data chat Berhasil Disimpan!', null, null, null);
         }
         return new ChatResource(false, 'Data chat gagal Disimpan!', null, null, null);

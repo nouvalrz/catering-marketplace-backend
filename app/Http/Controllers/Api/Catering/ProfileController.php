@@ -101,8 +101,8 @@ class ProfileController extends Controller
         if ($request->file('image')) {
             //remove old image
             // Storage::disk('local')->delete('public/products/'.basename($product->image));
-            $exixtsImage = Storage::disk('local')->exists('public/caterings/'.basename($catering->image));
-            if($exixtsImage){
+            // $exixtsImage = Storage::disk('local')->exists('public/caterings/'.basename($catering->image));
+            if($catering->image){
 
                 Storage::disk('local')->delete('public/caterings/'.basename($catering->image));
             }
