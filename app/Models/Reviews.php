@@ -38,7 +38,7 @@ class Reviews extends Model
 
     public function order()
     {
-        return $this->belongsTo(Order::class, 'order_id');
+        return $this->belongsTo(Orders::class, 'order_id');
     }
     public function customer()
     {
@@ -46,6 +46,11 @@ class Reviews extends Model
     }
     
 
+    public function getImageAttribute($image)
+    {
+        return asset('storage/reviews/' . $image);
+    }
+    
 
 
 

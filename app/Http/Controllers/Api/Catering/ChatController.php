@@ -35,9 +35,11 @@ class ChatController extends Controller
         })->get()->sortBy('latestChat.created_at', SORT_REGULAR, true)->values()->all();
 
         // dd($roomChats);
-
+        // $linkImage = ;
+        $linkImageCustomer = asset('storage/customers/');
+        $linkImageCatering = asset('storage/caterings/');
         if($roomChats){
-            return new ChatResource(true, 'List Data Chats', $roomChats, null, null);
+            return new ChatResource(true, 'List Data Chats', $roomChats, $linkImageCustomer, $linkImageCatering);
         }
 
         //return with Api Resource
@@ -48,7 +50,10 @@ class ChatController extends Controller
         $chats = Chats::with('room')->where('roomchats_id', $id)->orderBy('created_at')->get();
         $room = RoomChats::whereId($id)->first();
         $profileCustomer = Customer::whereId($room->customer_id)->first(['id','name','image']);
+        $profileCustomer->link = asset('storage/customers/');
+
         $profileCatering = Catering::whereId($room->catering_id)->first(['id','name','image']);
+        $profileCatering->link = asset('storage/caterings/');
         // $chats->link = asset('storage/caterings/');
         
         // $roomChats = RoomChats::with('imageCustomer')->where('id', $id)->first();

@@ -23,4 +23,8 @@ class Chats extends Model
         return $this->belongsTo(RoomChats::class, 'roomchats_id');
     }
     
+    // public function getImageAttribute($image)
+    // {
+    //     return asset('storage/products/' . $image);
+    // }
 }
