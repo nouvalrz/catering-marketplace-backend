@@ -101,7 +101,9 @@ Route::get('catering/client/{id}/get-delivery-time-range', [CateringToClientCont
 Route::get('catering/client/{id}/get-catering-work-day', [CateringToClientController::class, 'getCateringWorkDay']);
 Route::get('catering/client/{id}/get-discounts', [CateringToClientController::class, 'getCateringDiscounts']);
 
+//Catering Mobile
 Route::get('catering-mobile/get-dashboard', [\App\Http\Controllers\CateringInMobileController::class, 'getDashbord']);
+Route::get('catering-mobile/preorder/{id}/show', [\App\Http\Controllers\CateringInMobileController::class, 'showPreOrder']);
 
 //tambah
 // Auth::routes(['verify' => true]);

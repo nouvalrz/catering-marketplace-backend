@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Complaints;
 use App\Models\Customer;
 use App\Models\Catering;
 use App\Models\Orders;
+use App\Models\ProductOptionDetail;
+use App\Models\Reviews;
 use Illuminate\Http\Request;
 
 class CateringInMobileController extends Controller
@@ -57,4 +60,80 @@ class CateringInMobileController extends Controller
            'orders' => $orderList
         ]);
     }
+
+    public function showPreOrder($id){
+        $order = Orders::find($id);
+
+        $address = $order->customerAddresses()->get()->first();
+
+        $productsRaws = $order->orderDetails()->with('product')->get();
+
+        $products = [];
+
+        $review = Reviews::where('order_id', $order->id)->first();
+        $complaint = Complaints::with('images')->where('orders_id', $order->id)->first();
+        $customer = Customer::find($order->customer_id);
+
+
+        foreach ($productsRaws as $index=>$productsRaw){
+            $productOptionSummary = [];
+
+            $productOptions =  $productsRaw->productOptions()->get();
+
+//            if($index == 0){
+//                $catering = Catering::with('village')->where('id', $productsRaw->product->catering_id)->get()->first();
+//                $customerName = $catering->name;
+//                $customerPhone = $catering->phone;
+//                $customerAddress = $catering->village->name;
+//                $cateringOriginalPath = $catering->image;
+//                $customerId = $catering->id;
+//            }
+
+            if($productOptions){
+                foreach ($productOptions as $productOption){
+                    $productOptionName = ProductOptionDetail::find($productOption->product_option_detail_id)->option_choice_name;
+                    $productOptionSummary[] = $productOptionName;
+                }
+            }
+
+
+            $product["id"] = $productsRaw->product->id;
+            $product["name"] = $productsRaw->product->name;
+            $product["quantity"] = $productsRaw->quantity;
+            $product["price"] = $productsRaw->price;
+            $product["image"] = $productsRaw->product->image;
+            $product["product_option_summary"] = join(", ", $productOptionSummary);
+
+            $products[] = $product;
+        }
+
+        $orderJson = [
+            "id" => $order->id,
+            "order_type" => $order->order_type,
+            "invoice_number" => $order->invoice_number,
+            "address" => $address,
+            "delivery_datetime" => $order->start_date,
+            "products" => $products,
+            "subtotal" => $order->total_price - $order->delivery_cost,
+            "delivery_price" => $order->delivery_cost,
+            "total_price" => $order->total_price,
+            "payment_expiry" =>$order->payment_expiry,
+            "use_balance" =>$order->use_balance,
+            "order_status" => $order->status,
+            "created_at" =>$order->created_at,
+            "discount" => $order->diskon,
+            "customer" => $customer
+
+        ];
+
+        if($review){
+            $orderJson['review'] = $review;
+        }
+        if($complaint){
+            $orderJson['complaint'] = $complaint;
+        }
+
+        return response()->json(["order" => $orderJson]);
+    }
+
 }
