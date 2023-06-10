@@ -104,6 +104,7 @@ Route::get('catering/client/{id}/get-discounts', [CateringToClientController::cl
 //Catering Mobile
 Route::get('catering-mobile/get-dashboard', [\App\Http\Controllers\CateringInMobileController::class, 'getDashbord']);
 Route::get('catering-mobile/preorder/{id}/show', [\App\Http\Controllers\CateringInMobileController::class, 'showPreOrder']);
+Route::get('catering-mobile/preorder/changeStatusOrder', [\App\Http\Controllers\CateringInMobileController::class, 'changeStatusOrder']);
 
 //tambah
 // Auth::routes(['verify' => true]);

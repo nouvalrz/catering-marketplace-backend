@@ -136,4 +136,18 @@ class CateringInMobileController extends Controller
         return response()->json(["order" => $orderJson]);
     }
 
+    public function changeStatusOrder(Request $request){
+        request()->validate([
+            "orderId" => 'required',
+            "newStatus" => 'required'
+        ]);
+
+        $order = Orders::find(request('orderId'));
+
+        $order->status = request('newStatus');
+        $order->save();
+
+        return response()->json(["order" => $order]);
+    }
+
 }
