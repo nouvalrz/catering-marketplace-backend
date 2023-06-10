@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Complaints;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Catering;
 use App\Models\Orders;
 use App\Models\ProductOptionDetail;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
-use Artisan;
-use Illuminate\Console\Scheduling\Schedule;
+// use Artisan;
+// use Illuminate\Console\Scheduling\Schedule;
+// use Illuminate\Console\Command;
+// use Illuminate\Support\Facades\Artisan;
+
+use App\Jobs\CancelOrder;
 // use Illuminate\Support\Facades\Artisan;
 
 class CateringInMobileController extends Controller
@@ -160,12 +165,40 @@ class CateringInMobileController extends Controller
     }
 
 
-    public function setCancel(){
+//     public function setCancel(){
 
-        $schedule = new Schedule();
+//         $order = Orders::find(7009);
+//         CancelOrder::dispatch($order)
+//                     ->delay(now()->addMinutes(2));
 
-        $schedule->command('order:cancel 7008')->when(function (){
-            return Carbon::create(2034,6,10,11,38)->isPast();
-        });
-    }
+//         // $schedule = new Schedule(new Command);
+        
+//         // // Tambahkan tugas ke Task Scheduler
+//         // $schedule->command('order:cancel 7009')->when(function (){
+//         //     return Carbon::create(2023,6,10,19,55)->isPast();
+//         // })->everyMinute()->appendOutputTo(storage_path('logs/inspire.log'));
+
+// // // Store the schedule in temporary storage
+// // $temporaryFilePath = 'temporary_schedule.json';
+// // Storage::put($temporaryFilePath, json_encode($schedule->events()));
+
+// // // Run the added tasks
+// // Artisan::call('schedule:run', [
+// //     '--location' => $temporaryFilePath,
+// // ]);
+
+// // // Delete the temporary storage file
+// // Storage::delete($temporaryFilePath);
+
+//         // Artisan::call('schedule:run', [
+//         //     '--schedule' => serialize($schedule)
+//         // ]);
+//         // $schedule->call(function () {
+//         //     // Lakukan sesuatu
+//         // })->everyTenMinutes();
+        
+//         // Jalankan tugas-tugas yang telah ditambahkan
+//         // $schedule->run();
+//         // return response()->json($schedule);
+//     }
 }

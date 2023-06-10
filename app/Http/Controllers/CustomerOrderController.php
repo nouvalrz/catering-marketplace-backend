@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kutia\Larafirebase\Facades\Larafirebase;
 use Midtrans\Notification;
+use App\Jobs\CancelOrder;
 
 class CustomerOrderController extends Controller
 {
@@ -92,6 +93,9 @@ class CustomerOrderController extends Controller
         $order->snap_token = $snapToken;
         $order->save();
 
+        CancelOrder::dispatch($order)
+                    ->delay(now()->addHour(24));
+
         return response()->json($order);
 //        return $address;
     }
@@ -147,6 +151,9 @@ class CustomerOrderController extends Controller
         $snapToken = $midtrans->getSnapTokenForSubs();
         $order->snap_token = $snapToken;
         $order->save();
+
+        CancelOrder::dispatch($order)
+        ->delay(now()->addHour(24));
 
         return response()->json($order);
     }
