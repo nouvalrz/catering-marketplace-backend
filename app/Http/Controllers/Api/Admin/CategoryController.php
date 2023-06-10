@@ -23,7 +23,8 @@ class CategoryController extends Controller
     public function index()
     {
         //get categories
-        $categories = Categories::when(request()->q, function($categories)
+        $categories = Categories::where('type', 'like', '%'. request()->type . '%');
+        $categories = $categories->when(request()->q, function($categories)
         {
             $categories = $categories->where('name', 'like', '%'. request()->q . '%');
         })->latest()->paginate(request()->pages);
@@ -41,7 +42,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             // 'image' => 'required|image|mimes:jpeg,jpg,png|max:2000',
             'name' => 'required|unique:categories',
-            'description' => 'required',
+            'type' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -54,7 +55,7 @@ class CategoryController extends Controller
         $category = Categories::create([
             // 'image'=> $image->hashName(),
             'name' => $request->name,
-            'description' => $request->description,
+            'type' => $request->type,
             // 'slug' => Str::slug($request->name, '-'),
         ]);
         if($category) {
@@ -91,30 +92,15 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' =>'required|unique:categories,name,'.$category->id,
-            // 'description' =>'required',
+            'type' =>'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        //check image update
-        // if ($request->file('image')) {
-        //     //remove old image
-        //     Storage::disk('local')->delete('public/categories/'.basename($category->
-        //     image));
-        //     //upload new image
-        //     $image = $request->file('image');
-        //     $image->storeAs('public/categories', $image->hashName());
-        //     //update category with new image
-        //     $category->update([
-        //         'image'=> $image->hashName(),
-        //         'name' => $request->name,
-        //         'slug' => Str::slug($request->name, '-'),
-        //     ]);
-        // }
         //update category without image
         $category->update([
             'name' => $request->name,
-            'description' => $request->description,
+            'type' => $request->type,
             // 'slug' => Str::slug($request->name, '-'),
         ]);
         if($category) {

@@ -157,6 +157,21 @@ class SliderController extends Controller
         return new SliderResource(false, 'Data Slider Gagal Diupdate!', null);
     }
 
+    public function changeActiveSlider(Request $request, $id)
+    {
+        // dd($request->status);
+        $slider      = Slider::findOrFail($id);
+        $slider->is_active = $request->is_active;
+        $slider->save();
+
+        if($slider) {
+            //return success with Api Resource
+            return new SliderResource(true, 'Data Slider Berhasil!', $slider);
+        }
+        //return failed with Api Resource
+        return new SliderResource(false, 'Data Slider Gagal Diupdate!', $slider);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

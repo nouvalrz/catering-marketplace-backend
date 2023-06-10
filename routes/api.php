@@ -127,6 +127,8 @@ Route::prefix('admin')->group(function(){
         
         Route::apiResource('/slider', App\Http\Controllers\Api\Admin\SliderController::class, ['as' => 'admin']);
         
+        Route::post('/slidersUpdateActive/{id}', 'App\Http\Controllers\Api\Admin\SliderController@changeActiveSlider');
+        
         Route::apiResource('/customers', App\Http\Controllers\Api\Admin\CustomerController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
         
         Route::apiResource('/discounts', App\Http\Controllers\Api\Admin\DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);

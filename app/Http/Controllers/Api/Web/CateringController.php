@@ -32,7 +32,7 @@ class CateringController extends Controller
      */
     public function index()
     {
-        $catering = Catering::where('isVerified', 'yes')->with(["categories:id,name", "district:id,name", "recommendation_products"])->orderByDesc('rate')->get()->map(function ($catering) {
+        $catering = Catering::where('isVerified', 'yes')->where('is_open', '1')->with(["categories:id,name", "district:id,name", "recommendation_products"])->orderByDesc('rate')->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         })->take(30);

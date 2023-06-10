@@ -73,6 +73,8 @@ class OrdersController extends Controller
             $complaintImage = null;
         }
 
+        $orders->linkImageReview = asset('storage/reviews/');
+        
         if($orders) {
             //response
             return response()->json([
@@ -82,6 +84,7 @@ class OrdersController extends Controller
                     'order' => $orders,
                     'order_detail' => $ordersDetail,
                     'complaint_image' => $complaintImage,
+                    'linkImageReview' => $complaintImage,
                 ]
             ], 200);
         }

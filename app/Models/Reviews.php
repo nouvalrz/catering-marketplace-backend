@@ -50,9 +50,9 @@ class Reviews extends Model
     }
 
 
-    public function getImageAttribute($image)
+    public function getImageAttribute($has_image)
     {
-        return asset('storage/reviews/' . $image);
+        return asset('storage/reviews/' . $has_image);
     }
     
 
