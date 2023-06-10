@@ -147,6 +147,12 @@ class CateringInMobileController extends Controller
         $order->status = request('newStatus');
         $order->save();
 
+        if(request('newStatus') == "NOT_APPROVED"){
+            $customer = Customer::find($order->customer_id);
+            $customer->balance = $customer->balance + $order->total_price;
+            $customer->save();
+        }
+
         return response()->json(["order" => $order]);
     }
 
