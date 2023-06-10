@@ -9,6 +9,9 @@ use App\Models\Orders;
 use App\Models\ProductOptionDetail;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
+use Artisan;
+use Illuminate\Console\Scheduling\Schedule;
+// use Illuminate\Support\Facades\Artisan;
 
 class CateringInMobileController extends Controller
 {
@@ -156,4 +159,13 @@ class CateringInMobileController extends Controller
         return response()->json(["order" => $order]);
     }
 
+
+    public function setCancel(){
+
+        $schedule = new Schedule();
+
+        $schedule->command('order:cancel 7008')->when(function (){
+            return Carbon::create(2034,6,10,11,38)->isPast();
+        });
+    }
 }
