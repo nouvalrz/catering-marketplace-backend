@@ -152,7 +152,7 @@ class OrdersController extends Controller
 
                 $user = Customer::find($order->customer_id)->user()->first();
 
-                Larafirebase::withTitle('Pesanan Diterima Katering')->withBody("Pesanan {$this->order->invoice_number} telah diterima katering!")->withAdditionalData([
+                Larafirebase::withTitle('Pesanan Diterima Katering')->withBody("Pesanan {$order->invoice_number} telah diterima katering!")->withAdditionalData([
                     'type' => 'PROCESSED',
                 ])->sendNotification($user->fcm_token);
             }
@@ -160,7 +160,7 @@ class OrdersController extends Controller
             if($request->status == "NOT_APPROVED"){
                 $user = Customer::find($order->customer_id)->user()->first();
 
-                Larafirebase::withTitle('Pesanan Ditolak Katering')->withBody("Pesanan {$this->order->invoice_number} ditolak katering. Uang akan dikembalikan ke saldo Kateringku!")->withAdditionalData([
+                Larafirebase::withTitle('Pesanan Ditolak Katering')->withBody("Pesanan {$order->invoice_number} ditolak katering. Uang akan dikembalikan ke saldo Kateringku!")->withAdditionalData([
                     'type' => 'PROCESSED',
                 ])->sendNotification($user->fcm_token);
             }
@@ -176,7 +176,7 @@ class OrdersController extends Controller
 
                 $user = Customer::find($order->customer_id)->user()->first();
 
-                Larafirebase::withTitle('Pesanan Sedang Diantar Katering')->withBody("Pesanan {$this->order->invoice_number} sedang diantar katering, mohon ditunggu!")->withAdditionalData([
+                Larafirebase::withTitle('Pesanan Sedang Diantar Katering')->withBody("Pesanan {$order->invoice_number} sedang diantar katering, mohon ditunggu!")->withAdditionalData([
                     'type' => 'SENT',
                 ])->sendNotification($user->fcm_token);
             }
