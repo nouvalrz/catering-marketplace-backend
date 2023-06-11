@@ -16,6 +16,7 @@ use App\Models\OrderDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Kutia\Larafirebase\Facades\Larafirebase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class OrdersController extends Controller
@@ -37,10 +38,10 @@ class OrdersController extends Controller
         $orders = $orders->where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
         function($orders) {
             $orders = $orders->where('invoice_number', 'like', '%'. request()->q . '%')
-                ->orWhereHas('customer', 
+                ->orWhereHas('customer',
             function($orders) {
                 $orders = $orders->where('name', 'like', '%'. request()->q . '%')
-                    ->where('status', 'like', '%' . request()->status . '%' ); 
+                    ->where('status', 'like', '%' . request()->status . '%' );
             });
         })->latest()->paginate(request()->pages);
         //return with Api Resource
@@ -58,7 +59,7 @@ class OrdersController extends Controller
         // $userId = auth()->guard('api_catering')->user()->id;
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
-        
+
         $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review', 'complaint'])->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
         if(!$ordersDetail){
@@ -74,7 +75,7 @@ class OrdersController extends Controller
         }
 
         $orders->linkImageReview = asset('storage/reviews/');
-        
+
         if($orders) {
             //response
             return response()->json([
@@ -92,7 +93,7 @@ class OrdersController extends Controller
         return new OrderResource(false, 'Detail Data Product Tidak Ditemukan!', null);
     }
 
-    
+
     public function listProducts($id)
     {
         // $userId = auth()->guard('api_catering')->user()->id;
@@ -102,7 +103,7 @@ class OrdersController extends Controller
         }
         // $orders = Orders::whereId($id)->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->get();
-        
+
         //return failed with Api Resource
         if($ordersDetail){
             return new OrderResource(true, 'Data List Product!', $ordersDetail);
@@ -110,7 +111,7 @@ class OrdersController extends Controller
         return new OrderResource(true, 'Data List Product Tidak Ada!', null);
     }
 
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -123,35 +124,61 @@ class OrdersController extends Controller
 
     }
 
-    
+
     public function changeStatus(Request $request, $id)
     {
         // dd($request->status);
-        
+
         if($request->tanggal){
             // $order      = Orders::findOrFail($id);
             $orderDetails = OrderDetails::where('orders_id', $id)->where('delivery_datetime', $request->tanggal)->get();
-            
+
             foreach($orderDetails as $orderDetail){
                 $orderDetail->status = 'sending';
                 $orderDetail->save();
             }
+
+
+
             return new ProductResource(true, 'Data Product Berhasil!', $orderDetail);
-            
+
         }else{
-            
+
             $order      = Orders::findOrFail($id);
             $order->status = $request->status;
             $order->save();
-    
+
+            if($request->status == "PROCESSED"){
+
+                $user = Customer::find($order->customer_id)->user()->first();
+
+                Larafirebase::withTitle('Pesanan Diterima Katering')->withBody("Pesanan {$this->order->invoice_number} telah diterima katering!")->withAdditionalData([
+                    'type' => 'PROCESSED',
+                ])->sendNotification($user->fcm_token);
+            }
+
+            if($request->status == "NOT_APPROVED"){
+                $user = Customer::find($order->customer_id)->user()->first();
+
+                Larafirebase::withTitle('Pesanan Ditolak Katering')->withBody("Pesanan {$this->order->invoice_number} ditolak katering. Uang akan dikembalikan ke saldo Kateringku!")->withAdditionalData([
+                    'type' => 'PROCESSED',
+                ])->sendNotification($user->fcm_token);
+            }
+
             if($request->status == 'SEND'){
                 $orderDetails = OrderDetails::where('orders_id', $id)->get();
-    
+
                 // foreach($orderDetails as $orderDetail){
                 foreach($orderDetails as $orderDetail){
                     $orderDetail->status = 'sending';
                     $orderDetail->save();
                 }
+
+                $user = Customer::find($order->customer_id)->user()->first();
+
+                Larafirebase::withTitle('Pesanan Sedang Diantar Katering')->withBody("Pesanan {$this->order->invoice_number} sedang diantar katering, mohon ditunggu!")->withAdditionalData([
+                    'type' => 'SENT',
+                ])->sendNotification($user->fcm_token);
             }
         }
 

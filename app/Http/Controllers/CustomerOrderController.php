@@ -195,6 +195,10 @@ class CustomerOrderController extends Controller
                 Orders::where('id', $notification->order_id)->update([
                     'status' => 'VOID',
                 ]);
+                $user = Orders::where('id', $notification->order_id)->first()->customer()->first()->user()->get()->first();
+                Larafirebase::withTitle('Pembayaran Kadaluarsa')->withBody("Maaf pesanan {$order->invoice_number} dibatalkan karena pembayaran kadaluarsa!")->withAdditionalData([
+                    'type' => 'PAYMENT_FAIL',
+                ])->sendNotification($user->fcm_token);
             }
 
             if ($callback->isCancelled()) {
@@ -207,6 +211,10 @@ class CustomerOrderController extends Controller
                 Orders::where('id', $notification->order_id)->update([
                     'status' => "VOID",
                 ]);
+                $user = Orders::where('id', $notification->order_id)->first()->customer()->first()->user()->get()->first();
+                Larafirebase::withTitle('Pembayaran Kadaluarsa')->withBody("Maaf pesanan {$order->invoice_number} dibatalkan karena pembayaran kadaluarsa!")->withAdditionalData([
+                    'type' => 'PAYMENT_FAIL',
+                ])->sendNotification($user->fcm_token);
             }
 
             if ($callback->isPending()) {
