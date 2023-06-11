@@ -174,12 +174,13 @@ class CustomerOrderController extends Controller
             $order = $callback->getOrder();
 
             if ($callback->isSuccess()) {
+                $order = Orders::find($notification->order_id);
                 Orders::where('id', $notification->order_id)->update([
                     'status' => 'PAID',
                 ]);
                 $user = Orders::where('id', $notification->order_id)->first()->customer()->first()->user()->get()->first();
 
-                Larafirebase::withTitle('Pembayaran Diterima')->withBody("Terimakasih pesanan ada dengan ID {$notification->order_id} telah dibayar!")->withAdditionalData([
+                Larafirebase::withTitle('Pembayaran Diterima')->withBody("Terimakasih pesanan ada dengan Invoice {$order->invoice_number} telah dibayar!")->withAdditionalData([
                     'type' => 'PAYMENT_SUCCESS',
                 ])->sendNotification($user->fcm_token);
             }
