@@ -35,7 +35,7 @@ class ComplaintController extends Controller
 
             $complaintImage = ComplaintImage::create([
                 'complaint_id' => $complaint->id,
-                'image' => Storage::url($nama_gambar)
+                'image' => $nama_gambar
             ]);
 
         }

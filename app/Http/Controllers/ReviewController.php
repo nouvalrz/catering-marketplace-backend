@@ -37,7 +37,7 @@ class ReviewController extends Controller
                 'star' => request('star'),
                 'description' => request('description'),
                 'catering_id' => request('catering_id'),
-                'has_image' => Storage::url($nama_gambar)
+                'has_image' => $nama_gambar
             ]);
 
             $order = Orders::find(request('order_id'));
