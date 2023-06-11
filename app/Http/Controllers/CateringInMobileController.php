@@ -238,6 +238,26 @@ class CateringInMobileController extends Controller
         return response()->json(["order" => $order]);
     }
 
+    public function changeStatusSubsOrder(Request $request){
+        request()->validate([
+            "orderId" => 'required',
+            "newStatus" => 'required'
+        ]);
+
+        $order = Orders::find(request('orderId'));
+
+        $order->status = request('newStatus');
+        $order->save();
+
+        if(request('newStatus') == "NOT_APPROVED"){
+            $customer = Customer::find($order->customer_id);
+            $customer->balance = $customer->balance + $order->total_price;
+            $customer->save();
+        }
+
+        return response()->json(["order" => $order]);
+    }
+
 
 //     public function setCancel(){
 
