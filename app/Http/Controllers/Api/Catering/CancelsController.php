@@ -40,7 +40,7 @@ class CancelsController extends Controller
             $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', request()->status);
         }else{
 
-            $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->orWhere('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
+            $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
         }
 
         $cancelOrder = $cancelOrder->orderBy('start_date', 'desc')->when(request()->q,
