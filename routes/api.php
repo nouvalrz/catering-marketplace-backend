@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AdminAuthController;
+use App\Http\Controllers\Api\Catering\CancelsController;
 use App\Http\Controllers\Api\Catering\CategoryController;
 use App\Http\Controllers\Api\Catering\ProductController;
 use App\Http\Controllers\Api\Catering\CashWidithrawalController;
@@ -147,6 +148,8 @@ Route::prefix('admin')->group(function(){
         Route::apiResource('/complaint', App\Http\Controllers\Api\Admin\ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
         Route::apiResource('/order', App\Http\Controllers\Api\Admin\OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
+        
+        Route::apiResource('/cancelOrder', App\Http\Controllers\Api\Admin\CancelsController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
         Route::apiResource('/cashWithdrawal', App\Http\Controllers\Api\Admin\CashWithdrawalController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
@@ -215,6 +218,8 @@ Route::prefix('catering')->group(function($router){
         Route::post('/orderA/{id}', 'App\Http\Controllers\Api\Catering\OrdersController@changeStatus');
 
         Route::apiResource('/complaint', ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        
+        Route::apiResource('/cancelOrder', CancelsController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
 
         Route::post('/message', 'App\Http\Controllers\Api\Catering\ChatController@message');
 
