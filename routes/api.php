@@ -107,6 +107,7 @@ Route::get('catering-mobile/preorder/{id}/show', [\App\Http\Controllers\Catering
 Route::get('catering-mobile/subs/{id}/show', [\App\Http\Controllers\CateringInMobileController::class, 'showSubsOrder']);
 Route::post('catering-mobile/preorder/changeStatusOrder', [\App\Http\Controllers\CateringInMobileController::class, 'changeStatusOrder']);
 Route::post('catering-mobile/subs/changeStatusOrder', [\App\Http\Controllers\CateringInMobileController::class, 'changeStatusSubsOrder']);
+Route::post('catering-mobile/subs/changeStatusOrder/oneDay', [\App\Http\Controllers\CateringInMobileController::class, 'changeStatusOrderOneDay']);
 Route::get('catering-mobile/preorder/cancelOrder', [\App\Http\Controllers\CateringInMobileController::class, 'setCancel']);
 
 //tambah

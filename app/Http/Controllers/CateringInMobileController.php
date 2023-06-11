@@ -258,6 +258,16 @@ class CateringInMobileController extends Controller
         return response()->json(["order" => $order]);
     }
 
+    public function changeStatusOrderOneDay(Request $request){
+        $orderDetail = Orders::find(request('order_id'))->orderDetails()->get();
+        $selectedOrder = $orderDetail->where('delivery_datetime', request('delivery_datetime'));
+        foreach ($selectedOrder as $value){
+            $value->status = "sending";
+            $value->save();
+        }
+        return response()->json($selectedOrder);
+    }
+
 
 //     public function setCancel(){
 
