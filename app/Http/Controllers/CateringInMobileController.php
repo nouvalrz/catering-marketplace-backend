@@ -143,6 +143,80 @@ class CateringInMobileController extends Controller
 
         return response()->json(["order" => $orderJson]);
     }
+    public function showSubsOrder($id){
+        $order = Orders::find($id);
+
+        $address = $order->customerAddresses()->get()->first();
+
+//        $productsRaws = $order->orderDetails()->with('product')->get();
+//
+//        $products = [];
+        $ordersFix = array();
+
+        $orders = $order->orderDetails()->with('product')->get()->groupBy('delivery_datetime')->all();
+
+
+        foreach ($orders as $date => $orderSingle){
+            $orderRaw = array();
+            $orderRaw["delivery_datetime"] = $date;
+            $orderRaw["subtotal_price"] = 0;
+
+            $complaint = Complaints::with('images')->where('orders_id', $order->id)->where('delivery_datetime', $date)->get();
+
+            if(count($complaint) !== 0){
+                $orderRaw['complaint'] = $complaint->first();
+            }
+
+            foreach ($orderSingle as $orderDetail){
+                $orderProductDetail = array();
+                $orderProductDetail["id"] = $orderDetail["product"]->id;
+                $orderProductDetail["name"] = $orderDetail["product"]->name;
+                $orderProductDetail["quantity"] = $orderDetail["quantity"];
+                $orderProductDetail["price"] = $orderDetail["price"];
+                $orderProductDetail["custom_desc"] = $orderDetail["custom_desc"];
+                $orderProductDetail["image"] = $orderDetail["product"]->image;
+
+                $orderRaw["subtotal_price"] += $orderDetail["price"];
+                $orderRaw["status"] = $orderDetail["status"];
+                $orderRaw["products"][] = $orderProductDetail;
+            }
+            $ordersFix[] = $orderRaw;
+        }
+
+        $review = Reviews::where('order_id', $order->id)->first();
+        $complaint = Complaints::with('images')->where('orders_id', $order->id)->first();
+        $customer = Customer::find($order->customer_id);
+
+
+
+        $orderJson = [
+            "id" => $order->id,
+            "order_type" => $order->order_type,
+            "invoice_number" => $order->invoice_number,
+            "address" => $address,
+            "delivery_datetime" => $order->start_date,
+            "orders" => $ordersFix,
+            "subtotal" => $order->total_price - $order->delivery_cost,
+            "delivery_price" => $order->delivery_cost,
+            "total_price" => $order->total_price,
+            "payment_expiry" =>$order->payment_expiry,
+            "use_balance" =>$order->use_balance,
+            "order_status" => $order->status,
+            "created_at" =>$order->created_at,
+            "discount" => $order->diskon,
+            "customer" => $customer
+
+        ];
+
+        if($review){
+            $orderJson['review'] = $review;
+        }
+        if($complaint){
+            $orderJson['complaint'] = $complaint;
+        }
+
+        return response()->json(["order" => $orderJson]);
+    }
 
     public function changeStatusOrder(Request $request){
         request()->validate([
@@ -172,7 +246,7 @@ class CateringInMobileController extends Controller
 //                     ->delay(now()->addMinutes(2));
 
 //         // $schedule = new Schedule(new Command);
-        
+
 //         // // Tambahkan tugas ke Task Scheduler
 //         // $schedule->command('order:cancel 7009')->when(function (){
 //         //     return Carbon::create(2023,6,10,19,55)->isPast();
@@ -196,7 +270,7 @@ class CateringInMobileController extends Controller
 //         // $schedule->call(function () {
 //         //     // Lakukan sesuatu
 //         // })->everyTenMinutes();
-        
+
 //         // Jalankan tugas-tugas yang telah ditambahkan
 //         // $schedule->run();
 //         // return response()->json($schedule);

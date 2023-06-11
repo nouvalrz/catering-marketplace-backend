@@ -104,6 +104,7 @@ Route::get('catering/client/{id}/get-discounts', [CateringToClientController::cl
 //Catering Mobile
 Route::get('catering-mobile/get-dashboard', [\App\Http\Controllers\CateringInMobileController::class, 'getDashbord']);
 Route::get('catering-mobile/preorder/{id}/show', [\App\Http\Controllers\CateringInMobileController::class, 'showPreOrder']);
+Route::get('catering-mobile/subs/{id}/show', [\App\Http\Controllers\CateringInMobileController::class, 'showSubsOrder']);
 Route::post('catering-mobile/preorder/changeStatusOrder', [\App\Http\Controllers\CateringInMobileController::class, 'changeStatusOrder']);
 Route::get('catering-mobile/preorder/cancelOrder', [\App\Http\Controllers\CateringInMobileController::class, 'setCancel']);
 
@@ -132,9 +133,9 @@ Route::prefix('admin')->group(function(){
         Route::apiResource('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
 
         Route::apiResource('/slider', App\Http\Controllers\Api\Admin\SliderController::class, ['as' => 'admin']);
-        
+
         Route::post('/slidersUpdateActive/{id}', 'App\Http\Controllers\Api\Admin\SliderController@changeActiveSlider');
-        
+
         Route::apiResource('/customers', App\Http\Controllers\Api\Admin\CustomerController::class, ['except' => ['create', 'edit', 'destroy'], 'as' => 'admin']);
 
         Route::apiResource('/discounts', App\Http\Controllers\Api\Admin\DiscountController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
