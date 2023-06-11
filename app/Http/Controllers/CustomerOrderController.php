@@ -185,12 +185,24 @@ class CustomerOrderController extends Controller
             }
 
             if ($callback->isExpire()) {
+                $order = Orders::find($notification->order_id);
+                if($order->use_balance != null){
+                    $customer = Customer::find($order->customer_id);
+                    $customer->balance = $customer->balance + $order->use_balance;
+                    $customer->save();
+                }
                 Orders::where('id', $notification->order_id)->update([
                     'status' => 'VOID',
                 ]);
             }
 
             if ($callback->isCancelled()) {
+                $order = Orders::find($notification->order_id);
+                if($order->use_balance != null){
+                    $customer = Customer::find($order->customer_id);
+                    $customer->balance = $customer->balance + $order->use_balance;
+                    $customer->save();
+                }
                 Orders::where('id', $notification->order_id)->update([
                     'status' => "VOID",
                 ]);
