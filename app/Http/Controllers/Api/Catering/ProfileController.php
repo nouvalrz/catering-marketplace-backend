@@ -60,8 +60,8 @@ class ProfileController extends Controller
     public function update(Request $request, Catering $catering)
     {
         $userId = auth()->guard('api_catering')->user()->id;
-        $catering = Catering::find($userId);
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
+        $catering = Catering::find($cateringId);
         
         $validator = Validator::make($request->all(), [
             
@@ -166,27 +166,31 @@ class ProfileController extends Controller
         $notAvailableCategories = [];
         $avail = false;
         $i = 0;
-        foreach($request->oldCategories as $oldCategory){
-            $avail = false;
-            foreach($request->categories as $category){
-                if($oldCategory['id'] == $category['id']){
-                    $avail = true;
+        if($request->oldCategories[0]['id'] == null){
+            $notAvailableCategories = null;
+        }else{
+            foreach($request->oldCategories as $oldCategory){
+                $avail = false;
+                foreach($request->categories as $category){
+                    if($oldCategory['id'] == $category['id']){
+                        $avail = true;
+                    };
                 };
+                if(!$avail){
+                    $notAvailableCategories[$i] = $oldCategory['id'];
+                };
+                $i++;
             };
-            if(!$avail){
-                $notAvailableCategories[$i] = $oldCategory['id'];
-            };
-            $i++;
-        };
+        }
 
 
         $i = 0;
         foreach($request->categories as $category){
             $aa[$i] = $category['id'];
-            $categoriesDatas = CateringCategories::where('categories_id', $category['id'])->first();
+            $categoriesDatas = CateringCategories::where('catering_id', $cateringId)->where('categories_id', $category['id'])->first();
             if(!$categoriesDatas){
                 CateringCategories::create([
-                    'catering_id' => $userId,
+                    'catering_id' => $cateringId,
                     'categories_id' => $category['id'],
                 ]);
             }
@@ -194,23 +198,25 @@ class ProfileController extends Controller
         };
 
         $i = 0;
-        foreach($notAvailableCategories as $notCategory){
-            $notCategoriesDatas = CateringCategories::where('categories_id', $notCategory)->first();
-            if($notCategoriesDatas){
-                DB::table('catering_categories')->where('categories_id', $notCategory)->delete();
-            };
-            $i++;
-        };
+        if($notAvailableCategories != null){
 
+            foreach($notAvailableCategories as $notCategory){
+                $notCategoriesDatas = CateringCategories::where('categories_id', $notCategory)->first();
+                if($notCategoriesDatas){
+                    DB::table('catering_categories')->where('categories_id', $notCategory)->delete();
+                };
+                $i++;
+            };
+        }
         // $aa = CateringCategories::where('categories_id', $request->categories->id)->first();
 
 
         //update product without image
         if($catering) {
             //return success with Api Resource
-            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $notAvailableCategories);
+            return new CateringResource(true, 'Data Product Berhasil Diupdate!', $aa);
         }
         //return failed with Api Resource
-        return new CateringResource(false, 'Data Product Gagal Diupdate!', null);
+        return new CateringResource(false, 'Data Product Gagal Diupdate!', $catering);
     }
 }
