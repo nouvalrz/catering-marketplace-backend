@@ -20,8 +20,9 @@ class ReviewController extends Controller
 
         if(request('review_image')){
             $photo_resize = \Intervention\Image\Facades\Image::make($request->file('review_image'))->encode('jpg',50);
-            $nama_gambar = 'reviews/review-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
-            Storage::disk('public')->put( $nama_gambar, $photo_resize);
+            $nama_gambar = 'review-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
+            $nama_gambar_with_folder = "reviews/" . $nama_gambar;
+            Storage::disk('public')->put( $nama_gambar_with_folder, $photo_resize);
 
 //            $image = Image::create(
 //                [

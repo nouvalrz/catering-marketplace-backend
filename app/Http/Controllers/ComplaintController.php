@@ -29,8 +29,9 @@ class ComplaintController extends Controller
 
         foreach ($images as $image){
             $photo_resize = \Intervention\Image\Facades\Image::make($image)->encode('jpg',50);
-            $nama_gambar = 'complaints/complaint-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
-            Storage::disk('public')->put( $nama_gambar, $photo_resize);
+            $nama_gambar = 'complaint-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
+            $nama_gambar_with_folder = "complaints/" . $nama_gambar;
+            Storage::disk('public')->put( $nama_gambar_with_folder, $photo_resize);
 
             $complaintImage = ComplaintImage::create([
                 'complaint_id' => $complaint->id,
