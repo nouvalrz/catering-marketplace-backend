@@ -38,10 +38,7 @@ class CustomerOrderController extends Controller
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
-        if(request('use_balance') > 0){
-            $customer->balance -= request('use_balance');
-            $customer->save();
-        }
+
 
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
@@ -59,7 +56,14 @@ class CustomerOrderController extends Controller
             'use_balance' => request('use_balance') ?? null,
             'diskon' => request('discount') ? stripslashes(request('discount')) : null
         ]);
-        
+
+        if(request('use_balance') > 0){
+            $customer->balance -= request('use_balance');
+            $customer->save();
+            $order->use_balance = request('use_balance');
+            $order->save();
+        }
+
         $order->customer_addresses_id = $address->id;
         $order->save();
 
@@ -107,10 +111,6 @@ class CustomerOrderController extends Controller
 
         $address = $this->getAddress($request, $customer, $user);
 
-        if(request('use_balance') > 0){
-            $customer->balance -= request('use_balance');
-            $customer->save();
-        }
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/SUBS/" . mt_rand(10000000, 99999999);
         $order = Orders::create([
@@ -129,9 +129,16 @@ class CustomerOrderController extends Controller
             'cancele_at' => "2023-04-07 12:00:00",
             'diskon' => request('discount') ? stripslashes(request('discount')) : null
         ]);
-        
+
         $order->customer_addresses_id = $address->id;
         $order->save();
+
+        if(request('use_balance') > 0){
+            $customer->balance -= request('use_balance');
+            $customer->save();
+            $order->use_balance = request('use_balance');
+            $order->save();
+        }
 
         $orderDetails = request('order_details');
 
