@@ -36,6 +36,7 @@ class CustomerRegisterController extends Controller
         Customer::create([
             'user_id' => $user->id,
             'phone' => request('phone'),
+            'name' => request('name'),
             'points' => 0,
             'balance' => 0
         ]);
