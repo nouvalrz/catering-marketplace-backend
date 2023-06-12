@@ -21,6 +21,7 @@ class ComplaintController extends Controller
         $complaint = Complaints::create([
            'orders_id' => request('orders_id'),
            'problem' => request('problem'),
+            'solution_type' => request('solution_type')
         ]);
 
         $images = $request->file('images');
@@ -64,7 +65,8 @@ class ComplaintController extends Controller
         $complaint = Complaints::create([
             'orders_id' => request('orders_id'),
             'problem' => request('problem'),
-            'delivery_datetime' => request('delivery_datetime')
+            'delivery_datetime' => request('delivery_datetime'),
+            'solution_type' => request('solution_type')
         ]);
 
         $images = $request->file('images');
