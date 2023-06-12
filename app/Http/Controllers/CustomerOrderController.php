@@ -529,6 +529,13 @@ class CustomerOrderController extends Controller
         return response()->json($order);
     }
 
+    public function setOrderToRequestCancel($id){
+        $order = Orders::find($id);
+        $order->status = "REQUEST_CANCEL";
+        $order->save();
+        return response()->json($order);
+    }
+
     public function setSubsOrdertoAccepted(Request $request){
         $orderDetail = Orders::find(request('order_id'))->orderDetails()->get();
         $selectedOrder = $orderDetail->where('delivery_datetime', request('delivery_datetime'));
