@@ -77,6 +77,7 @@ Route::get('customer/preorder/{id}/show', [\App\Http\Controllers\CustomerOrderCo
 Route::get('customer/subsorder/{id}/show', [\App\Http\Controllers\CustomerOrderController::class, 'showSubsOrder']);
 Route::get('customer/order/{id}/show-paid-status', [\App\Http\Controllers\CustomerOrderController::class, 'getOrderPaidStatus']);
 Route::get('customer/order/{id}/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setOrderToAccepted']);
+Route::get('customer/order/{id}/set-to-request-cancel', [\App\Http\Controllers\CustomerOrderController::class, 'setOrderToRequestCancel']);
 Route::post('customer/subsorder/set-to-accepted', [\App\Http\Controllers\CustomerOrderController::class, 'setSubsOrdertoAccepted']);
 
 Route::post('customer/subsorder/create', [\App\Http\Controllers\CustomerOrderController::class, 'createSubsOrder']);
@@ -148,7 +149,7 @@ Route::prefix('admin')->group(function(){
         Route::apiResource('/complaint', App\Http\Controllers\Api\Admin\ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
         Route::apiResource('/order', App\Http\Controllers\Api\Admin\OrdersController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
-        
+
         Route::apiResource('/cancelOrder', App\Http\Controllers\Api\Admin\CancelsController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);
 
         Route::apiResource('/cashWithdrawal', App\Http\Controllers\Api\Admin\CashWithdrawalController::class, ['except' => ['create', 'edit'], 'as' => 'admin']);

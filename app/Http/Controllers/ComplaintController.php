@@ -21,6 +21,7 @@ class ComplaintController extends Controller
         $complaint = Complaints::create([
            'orders_id' => request('orders_id'),
            'problem' => request('problem'),
+            'solution_type' => request('solution_type')
         ]);
 
         $images = $request->file('images');
@@ -29,12 +30,13 @@ class ComplaintController extends Controller
 
         foreach ($images as $image){
             $photo_resize = \Intervention\Image\Facades\Image::make($image)->encode('jpg',50);
-            $nama_gambar = 'complaints/complaint-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
-            Storage::disk('public')->put( $nama_gambar, $photo_resize);
+            $nama_gambar = 'complaint-' . md5($photo_resize->__toString()) . '-' . Carbon::now()->format('dmy') . '.jpg';
+            $nama_gambar_with_folder = "complaints/" . $nama_gambar;
+            Storage::disk('public')->put( $nama_gambar_with_folder, $photo_resize);
 
             $complaintImage = ComplaintImage::create([
                 'complaint_id' => $complaint->id,
-                'image' => Storage::url($nama_gambar)
+                'image' => $nama_gambar
             ]);
 
         }
@@ -63,7 +65,8 @@ class ComplaintController extends Controller
         $complaint = Complaints::create([
             'orders_id' => request('orders_id'),
             'problem' => request('problem'),
-            'delivery_datetime' => request('delivery_datetime')
+            'delivery_datetime' => request('delivery_datetime'),
+            'solution_type' => request('solution_type')
         ]);
 
         $images = $request->file('images');

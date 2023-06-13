@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Complaints extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'order_id',
+        'orders_id',
         'status',
         'problem',
         'delivery_datetime',
@@ -21,12 +21,12 @@ class Complaints extends Model
     {
         return $this->belongsTo(Orders::class, 'orders_id');
     }
-    
+
     public function complaintImages()
     {
         return $this->hasMany(ComplaintImages::class, 'complaint_id');
     }
-    
+
     public function getImageAttribute($image)
     {
         return asset('storage/complaints/' . $image);

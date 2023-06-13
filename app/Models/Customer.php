@@ -26,9 +26,13 @@ class Customer extends Model
     public function orders(){
         return $this->hasMany(Orders::class, 'customer_id');
     }
-    
+
     public function getImageAttribute($image)
     {
         return asset('storage/customers/' . $image);
+    }
+
+    public function notifications(){
+        return $this->hasMany(CustomerNotification::class, 'customer_id');
     }
 }
