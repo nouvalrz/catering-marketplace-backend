@@ -42,4 +42,21 @@ class ComplaintController extends Controller
         //return with Api Resource
         return new ComplaintResource(true, 'List Data Complaints', $complaints);
     }
+
+     
+    public function changeStatus(Request $request, $id)
+    {
+        // dd($request->status);
+        $complaint      = Complaints::findOrFail($id);
+        $complaint->status = $request->status;
+        $complaint->save();
+    
+
+        if($complaint) {
+            //return success with Api Resource
+            return new ComplaintResource(true, 'Data Product Berhasil!', $complaint);
+        }
+        //return failed with Api Resource
+        return new ComplaintResource(false, 'Data Product Gagal Diupdate!', $complaint);
+    }
 }

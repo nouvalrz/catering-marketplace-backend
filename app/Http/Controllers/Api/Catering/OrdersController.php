@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Models\Catering;
 use App\Models\ComplaintImages;
+use App\Models\Complaints;
 use App\Models\Customer;
 use App\Models\CustomerAddresses;
 use App\Models\OrderDetails;
@@ -59,7 +60,7 @@ class OrdersController extends Controller
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         // $orders = Orders::with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude'])->where('status', 'like', '%' . request()->status . '%' );
         
-        $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review', 'complaint'])->first();
+        $orders = Orders::whereId($id)->with(['catering:id,name,image', 'customer:id,name,image', 'customerAddresses:id,recipient_name,phone,address,latitude,longitude', 'review'])->first();
         $ordersDetail = OrderDetails::where('orders_id', '=', $id)->with('product:id,name,price,weight,image')->get();
         if(!$ordersDetail){
             $ordersDetail = null;
@@ -67,13 +68,18 @@ class OrdersController extends Controller
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
         $orders->diskon = json_decode($orders->diskon);
 
-        if($orders->complaint){
-            $complaintImage = ComplaintImages::where('complaint_id', $orders->complaint->id)->get();
-        }else{
-            $complaintImage = null;
-        }
+        $complaints = Complaints::where('orders_id', $id)->with(['complaintImages'])->get();
+
+        // if($complaints){
+        //     foreach($complaints as $complaint){
+        //         $complaintImage = ComplaintImages::where('complaint_id', $complaint->id)->with(['complaintImages'])->get();
+        //     }
+        // }else{
+        //     $complaintImage = null;
+        // }
 
         $orders->linkImageReview = asset('storage/reviews/');
+        $orders->linkImageComplaint = asset('storage/complaints/');
         
         if($orders) {
             //response
@@ -83,8 +89,9 @@ class OrdersController extends Controller
                 'data' => [
                     'order' => $orders,
                     'order_detail' => $ordersDetail,
-                    'complaint_image' => $complaintImage,
-                    'linkImageReview' => $complaintImage,
+                    'complaint' => $complaints,
+                    // 'complaint_image' => $complaintImage,
+                    // 'linkImageReview' => $complaintImage,
                 ]
             ], 200);
         }

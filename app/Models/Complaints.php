@@ -13,6 +13,8 @@ class Complaints extends Model
         'order_id',
         'status',
         'problem',
+        'delivery_datetime',
+        'solution_type',
     ];
 
     public function orders()

@@ -219,6 +219,8 @@ Route::prefix('catering')->group(function($router){
 
         Route::apiResource('/complaint', ComplaintController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
         
+        Route::post('/complaintStatus/{id}', 'App\Http\Controllers\Api\Catering\ComplaintController@changeStatus');
+        
         Route::apiResource('/cancelOrder', CancelsController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
 
         Route::post('/message', 'App\Http\Controllers\Api\Catering\ChatController@message');

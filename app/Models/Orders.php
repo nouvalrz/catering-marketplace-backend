@@ -61,7 +61,7 @@ class Orders extends Model
     }
     public function complaint()
     {
-        return $this->hasOne(Complaints::class, 'orders_id');
+        return $this->hasMany(Complaints::class, 'orders_id');
     }
     // public function district()
     // {
