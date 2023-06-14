@@ -322,6 +322,17 @@ class ProductController extends Controller
                     'maximum_selection' => $request->maximum_selection,
                     'is_active' => $request->is_active,
                 ]);
+
+                $items = $request->items;
+                foreach($items as $item){
+                    $itemData = ProductOptionDetail::create([
+                        'product_options_id' => $options->id,
+                        'option_choice_name' => $item['nameItem'],
+                        'additional_price' => $item['price'],
+                        'is_available' => $item['isAvailable'],
+
+                    ]);
+                };
     
                 if($options){
                     return new ProductResource(true, 'Data Option Berhasil ditambah!', $options);

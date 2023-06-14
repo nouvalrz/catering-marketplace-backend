@@ -40,9 +40,9 @@ class DashboardController extends Controller
         $accepted = $order->where('status', '=', 'ACCEPTED')->count();
         $complain = $order->where('status', '=', 'COMPLAINT')->count();
         
-        $month_label = ['','January', 'February', 'March', 'April', 
-            'May', 'June', 'July', 'August', 'September', 
-            'October', 'November', 'December'];
+        $month_label = ['','Januari', 'Februari', 'Maret', 'April', 
+            'Mei', 'Juni', 'Juli', 'Agustus', 'September', 
+            'Oktober', 'November', 'Desember'];
 
         if(request()->year == null){
             // $year = date('Y');

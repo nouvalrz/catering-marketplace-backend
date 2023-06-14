@@ -14,16 +14,13 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 
-class CateringRegisterController extends Controller
+class UserController extends Controller
 {
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:caterings,phone',
-            'address' => 'required',
-            'zipcode' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => ['required', 'same:password']
         ]);
@@ -41,20 +38,20 @@ class CateringRegisterController extends Controller
             'type' => 'catering'
         ]);
 
-        Catering::create([
-            'user_id' => $user->id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'zipcode' => $request->zipcode,
-            // 'province_id' => 0,
-            // 'regency_id' => 0,
-            // 'district_id' => 0,
-            // 'village_id' => 0,
-            'isVerified' => 'no',
+        // Catering::create([
+        //     'user_id' => $user->id,
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'phone' => $request->phone,
+        //     'address' => $request->address,
+        //     'zipcode' => $request->zipcode,
+        //     // 'province_id' => 0,
+        //     // 'regency_id' => 0,
+        //     // 'district_id' => 0,
+        //     // 'village_id' => 0,
+        //     'isVerified' => 'no',
 
-        ]);
+        // ]);
 
         // DeliveryCost::create([
         //     'catering_id' => $user->id,

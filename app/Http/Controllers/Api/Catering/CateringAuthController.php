@@ -311,6 +311,7 @@ class CateringAuthController extends Controller
     public function getUser()
     {
         $user = auth()->guard('api_catering')->user();
+        $user = auth()->guard('api_catering')->user();
 
         $id = $user->id;
 
