@@ -37,12 +37,14 @@ class CreateSnapTokenService extends Midtrans
 
         if($this->order->diskon != null){
             $discountDecode = json_decode($this->order->diskon);
-            $itemDetails[] = [
-                'id' => 9998,
-                'price' => -((int)$discountDecode->jumlah),
-                'quantity' => 1,
-                'name' => "Discount"
-            ];
+            if($discountDecode->persenan != 0){
+                $itemDetails[] = [
+                    'id' => 9998,
+                    'price' => -((int)$discountDecode->jumlah),
+                    'quantity' => 1,
+                    'name' => "Discount"
+                ];
+            }
         }
 
         if($this->order->use_balance != 0){
@@ -118,12 +120,14 @@ class CreateSnapTokenService extends Midtrans
 
         if($this->order->diskon != null){
             $discountDecode = json_decode($this->order->diskon);
-            $itemDetails[] = [
-                'id' => 9998,
-                'price' => -((int)$discountDecode->jumlah),
-                'quantity' => 1,
-                'name' => "Discount"
-            ];
+            if($discountDecode->persenan != 0){
+                $itemDetails[] = [
+                    'id' => 9998,
+                    'price' => -((int)$discountDecode->jumlah),
+                    'quantity' => 1,
+                    'name' => "Discount"
+                ];
+            }
         }
 
         $params = [
