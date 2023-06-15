@@ -67,8 +67,17 @@ class OrdersController extends Controller
         if(!$ordersDetail){
             $ordersDetail = null;
         }
+        
+        // $disc->nama = '';
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
-        $orders->diskon = json_decode($orders->diskon);
+        if($orders->diskon){
+            $orders->diskon = json_decode($orders->diskon);
+
+        }else{
+            $orders->diskon->nama = '';
+            $orders->diskon->persenan = 0;
+            $orders->diskon->jumlah = 0;
+        }
 
         $complaints = Complaints::where('orders_id', $id)->with(['complaintImages'])->get();
 
@@ -84,7 +93,7 @@ class OrdersController extends Controller
         $orders->linkImageComplaint = asset('storage/complaints/');
         
         $chatroom = RoomChats::where('catering_id', $orders->catering->id)->where('customer_id', $orders->customer_id)->first();
-        
+
         if($orders) {
             //response
             return response()->json([
