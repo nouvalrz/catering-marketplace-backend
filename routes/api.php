@@ -229,6 +229,8 @@ Route::prefix('catering')->group(function($router){
         Route::get('/roomChats', 'App\Http\Controllers\Api\Catering\ChatController@roomChats');
 
         Route::get('/chats/{id}', 'App\Http\Controllers\Api\Catering\ChatController@chats');
+        
+        Route::post('/chats/create', 'App\Http\Controllers\Api\Catering\ChatController@createMessage');
 
         Route::post('/chats/send', 'App\Http\Controllers\Api\Catering\ChatController@sendMessage');
 

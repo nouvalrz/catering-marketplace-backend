@@ -38,8 +38,6 @@ class CustomerOrderController extends Controller
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
-
-
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
@@ -54,7 +52,7 @@ class CustomerOrderController extends Controller
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
             'use_balance' => request('use_balance') ?? null,
-            'diskon' => request('discount') ? stripslashes(request('discount')) : null
+            'diskon' => request('discount') ? stripslashes(request('discount')) : '{"nama":"", "persenan":"0", "jumlah":"0"}'
         ]);
 
         if(request('use_balance') > 0){
