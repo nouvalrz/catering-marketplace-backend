@@ -14,6 +14,7 @@ use App\Models\Complaints;
 use App\Models\Customer;
 use App\Models\CustomerAddresses;
 use App\Models\OrderDetails;
+use App\Models\RoomChats;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class OrdersController extends Controller
 
         $orders = Orders::with('customer:id,name,image')->where('status', 'like', '%' . request()->status . '%' );
 
-        $orders = $orders->where('catering_id', $cateringId)->orderBy('start_date', 'desc')->when(request()->q,
+        $orders = $orders->where('catering_id', $cateringId)->orderBy('created_at', 'desc')->when(request()->q,
         function($orders) {
             $orders = $orders->where('invoice_number', 'like', '%'. request()->q . '%')
                 ->orWhereHas('customer',
@@ -66,8 +67,17 @@ class OrdersController extends Controller
         if(!$ordersDetail){
             $ordersDetail = null;
         }
+        
+        // $disc->nama = '';
         // $customerAddressZipcode = CustomerAddresses::whereId($orders->customer_addresses_id)->value('zipcode');
-        $orders->diskon = json_decode($orders->diskon);
+        if($orders->diskon){
+            $orders->diskon = json_decode($orders->diskon);
+
+        }else{
+            $orders->diskon->nama = '';
+            $orders->diskon->persenan = 0;
+            $orders->diskon->jumlah = 0;
+        }
 
         $complaints = Complaints::where('orders_id', $id)->with(['complaintImages'])->get();
 
@@ -82,6 +92,8 @@ class OrdersController extends Controller
         $orders->linkImageReview = asset('storage/reviews/');
         $orders->linkImageComplaint = asset('storage/complaints/');
         
+        $chatroom = RoomChats::where('catering_id', $orders->catering->id)->where('customer_id', $orders->customer_id)->first();
+
         if($orders) {
             //response
             return response()->json([
@@ -91,6 +103,7 @@ class OrdersController extends Controller
                     'order' => $orders,
                     'order_detail' => $ordersDetail,
                     'complaint' => $complaints,
+                    'chatroom' => $chatroom,
                     // 'complaint_image' => $complaintImage,
                     // 'linkImageReview' => $complaintImage,
                 ]

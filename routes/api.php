@@ -230,9 +230,13 @@ Route::prefix('catering')->group(function($router){
 
         Route::get('/chats/{id}', 'App\Http\Controllers\Api\Catering\ChatController@chats');
 
+        Route::post('/chats/create', 'App\Http\Controllers\Api\Catering\ChatController@createMessage');
+
         Route::post('/chats/send', 'App\Http\Controllers\Api\Catering\ChatController@sendMessage');
 
         Route::apiResource('/cashWithdrawal', CashWithdrawalController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
+        
+        Route::apiResource('/customers', App\Http\Controllers\Api\Catering\CustomerController::class, ['except' => ['create', 'edit'], 'as' => 'catering']);
     });
 
 });
