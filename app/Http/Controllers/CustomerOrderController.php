@@ -78,6 +78,7 @@ class CustomerOrderController extends Controller
                 'price' => $product['price'],
                 'delivery_datetime' => request('delivery_date'),
                 'status' => "PENDING",
+                'custom_desc' => $product['custom_desc'] == null ? "NULL" : $product['custom_desc']
             ]);
             foreach ($productOptions as $productOption){
                 $productOptionDetails = $productOption['product_option_details'];
