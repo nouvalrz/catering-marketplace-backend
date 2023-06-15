@@ -38,8 +38,6 @@ class CustomerOrderController extends Controller
 
         $invoiceNumber = "INV/" . Carbon::now()->format('dmy') . "/PO/" . mt_rand(10000000, 99999999);
 
-
-
         $order = Orders::create([
             'invoice_number' => $invoiceNumber,
             'customer_id' => $customer->id,
@@ -54,7 +52,7 @@ class CustomerOrderController extends Controller
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
             'use_balance' => request('use_balance') ?? null,
-            'diskon' => request('discount') ? stripslashes(request('discount')) : null
+            'diskon' => request('discount') ? stripslashes(request('discount')) : '{"nama":"", "persenan":"0", "jumlah":"0"}'
         ]);
 
         if(request('use_balance') > 0){
@@ -80,6 +78,7 @@ class CustomerOrderController extends Controller
                 'price' => $product['price'],
                 'delivery_datetime' => request('delivery_date'),
                 'status' => "PENDING",
+                'custom_desc' => $product['custom_desc'] == null ? "NULL" : $product['custom_desc']
             ]);
             foreach ($productOptions as $productOption){
                 $productOptionDetails = $productOption['product_option_details'];
@@ -127,7 +126,7 @@ class CustomerOrderController extends Controller
             'status' => 'PENDING',
             'snap_token' => "s",
             'cancele_at' => "2023-04-07 12:00:00",
-            'diskon' => request('discount') ? stripslashes(request('discount')) : null
+            'diskon' => request('discount') ? stripslashes(request('discount')) : '{"nama":"", "persenan":"0", "jumlah":"0"}'
         ]);
 
         $order->customer_addresses_id = $address->id;
@@ -374,13 +373,23 @@ class CustomerOrderController extends Controller
             "use_balance" =>$order->use_balance,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->diskon,
             "catering_name" => $cateringName,
             "catering_phone" => $cateringPhone,
             "catering_location" => $cateringLocation,
             "image" => $cateringOriginalPath,
             "catering_id" => $cateringId
         ];
+
+        if($order->diskon){
+            $diskonObject = json_decode($order->diskon);
+            if($diskonObject->nama == ""){
+                $orderJson['discount'] = null;
+            }else{
+                $orderJson['discount'] = $order->diskon;
+            }
+        }else{
+            $orderJson['discount'] = null;
+        }
 
         if($review){
             $orderJson['review'] = $review;
@@ -505,9 +514,19 @@ class CustomerOrderController extends Controller
             "payment_expiry" =>$order->payment_expiry,
             "order_status" => $order->status,
             "created_at" =>$order->created_at,
-            "discount" => $order->diskon,
             "orders" => $ordersFix,
         ];
+
+        if($order->diskon){
+            $diskonObject = json_decode($order->diskon);
+            if($diskonObject->nama == ""){
+                $orderJson['discount'] = null;
+            }else{
+                $orderJson['discount'] = $order->diskon;
+            }
+        }else{
+            $orderJson['discount'] = null;
+        }
 
         if($review){
             $orderJson['review'] = $review;
