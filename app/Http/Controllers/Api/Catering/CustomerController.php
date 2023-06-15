@@ -128,6 +128,7 @@ class CustomerController extends Controller
         // $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
         
         $customer = Customer::whereId($id)->first();
+        $customer->linkImageCustomer = asset('storage/customers/');
         if($customer) {
             //return success with Api Resource
             return new CustomerResource(true, 'Detail Data Customer!', $customer);

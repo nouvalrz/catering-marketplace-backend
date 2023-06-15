@@ -65,9 +65,12 @@ class ChatController extends Controller
     }
 
     public function createMessage(Request $request){
+        $userId = auth()->guard('api_catering')->user()->id;
+        $cateringId = Catering::where('user_id', $userId)->value('id');
+
         $roomChats = RoomChats::create([
             'customer_id' => $request->customer_id,
-            'catering_id' => $request->catering_id,
+            'catering_id' => $cateringId,
         ]);
 
         $chats = Chats::create([
@@ -77,7 +80,7 @@ class ChatController extends Controller
         ]);
 
         if($chats){   
-            return new ChatResource(true, 'Data chat Berhasil Disimpan!', null, null, null);
+            return new ChatResource(true, 'Data chat Berhasil Disimpan!', $chats, null, null);
         }
         return new ChatResource(false, 'Data chat gagal Disimpan!', null, null, null);
 
