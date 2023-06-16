@@ -26,7 +26,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings = array();
 //
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->orderByDesc("total_sales")->orderByDesc('rate')->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::where('isVerified', 'yes')->with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->orderByDesc("total_sales")->orderByDesc('rate')->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
@@ -64,7 +64,7 @@ class CateringToClientController extends Controller
 
         $finish_caterings = array();
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
+        $finish_caterings["caterings"] = Catering::where('isVerified', 'yes')->with(["recommendation_products" => function ($query) {
             $query->where("name", "like", "%" . request('keyword') . "%");
         }, "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
@@ -100,7 +100,7 @@ class CateringToClientController extends Controller
         $customerLongitude = request('customer_longitude');
 
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::where('isVerified', 'yes')->with(["recommendation_products","village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
