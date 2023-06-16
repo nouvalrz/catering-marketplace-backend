@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Catering;
-use App\Models\Discounts;
+use App\Models\Discount;
 use App\Models\Product;
 use App\Models\Reviews;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +30,13 @@ class CateringToClientController extends Controller
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
+
+        $now = Carbon::now();
+        $date = Carbon::parse($now)->toDateString();
+        $discountAdmin = Discount::where('catering_id', 0)->whereDate('start_date', '>=', $date )->whereDate('end_date', '>=', $date )->get();
+
+        $finish_caterings['admin_discounts'] = $discountAdmin;
+
 
 ////        $finish_caterings["caterings"] = Catering::select('name')->whitDistance([115.214485, -8.711786])->whereDistance([115.214485, -8.711786],10000)->get();
 //
@@ -62,6 +70,13 @@ class CateringToClientController extends Controller
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
+
+        $now = Carbon::now();
+        $date = Carbon::parse($now)->toDateString();
+        $discountAdmin = Discount::where('catering_id', 0)->whereDate('start_date', '>=', $date )->whereDate('end_date', '>=', $date )->get();
+
+        $finish_caterings['admin_discounts'] = $discountAdmin;
+
 //        $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
 //            $query->where("name", "like", "%" . request('keyword') . "%");
 //        }, "village.district", "categories", "discounts"])->withCount('discounts')->limit(15)->get()->map(function ($catering) {
@@ -89,6 +104,13 @@ class CateringToClientController extends Controller
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
+
+        $now = Carbon::now();
+        $date = Carbon::parse($now)->toDateString();
+        $discountAdmin = Discount::where('catering_id', 0)->whereDate('start_date', '>=', $date )->whereDate('end_date', '>=', $date )->get();
+
+        $finish_caterings['admin_discounts'] = $discountAdmin;
+
 
         return response()->json($finish_caterings);
     }
