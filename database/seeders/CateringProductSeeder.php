@@ -43,7 +43,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[0],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Campur",
@@ -54,7 +55,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[1],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Sate Kambing Bumbu Kacang",
@@ -65,7 +67,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 80,
                 'is_available' => 1,
                 'image' => $productImages[2],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Campur",
@@ -76,7 +79,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[3],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Ayam Bakar Kecap",
@@ -87,7 +91,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[4],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Ayam Bakar Tomat",
@@ -98,7 +103,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[5],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Japanese Rice Box",
@@ -109,7 +115,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 120,
                 'is_available' => 1,
                 'image' => $productImages[6],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Rendang",
@@ -120,7 +127,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[7],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Kotak Lauk Telur",
@@ -131,7 +139,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 80,
                 'is_available' => 1,
                 'image' => $productImages[8],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Ricebowl Ayam Geprek",
@@ -142,7 +151,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 120,
                 'is_available' => 1,
                 'image' => $productImages[9],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Jajan Kotak 8rb",
@@ -153,7 +163,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 180,
                 'is_available' => 1,
                 'image' => $productImages[10],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Jajan Kotak 6rb",
@@ -164,7 +175,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[11],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Tumpeng Besar",
@@ -175,7 +187,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 5,
                 'is_available' => 1,
                 'image' => $productImages[12],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Tumpeng Box",
@@ -186,7 +199,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[13],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Ayam Goreng Kalasan",
@@ -197,7 +211,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[14],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Bekel Telur",
@@ -208,7 +223,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[15],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Tumis Tempe Kacang Panjang Box",
@@ -219,7 +235,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[16],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Ayam Sisit Sambal Matah Box",
@@ -230,7 +247,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 100,
                 'is_available' => 1,
                 'image' => $productImages[17],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Rendang Sapi Box",
@@ -241,7 +259,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 20,
                 'is_available' => 1,
                 'image' => $productImages[18],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Sambal Ati Box",
@@ -252,7 +271,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 20,
                 'is_available' => 1,
                 'image' => $productImages[19],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Lumpia Box",
@@ -263,7 +283,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[20],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Tumis Tauge Box",
@@ -274,7 +295,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[21],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Oseng Buncis Tempe Box",
@@ -285,7 +307,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[22],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Pepes Ayam Bumbu Kuning Box",
@@ -296,7 +319,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[23],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Siomay Ikan Tenggiri",
@@ -307,7 +331,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[24],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Peyek Kacang Teri Toples",
@@ -318,7 +343,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[25],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Rendang Ayam Box",
@@ -329,7 +355,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 50,
                 'is_available' => 1,
                 'image' => $productImages[26],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Bubur Campur Santan",
@@ -340,7 +367,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[27],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Rujak Bali Toples Kecil",
@@ -351,7 +379,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[28],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Capcay Box",
@@ -362,7 +391,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[29],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Tumis Labu Siam Box",
@@ -373,7 +403,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[30],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Nasi Ayam Bakar Besar",
@@ -384,7 +415,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[31],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Sayur Tumis Timun",
@@ -395,7 +427,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[32],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Biji Salak Warna-Warni",
@@ -406,7 +439,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[33],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Rendang Kentang Box",
@@ -417,7 +451,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[34],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             ),
             array(
                 'name' => "Capcay Brokoli Jamur",
@@ -428,7 +463,8 @@ class CateringProductSeeder extends Seeder
                 'maximum_quantity' => 200,
                 'is_available' => 1,
                 'image' => $productImages[35],
-                'catering_id'=>1
+                'catering_id'=>1,
+                'category_id' => 1
             )
 
             );
