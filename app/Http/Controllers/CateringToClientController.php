@@ -15,20 +15,30 @@ class CateringToClientController extends Controller
     public function getRelevantCatering(Request $request)
     {
         request()->validate([
-            'district_name' => 'required'
+            'district_name' => 'required',
+            'customer_latitude' => 'required',
+            'customer_longitude' => 'required'
         ]);
 
-        $finish_caterings = array();
+        $customerLatitude = request('customer_latitude');
+        $customerLongitude = request('customer_longitude');
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->orderByDesc('rate')->get()->map(function ($catering) {
+        $finish_caterings = array();
+//
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->orderByDesc("total_sales")->orderByDesc('rate')->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
 
+////        $finish_caterings["caterings"] = Catering::select('name')->whitDistance([115.214485, -8.711786])->whereDistance([115.214485, -8.711786],10000)->get();
+//
+//        $finish_caterings["caterings"] = Catering::with(["recommendation_products", "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->limit(15)->orderByDesc("total_sales")->orderByDesc('rate')->get()->map(function ($catering) {
+//            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+//            return $catering;
+//        });
 
         return response()->json($finish_caterings);
 //        return json_encode($finish_caterings);
-
     }
 
     public function getSearchResultCatering(Request $request)
@@ -36,17 +46,28 @@ class CateringToClientController extends Controller
 
         request()->validate([
             'keyword' => 'required',
-            'district_name' => 'required'
+            'district_name' => 'required',
+            'customer_latitude' => 'required',
+            'customer_longitude' => 'required'
         ]);
+
+        $customerLatitude = request('customer_latitude');
+        $customerLongitude = request('customer_longitude');
 
         $finish_caterings = array();
 
         $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
             $query->where("name", "like", "%" . request('keyword') . "%");
-        }, "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+        }, "village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("recommendation_products", "name", "like", "%" . request('keyword') . "%")->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
+//        $finish_caterings["caterings"] = Catering::with(["recommendation_products" => function ($query) {
+//            $query->where("name", "like", "%" . request('keyword') . "%");
+//        }, "village.district", "categories", "discounts"])->withCount('discounts')->limit(15)->get()->map(function ($catering) {
+//            $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
+//            return $catering;
+//        });
 
         return response()->json($finish_caterings);
     }
@@ -54,13 +75,17 @@ class CateringToClientController extends Controller
     public function getCategoryResultCatering(Request $request){
         request()->validate([
             'keyword' => 'required',
-            'district_name' => 'required'
+            'district_name' => 'required',
+            'customer_latitude' => 'required',
+            'customer_longitude' => 'required'
         ]);
 
         $finish_caterings = array();
+        $customerLatitude = request('customer_latitude');
+        $customerLongitude = request('customer_longitude');
 
 
-        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("village.district", "name", "like", "%" . request('district_name') . "%")->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->limit(15)->get()->map(function ($catering) {
+        $finish_caterings["caterings"] = Catering::with(["recommendation_products","village.district", "categories", "discounts"])->withCount('discounts')->whereRelation("categories", "name", "like", "%" . request('keyword') . "%")->whitDistance([$customerLongitude, $customerLatitude])->whereDistance([$customerLongitude, $customerLatitude],10000)->limit(15)->get()->map(function ($catering) {
             $catering->setRelation('recommendation_products', $catering->recommendation_products->take(2));
             return $catering;
         });
