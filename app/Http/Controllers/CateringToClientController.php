@@ -33,7 +33,7 @@ class CateringToClientController extends Controller
 
         $now = Carbon::now();
         $date = Carbon::parse($now)->toDateString();
-        $discountAdmin = Discount::where('catering_id', 0)->whereDate('start_date', '>=', $date )->whereDate('end_date', '>=', $date )->get();
+        $discountAdmin = Discount::where('catering_id', 0)->whereDate('end_date', '>=', $date )->whereDate('start_date', '<=', $date )->get();
 
         $finish_caterings['admin_discounts'] = $discountAdmin;
 
