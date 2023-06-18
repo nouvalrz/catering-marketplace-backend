@@ -291,6 +291,13 @@ class CustomerOrderController extends Controller
                 $itemSummary[] = $orderDetail->product()->get()->first()->name;
             }
 
+            if($order->diskon){
+                $diskonDecode = json_decode($order->diskon);
+                if($diskonDecode->jumlah !=0){
+                    $orderTemp["discount"] = $diskonDecode->jumlah;
+                }
+            }
+
 
             $orderTemp['id'] = $order->id;
             $orderTemp['order_type'] = $order->order_type;
@@ -298,6 +305,7 @@ class CustomerOrderController extends Controller
             $orderTemp['end_date'] = $order->end_date;
             $orderTemp['order_status'] = $order->status;
             $orderTemp['use_balance'] = $order->use_balance;
+            $orderTemp['delivery_cost'] = $order->delivery_cost;
             $orderTemp['catering_name'] = $cateringName;
             $orderTemp['order_quantity'] = $orderQuanity;
             $orderTemp['item_summary'] = join(", ", $itemSummary);
