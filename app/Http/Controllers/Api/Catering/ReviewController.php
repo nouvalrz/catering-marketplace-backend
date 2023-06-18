@@ -25,7 +25,7 @@ class ReviewController extends Controller
         // $products = Product::with('category')->when(request()->q,
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        $reviews = Reviews::with(['order', 'customer:id,name'])
+        $reviews = Reviews::where('catering_id', $cateringId)->with(['order', 'customer:id,name'])
             ->where('star', 'like', '%'. request()->rating . '%')
             ->when(request()->q,
                 function($reviews) {

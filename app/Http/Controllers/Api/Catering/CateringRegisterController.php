@@ -22,8 +22,8 @@ class CateringRegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|unique:caterings,phone',
-            'address' => 'required',
-            'zipcode' => 'required',
+            // 'address' => 'required',
+            // 'zipcode' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => ['required', 'same:password']
         ]);
@@ -46,8 +46,8 @@ class CateringRegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'address' => $request->address,
-            'zipcode' => $request->zipcode,
+            // 'address' => $request->address,
+            // 'zipcode' => $request->zipcode,
             // 'province_id' => 0,
             // 'regency_id' => 0,
             // 'district_id' => 0,

@@ -110,36 +110,36 @@ class ProductController extends Controller
         // $index = 0;
         $options = $request->options;
         // return new ProductResource(true, $options, $options);
-        
-        foreach($options as $option){
-            // return new ProductResource(true, $options, $option);
-
-            $optionData = ProductOption::create([
-                // 'product_id' => 3,
-                'product_id' => $product->id,
-                'option_name' => $option['nameOption'],
-                'option_type' => $option['optionType'],
-                'minimum_selection' => $option['minSelect'],
-                'maximum_selection' => $option['maxSelect'],
-                'is_active' => $option['isActive'],
-
-            ]);
-
-            // $items = $option->flatten(1)->value()->all();
-            $items = $option['items'];
-            foreach($items as $item){
-                $itemData = ProductOptionDetail::create([
-                    'product_options_id' => $optionData->id,
-                    'option_choice_name' => $item['nameItem'],
-                    'additional_price' => $item['price'],
-                    'is_available' => $item['isAvailable'],
-
+        if($request->options) {
+            foreach($options as $option){
+                // return new ProductResource(true, $options, $option);
+    
+                $optionData = ProductOption::create([
+                    // 'product_id' => 3,
+                    'product_id' => $product->id,
+                    'option_name' => $option['nameOption'],
+                    'option_type' => $option['optionType'],
+                    'minimum_selection' => $option['minSelect'],
+                    'maximum_selection' => $option['maxSelect'],
+                    'is_active' => $option['isActive'],
+    
                 ]);
+    
+                // $items = $option->flatten(1)->value()->all();
+                $items = $option['items'];
+                foreach($items as $item){
+                    $itemData = ProductOptionDetail::create([
+                        'product_options_id' => $optionData->id,
+                        'option_choice_name' => $item['nameItem'],
+                        'additional_price' => $item['price'],
+                        'is_available' => $item['isAvailable'],
+    
+                    ]);
+                };
+                // $index+=1;
             };
-            // $index+=1;
-        };
-        return new ProductResource(true, $options, $optionData);
-
+            return new ProductResource(true, $options, $optionData);
+        }
         // dd($request->category_id);
         // Log::debug($request->category_id);
         // $category = Categories::find($request->category_id);
