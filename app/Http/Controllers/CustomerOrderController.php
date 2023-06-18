@@ -562,12 +562,31 @@ class CustomerOrderController extends Controller
     }
 
     public function setSubsOrdertoAccepted(Request $request){
-        $orderDetail = Orders::find(request('order_id'))->orderDetails()->get();
+        $order = Orders::find(request('order_id'));
+        $orderDetail = $order->orderDetails()->get();
         $selectedOrder = $orderDetail->where('delivery_datetime', request('delivery_datetime'));
         foreach ($selectedOrder as $value){
             $value->status = "delivered";
             $value->save();
+
         }
+//        CAIRIN UANG KE CATERING
+        $catering = Catering::find($order->catering_id);
+        $subsDayCount = $order->orderDetails()->get()->groupBy('delivery_datetime')->count();
+        $deliveryForOneDay = $order->delivery_cost / $subsDayCount;
+
+        foreach ($selectedOrder as $value){
+            $value->status = "delivered";
+            $value->save();
+            $subtotalPrice = $value->price * $value->quantity;
+
+            $catering->balance += $subtotalPrice;
+            $catering->save();
+        }
+
+        $catering->balance += $deliveryForOneDay;
+        $catering->save();
+
         return response()->json($selectedOrder);
     }
 }
