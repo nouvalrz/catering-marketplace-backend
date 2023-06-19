@@ -578,6 +578,14 @@ class CustomerOrderController extends Controller
             $value->save();
 
         }
+
+
+//        Ubah ke received ketika semua pesanan subs selesai
+        if($selectedOrder[0]->delivery_datetime == $order->end_date){
+            $order->status = "RECEIVED";
+            $order->save();
+        }
+
 //        CAIRIN UANG KE CATERING
         $catering = Catering::find($order->catering_id);
         $subsDayCount = $order->orderDetails()->get()->groupBy('delivery_datetime')->count();
