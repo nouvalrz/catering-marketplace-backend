@@ -581,7 +581,7 @@ class CustomerOrderController extends Controller
 
 
 //        Ubah ke received ketika semua pesanan subs selesai
-        if($selectedOrder[0]->delivery_datetime == $order->end_date){
+        if($selectedOrder->first()->delivery_datetime == $order->end_date){
             $order->status = "RECEIVED";
             $order->save();
         }
