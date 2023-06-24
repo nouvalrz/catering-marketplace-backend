@@ -49,7 +49,7 @@ class AdminAuthController extends Controller
         //response login "failed"
         return response()->json([
             'success' => false,
-            'message' => 'Email or Password is incorrect lah',
+            'message' => 'Email atau Kata sandi salah',
             'aa' => $credentials,
             // 'aa' => auth()->guard('api_admin')->user(),
             ], 401);

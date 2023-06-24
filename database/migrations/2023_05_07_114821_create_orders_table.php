@@ -25,7 +25,7 @@ class CreateOrdersTable extends Migration
             $table->bigInteger('delivery_cost',);
             $table->bigInteger('total_price',);
             $table->enum('order_type',['preorder','subs']);
-            $table->enum('status',['UNPAID','PAID','VOID','PENDING','NOT_APPROVED','PROCESSED','SEND','ONGOING','ACCEPTED','COMPLAINT'])->nullable();
+            $table->enum('status',['UNPAID','PAID','VOID','PENDING','NOT_APPROVED','PROCESSED','SEND','ONGOING','ACCEPTED','COMPLAINT','RECEIVED'])->nullable();
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->datetime('cancele_at');

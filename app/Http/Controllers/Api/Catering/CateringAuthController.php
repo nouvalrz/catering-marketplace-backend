@@ -296,7 +296,7 @@ class CateringAuthController extends Controller
             \ndan jangan berikan kode ini kepada siapapun 
             \n\nKode OTP anda adalah $otp_token
             \n\n- CateringKu -", function ($m) {
-            $m->to(request('email'))->subject('CateringKu Email Verification OTP');
+            $m->to(request('emailNew'))->subject('CateringKu Email Verification OTP');
         });
 
         return response()->json([

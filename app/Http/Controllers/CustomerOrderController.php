@@ -546,7 +546,7 @@ class CustomerOrderController extends Controller
         $order = Orders::find($id);
 
         $catering = Catering::find($order->catering_id);
-        $catering->balance = $order->total_price + $order->delivery_cost;
+        $catering->balance += $order->total_price + $order->delivery_cost;
         $catering->save();
 
         $order->status = "ACCEPTED";

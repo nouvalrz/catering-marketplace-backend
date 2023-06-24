@@ -35,15 +35,28 @@ class CancelsController extends Controller
 
         $userId = auth()->guard('api_catering')->user()->id;
         $cateringId = DB::table('caterings')->where('user_id', $userId)->value('id');
-        // $cancelOrder = Orders::where('catering_id', $cateringId);
-        if(request()->status){
-            $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', request()->status);
-        }else{
+        $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image');
+        $cancelOrder1 = Orders::where('catering_id', $cateringId)->with('customer:id,name,image');
 
-            $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
-        }
+        // if(request()->status){
+        //     $cancelOrder = $cancelOrder->where('status', request()->status);
+        //     // $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', request()->status);
+        // }
+        // else{
 
-        $cancelOrder = $cancelOrder->orderBy('start_date', 'desc')->when(request()->q,
+        //     $cancelOrder = $cancelOrder->where('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
+        //     // $cancelOrder = Orders::where('catering_id', $cateringId)->with('customer:id,name,image')->where('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
+        // }
+
+        $cancelOrder = $cancelOrder->orderBy('start_date', 'desc')->where(
+            function($cancelOrder){
+                $cancelOrder =  $cancelOrder->where('status', 'REQUEST_CANCEL')->orWhere('status', 'CANCEL_BY_SYSTEM')->orWhere('status', 'APPROVED_CANCEL')->orWhere('status', 'CANCEL_REJECTED');
+            }
+        )->when(request()->status,
+            function($cancelOrder){
+                $cancelOrder =  $cancelOrder->where('status', request()->status);
+            }
+        )->when(request()->q,
         function($cancelOrder) {
             $cancelOrder = $cancelOrder->where('invoice_number', 'like', '%'. request()->q . '%')
                 ->orWhereHas('customer', 
