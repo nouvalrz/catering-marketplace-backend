@@ -50,7 +50,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1,7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010",
             ],
             [
                 "name"=>"Mecca Catering",
@@ -68,7 +76,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1,7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"OMA THIA'S Catering",
@@ -86,7 +102,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"MAKANOPO catering bali",
@@ -104,7 +128,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 4
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Harwandi Catering",
@@ -122,7 +154,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Wr. Zaenah Renon",
@@ -140,7 +180,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Surya Jaya Catering Bali",
@@ -158,7 +206,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Lumbung Catering",
@@ -176,7 +232,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 6
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Sri Krisna Catering",
@@ -194,7 +258,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 3
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Catering Kambing Guling Ade Muzni",
@@ -212,7 +284,15 @@ class CateringSeeder extends Seeder
                 "image" => $cateringImages[array_rand($cateringImages)],
                 "categories" => [
                     1, 4
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Catering Service Ny. Warti Buleleng",
@@ -230,7 +310,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>11,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Catering Kita Bali",
@@ -248,7 +336,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>12,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Endro Catering Bali",
@@ -266,7 +362,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>13,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Warung Wahai Catering",
@@ -284,7 +388,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>14,
                 "categories" => [
                     1, 4
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Catering Ibu Misna",
@@ -302,7 +414,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>5,
                 "categories" => [
                     1, 4
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Karisma Boga Catering",
@@ -320,7 +440,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>16,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Dapur Pak Lik",
@@ -338,7 +466,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>17,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -357,7 +493,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>18,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Laela - Catering Service",
@@ -375,7 +519,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>19,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Dewata Catering",
@@ -393,7 +545,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>20,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
             [
                 "name"=>"Damar Bali Catering",
@@ -411,7 +571,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>21,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -430,7 +598,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>22,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -449,7 +625,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>23,
                 "categories" => [
                     1, 4
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -468,7 +652,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>24,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -487,7 +679,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>25,
                 "categories" => [
                     1, 4
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -506,7 +706,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>26,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -525,7 +733,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>27,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -544,7 +760,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>28,
                 "categories" => [
                     1, 3
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -563,7 +787,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>29,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -582,7 +814,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>30,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ],
 
             [
@@ -601,7 +841,15 @@ class CateringSeeder extends Seeder
                 "user_id" =>31,
                 "categories" => [
                     1, 7
-                ]
+                ],
+                "workday"=>'[{"name":"Senin"},{"name":"Selasa"},{"name":"Rabu"},{"name":"Kamis"},{"name":"Jumat"}]',
+                "min_distance_delivery" => 1,
+                "delivery_cost" => 6000,
+                "isVerified" => 'yes',
+                'isOpen' => 1,
+                'province_id' => "51",
+                'regency_id' => "5171",
+                'district_id' => "5171010"
             ]
                 ];
 

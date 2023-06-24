@@ -291,6 +291,13 @@ class CustomerOrderController extends Controller
                 $itemSummary[] = $orderDetail->product()->get()->first()->name;
             }
 
+            if($order->diskon){
+                $diskonDecode = json_decode($order->diskon);
+                if($diskonDecode->jumlah !=0){
+                    $orderTemp["discount"] = $diskonDecode->jumlah;
+                }
+            }
+
 
             $orderTemp['id'] = $order->id;
             $orderTemp['order_type'] = $order->order_type;
@@ -298,6 +305,7 @@ class CustomerOrderController extends Controller
             $orderTemp['end_date'] = $order->end_date;
             $orderTemp['order_status'] = $order->status;
             $orderTemp['use_balance'] = $order->use_balance;
+            $orderTemp['delivery_cost'] = $order->delivery_cost;
             $orderTemp['catering_name'] = $cateringName;
             $orderTemp['order_quantity'] = $orderQuanity;
             $orderTemp['item_summary'] = join(", ", $itemSummary);
@@ -542,14 +550,14 @@ class CustomerOrderController extends Controller
     }
 
     public function setOrderToAccepted($id){
-        
+
         $order = Orders::find($id);
 
         $catering = Catering::find($order->catering_id);
         $catering->balance += $order->total_price + $order->delivery_cost;
         $catering->save();
 
-        $order->status = "ACCEPTED";
+        $order->status = "RECEIVED";
         $order->save();
         return response()->json($order);
     }
@@ -562,12 +570,39 @@ class CustomerOrderController extends Controller
     }
 
     public function setSubsOrdertoAccepted(Request $request){
-        $orderDetail = Orders::find(request('order_id'))->orderDetails()->get();
+        $order = Orders::find(request('order_id'));
+        $orderDetail = $order->orderDetails()->get();
         $selectedOrder = $orderDetail->where('delivery_datetime', request('delivery_datetime'));
         foreach ($selectedOrder as $value){
             $value->status = "delivered";
             $value->save();
+
         }
+
+
+//        Ubah ke received ketika semua pesanan subs selesai
+        if($selectedOrder->first()->delivery_datetime == $order->end_date){
+            $order->status = "RECEIVED";
+            $order->save();
+        }
+
+//        CAIRIN UANG KE CATERING
+        $catering = Catering::find($order->catering_id);
+        $subsDayCount = $order->orderDetails()->get()->groupBy('delivery_datetime')->count();
+        $deliveryForOneDay = $order->delivery_cost / $subsDayCount;
+
+        foreach ($selectedOrder as $value){
+            $value->status = "delivered";
+            $value->save();
+            $subtotalPrice = $value->price * $value->quantity;
+
+            $catering->balance += $subtotalPrice;
+            $catering->save();
+        }
+
+        $catering->balance += $deliveryForOneDay;
+        $catering->save();
+
         return response()->json($selectedOrder);
     }
 }

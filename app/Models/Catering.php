@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Magutti\MaguttiSpatial\Builders\SpatialBuilder;
 
 class Catering extends Model
 {
@@ -36,6 +37,16 @@ class Catering extends Model
         'is_open',
 
     ];
+
+    public $spatialFields = [
+        'longitude',
+        'latitude'
+    ];
+
+    function newEloquentBuilder($query): SpatialBuilder
+    {
+        return new SpatialBuilder($query);
+    }
 
     public function user()
     {

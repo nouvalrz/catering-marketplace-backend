@@ -21,7 +21,7 @@ class Discount extends Model
         $date = Carbon::parse($now)->toDateString();
         return $query->whereDate('start_date', '>=', $date)->orWhereDate('end_date', '<=', $date);
     }
-    
+
     protected $fillable = [
         'catering_id',
         'title',
